@@ -1,0 +1,21 @@
+# Render Blueprint — one-click deploy for CallForge
+# Usage: in Render dashboard → New → Blueprint → connect this repo
+
+services:
+  - type: web
+    name: callforge
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false   # Set in Render dashboard
+      - key: API_TOKEN
+        generateValue: true
+      - key: MOCK_ENABLED
+        value: "true"   # Allows demo to work without API keys
+      - key: PORT
+        value: "8000"
