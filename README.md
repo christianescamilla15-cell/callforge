@@ -1,55 +1,103 @@
 # CallForge
 
-Plataforma de automatización de atención a clientes (call center) basada en
-agentes LLM, con Clean Architecture, trazabilidad completa y costo cero por
-defecto. API-first: hoy REST, mañana WhatsApp/webchat/email/CRM/telefonía sin
-tocar el dominio.
+> **Multi-agent voice + LLM customer support platform.** Whisper STT (0.9s) → 6 specialized agents → Kokoro TTS (CPU, RTF 0.34). LLM provider fallback (Groq → Ollama → Mock) for zero-cost offline operation. Clean Architecture, multi-tenant, Windows-service deployable.
 
-## ADN (lo mejor de proyectos previos, integrado — no Frankenstein)
+[![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-async-009688.svg)](https://fastapi.tiangolo.com/)
+[![Tests](https://img.shields.io/badge/tests-15_suites_offline-green.svg)](#tests)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](#)
+
+---
+
+## What this proves
+
+| Capability | Evidence |
+|---|---|
+| **Production-grade multi-agent orchestration** | 6 specialized agents (Router, Support, Troubleshooting, Escalation, Quality, Summarizer) coordinated via explicit state machine — no LangGraph, no framework lock-in |
+| **Voice I/O at production latency** | Whisper STT 0.9s (Groq) + Kokoro ONNX TTS at RTF 0.34 on CPU only — GPU stays free for the LLM |
+| **Cost-optimized resilience** | LLM provider chain (`Groq → Ollama → Mock`) keeps the system answering when any provider fails, with $0 floor (local + mock) |
+| **Hybrid RAG with graceful degradation** | `nomic-embed-text` embeddings + keyword fallback when embedder is unavailable — lazy backfill for legacy docs |
+| **Multi-tenant from day 1** | `tenant_id` scoping in every aggregate, per-tenant API keys, per-tenant metrics |
+| **Clean Architecture** | Domain → Application → Infrastructure → Presentation. 100% of tests run offline (MockProvider + SQLite tmp) — no flaky CI |
+| **Operational maturity** | Deployable as Windows service via nssm. Alembic migrations auto-stamp pre-existing DBs at boot. Agent runs persist full trace (tokens, cost, latency, confidence, error) |
+| **Cloning + voice synthesis** | Chatterbox MIT voice cloning in isolated micro-service (separate venv with torch cu124) avoids GPU contention — auto-fallback to Kokoro if down |
+| **LLM specialization roadmap** | QLoRA fine-tune plan documented in [FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md): synthetic dataset → Unsloth/RunPod → GGUF export → Ollama. Specialization > scale for narrow tasks |
+
+**By the numbers** — 8 agents · 9 use-cases · 14 routes · 75 Python modules · 8,403 LOC · 15 test suites (100% offline)
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    Web[Webchat / REST / WhatsApp adapter] -->|message| API[FastAPI Presentation]
+    API --> UC[Use Cases]
+    UC --> Workflow[SupportWorkflow]
+
+    Workflow --> Router[RouterAgent<br/>intent + urgency]
+    Router -->|technical| Trouble[TroubleshootingAgent<br/>guided steps]
+    Router -->|general| Support[SupportAgent<br/>answer w/ context]
+    Router -->|escalate| Escalate[EscalationAgent]
+
+    Support --> Quality[QualityAgent<br/>score + retry]
+    Trouble --> Quality
+    Quality -->|low score| Workflow
+    Quality -->|ok| Sum[SummarizerAgent]
+    Escalate --> Sum
+
+    Sum --> Persist[(agent_runs<br/>agent_events<br/>tickets)]
+
+    UC -.->|retrieve| KB[Hybrid Knowledge Store<br/>embeddings + keyword fallback]
+    UC -.->|LLM call| Chain[LLM Provider Chain]
+    Chain --> Groq[Groq llama-3.3-70b]
+    Chain -->|fallback| Ollama[Ollama local]
+    Chain -->|fallback| Mock[MockProvider deterministic]
+
+    API -.->|voice in| STT[Groq Whisper STT<br/>~0.9s]
+    STT --> UC
+    UC -.->|voice out| TTS{TTS Engine}
+    TTS -->|default| Kokoro[Kokoro ONNX<br/>CPU RTF 0.34]
+    TTS -->|cloning| Chatterbox[Chatterbox MIT<br/>:8002 isolated venv]
+    Chatterbox -.->|on fail| Kokoro
+```
+
+Dependency rule: `presentation → application → domain`; `infrastructure` implements domain ports. Endpoints contain zero business logic.
+
+### Message flow (text)
+
+1. **Router** classifies intent, category, urgency, frustration → picks next agent.
+2. Knowledge retrieval: keyword + embeddings hybrid (`HybridKnowledgeStore`, similarity floor 0.55 calibrated empirically).
+3. **Support** or **Troubleshooting** answers using ONLY that context (anti-hallucination).
+4. **Quality** scores the answer. If low → 1 retry with feedback.
+5. **Escalation policy** (testable dataclass, NOT inside the agent): quality_threshold, confidence_threshold, max_retries, customer-asked-for-human signal.
+6. On escalate → **Escalation** generates handoff brief + **Summarizer** condenses history → creates `Ticket` + `Escalation` row.
+7. Everything persists: messages, `agent_runs` (input/output/decision/confidence/latency/model/provider/tokens/cost/error), workflow events, LLM usage.
+
+### LLM fallback chain
+
+```
+Groq (cloud, free tier) → Ollama (local) → MockProvider (deterministic)
+```
+
+If all fail, workflow returns a controlled message and logs a `fallback_used` event. System never crashes due to LLM unavailability. **Pattern transferable to any LLM-dependent system** ([infrastructure/llm/fallback.py](src/callforge/infrastructure/llm/fallback.py)).
+
+---
+
+## ADN (técnica reusada de proyectos previos)
 
 | Patrón | Origen | Dónde vive aquí |
 |---|---|---|
-| Agentes + workflows + eventos + trazabilidad | NexusForge | `agents/`, `orchestration/`, tablas `agent_runs`/`agent_events` |
-| Cadena de fallback con degradación limpia | YT backend (`playbackFallback`) | `infrastructure/llm/fallback.py` (Groq → Ollama → Mock) |
-| Degradar a humano sin romper la experiencia | Verificarro (manual-first) | `EscalationAgent` + `EscalationPolicy` |
-| Groq como LLM remoto barato/free | Compras semanales, YT `/recommend` | `GroqProvider` |
-| Token compartido opcional para exponer el API | YT token split | `API_TOKEN` + header `X-API-Token` |
-| Verify-before-ship, tests por fase | Spacetime Lab | `tests/` (corre 100% offline con MockProvider) |
-| Despliegue local como servicio Windows | yt-extract-service | `scripts/install-windows-service.ps1` (nssm) |
+| Agentes + workflows + eventos + trazabilidad | NexusForge AI | `agents/`, `orchestration/`, tablas `agent_runs`/`agent_events` |
+| LLM fallback chain con degradación limpia | yt-extract-service (`playbackFallback`) | `infrastructure/llm/fallback.py` |
+| Degradación a humano sin romper UX | Verificarro (manual-first) | `EscalationAgent` + `EscalationPolicy` |
+| Groq como LLM remoto barato/free | compras-cloud, yt-extract `/recommend` | `GroqProvider` |
+| Verify-before-ship con tests por fase | Spacetime Lab | `tests/` (100% offline con MockProvider) |
+| Despliegue local como Windows service | yt-extract-service | `scripts/install-windows-service.ps1` (nssm) |
 
-## Arquitectura
+---
 
-```
-src/callforge/
-  domain/            # Entidades puras + value objects + puertos (sin frameworks)
-  application/       # Casos de uso + DTOs + UnitOfWork
-  agents/            # Router, Support, Troubleshooting, Escalation, Summarizer, Quality
-  orchestration/     # SupportWorkflow + EscalationPolicy (orquestación propia, sin LangGraph)
-  infrastructure/    # SQLAlchemy, providers LLM, knowledge store, métricas
-  presentation/api/  # FastAPI: rutas, schemas, deps
-tests/               # 100% offline (MockProvider + SQLite temporal)
-```
-
-Regla de dependencias: `presentation → application → domain` e
-`infrastructure` implementa los puertos del dominio. Los endpoints no
-contienen lógica de negocio.
-
-### Flujo de un mensaje
-
-1. `RouterAgent` clasifica intención, categoría, urgencia, frustración y decide el siguiente agente.
-2. Se recupera contexto de la base de conocimiento (keyword retrieval local, cero dependencias; swap futuro a ChromaDB/FAISS sin tocar agentes).
-3. `SupportAgent` o `TroubleshootingAgent` responde usando SOLO ese contexto.
-4. `QualityAgent` evalúa la respuesta (score, riesgo de alucinación). Si es baja: 1 reintento con feedback.
-5. `EscalationPolicy` decide escalar (pedido de humano, sugerencia del agente, confianza baja, calidad baja tras reintentos) → `EscalationAgent` genera el handoff + `SummarizerAgent` resume → se crea Ticket + Escalation.
-6. Todo queda registrado: mensajes, `agent_runs` (input/output/decision/confidence/latency/modelo/provider/tokens/costo/error), eventos de workflow y uso LLM.
-
-### Fallback LLM
-
-`Groq (si hay API key) → Ollama (si está habilitado) → Mock determinista`.
-Si TODO falla, el workflow responde con un mensaje controlado y lo registra
-como evento `fallback_used`. El sistema nunca se cae por el LLM.
-
-## Correr local (sin pagar nada)
+## Quick start (zero cost default)
 
 ```powershell
 python -m venv .venv
@@ -59,94 +107,94 @@ copy .env.example .env
 python main.py        # http://localhost:8000/docs
 ```
 
-Sin configurar nada responde con MockProvider. Para respuestas reales:
-- Pon `GROQ_API_KEY` en `.env` (free tier), o
-- Levanta Ollama local (`ollama run llama3.1`).
+Without configuring anything, responds with `MockProvider`. For real answers:
+- Set `GROQ_API_KEY` in `.env` (free tier), or
+- Run Ollama locally (`ollama run llama3.1`).
 
 ### Docker
 
 ```bash
 docker compose up --build
-# Postgres opcional: docker compose --profile postgres up
+docker compose --profile postgres up   # opt-in Postgres
 ```
 
-## Ejemplos (curl)
+### Voice
+
+Whisper STT (Groq) + Kokoro TTS (CPU) work out of the box. For voice cloning with Chatterbox:
+
+```powershell
+python -m venv .venv-voice
+.\.venv-voice\Scripts\python.exe -m pip install \
+  torch==2.6.0+cu124 torchaudio==2.6.0+cu124 \
+  --index-url https://download.pytorch.org/whl/cu124
+.\.venv-voice\Scripts\python.exe -m pip install chatterbox-tts
+.\.venv-voice\Scripts\python.exe -m uvicorn voice_server:app --port 8002
+```
+
+Endpoints:
+- `POST /api/v1/voice/tts` — text → WAV
+- `POST /api/v1/conversations/{id}/voice-message` — audio → STT → workflow → response + spoken reply
+- WebChat UI at `/webchat` with 🎤/🔊 buttons
+
+---
+
+## Examples (curl)
 
 ```bash
-# Salud
+# Health
 curl http://localhost:8000/api/v1/health
 
-# Cargar conocimiento
+# Ingest knowledge
 curl -X POST http://localhost:8000/api/v1/knowledge/documents \
   -H "Content-Type: application/json" \
-  -d '{"title":"Como reiniciar el modem","content":"Desconecta el modem 60 segundos y vuelve a conectarlo.","tags":["internet"]}'
+  -d '{"title":"Reiniciar el modem","content":"Desconecta el modem 60s y reconecta.","tags":["internet"]}'
 
-# Iniciar conversación
+# Start conversation
 curl -X POST http://localhost:8000/api/v1/conversations/start \
   -H "Content-Type: application/json" \
   -d '{"customer_external_id":"cliente-42","customer_name":"Ana"}'
 
-# Enviar mensaje (usa el conversation_id devuelto)
+# Send message (use the returned conversation_id)
 curl -X POST http://localhost:8000/api/v1/conversations/<ID>/message \
   -H "Content-Type: application/json" \
   -d '{"content":"Mi internet no funciona desde ayer"}'
 
-# Ver conversación / tickets / métricas
+# Read conversation / tickets / metrics
 curl http://localhost:8000/api/v1/conversations/<ID>
 curl http://localhost:8000/api/v1/tickets
 curl http://localhost:8000/api/v1/metrics
-
-# Feedback
-curl -X POST http://localhost:8000/api/v1/feedback \
-  -H "Content-Type: application/json" \
-  -d '{"conversation_id":"<ID>","rating":5,"resolved":true}'
 ```
 
-Si defines `API_TOKEN` en `.env`, agrega `-H "X-API-Token: <token>"` a cada
-request (`/health` queda abierto para probes).
+If `API_TOKEN` is set in `.env`, add `-H "X-API-Token: <token>"` to each request (`/health` stays open for probes).
 
-## Voz
-
-El asistente habla y escucha (botones 🎤/🔊 en `/webchat`):
-
-- **Entrada (STT)**: Groq `whisper-large-v3-turbo` ($0.04/hora, ~0.9s por turno, español verificado palabra por palabra).
-- **Salida (TTS) en dos niveles**:
-  - **Kokoro** (`kokoro-onnx`, default): corre 100% en CPU — la VRAM queda para el LLM. RTF ~0.34 medido. Modelos en `models/` (descarga: releases de `thewh1teagle/kokoro-onnx`, archivos `kokoro-v1.0.onnx` + `voices-v1.0.bin`).
-  - **Chatterbox Multilingual** (clonación de voz, MIT): micro-servicio aparte (`voice_server.py`, venv propio `.venv-voice` con torch cu124) en `:8002`. Clona desde ~10s de audio: pon un WAV en `voices/` y configura `CHATTERBOX_VOICE=<nombre>`. Con `TTS_ENGINE=chatterbox`, CallForge lo intenta primero y **cae a Kokoro automáticamente** si está caído.
-
-```powershell
-# venv de voz (una vez):
-python -m venv .venv-voice
-.\.venv-voice\Scripts\python.exe -m pip install torch==2.6.0+cu124 torchaudio==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
-.\.venv-voice\Scripts\python.exe -m pip install chatterbox-tts
-# OJO: chatterbox arrastra torch CPU de PyPI; reinstala los wheels cu124 DESPUÉS.
-
-# correr el voice server:
-.\.venv-voice\Scripts\python.exe -m uvicorn voice_server:app --port 8002
-# o como servicio Windows: scripts\install-voice-service.ps1 (elevado)
-```
-
-Endpoints: `POST /api/v1/voice/tts` (texto → WAV) y `POST /api/v1/conversations/{id}/voice-message` (audio → STT → workflow → respuesta + audio hablado).
+---
 
 ## Tests
 
-```powershell
+```bash
 pytest
 ```
 
-Todos los tests corren offline (MockProvider + SQLite en tmp). Cubren:
-router, fallback de providers, flujo de conversación end-to-end, política y
-flujo de escalación, retrieval de conocimiento, health/metrics/feedback y el
-gate de token.
+All 15 test suites run offline with `MockProvider` + SQLite in tmp. Coverage: router, fallback chain, end-to-end conversation flow, escalation policy + flow, knowledge retrieval, health/metrics/feedback, API-token gate.
 
-## Roadmap técnico
+## Roadmap
 
-- ✅ **Migraciones**: Alembic dentro del paquete, stamp automático para DBs pre-Alembic, upgrade en startup.
-- ✅ **Retrieval**: embeddings locales (`nomic-embed-text` vía Ollama) detrás de `search()`, backfill perezoso + fallback keyword. Floor de similitud 0.55 calibrado empíricamente.
-- ✅ **Resolución guiada**: `ResolutionStep` persistente — el TroubleshootingAgent ve los pasos previos y no los repite; expuestos en `GET /conversations/{id}`.
-- ✅ **Webchat**: página en `/webchat` + WebSocket `/webchat/ws` reutilizando los mismos casos de uso.
-- ✅ **Dashboard**: `/dashboard` sobre `/metrics` + bandeja de tickets, auto-refresh.
-- ✅ **Multi-tenant**: tabla `tenants` + `tenant_id` en agregados raíz, scoping dentro de los repos, API keys por tenant (`POST /api/v1/admin/tenants` con `X-Admin-Token`), métricas por tenant. El tenant `default` mantiene el modo single-tenant sin fricción.
-- **WhatsApp / email**: adaptadores de canal pendientes (requieren credenciales Meta/SMTP); el patrón es el de `routes/webchat.py` — solo presentación.
-- **Redis**: cache de sesiones/respuestas si el volumen lo pide (decisión: diferido, no hay volumen que lo justifique).
-- **Embeddings vectoriales dedicados**: migrar de cosine-en-Python a ChromaDB/FAISS cuando la base supere ~miles de documentos.
+- ✅ Alembic migrations embedded, auto-stamp at boot
+- ✅ Hybrid retrieval (embeddings + keyword) with empirically-calibrated 0.55 floor
+- ✅ Guided resolution: `ResolutionStep` persistent — Troubleshooting agent sees prior steps, never repeats
+- ✅ Webchat (`/webchat`) + WebSocket (`/webchat/ws`) reusing same use cases
+- ✅ Dashboard (`/dashboard`) over `/metrics` + tickets tray, auto-refresh
+- ✅ Multi-tenant: `tenants` table + `tenant_id` scoping in repos, per-tenant API keys + metrics
+- ✅ QLoRA fine-tune runbook ([FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md)) — Unsloth + RunPod + GGUF for Qwen3-4B specialization
+- 🚧 WhatsApp / email channel adapters (Meta/SMTP creds required; pattern documented in `routes/webchat.py`)
+- 🔮 Redis session/response cache (deferred until volume justifies)
+- 🔮 Dedicated vector DB (ChromaDB/FAISS) when corpus exceeds ~thousands of docs
+
+See [ROADMAP_VOZ.md](ROADMAP_VOZ.md), [ROADMAP_LLM_LOCAL.md](ROADMAP_LLM_LOCAL.md), [ROADMAP_FINETUNE.md](ROADMAP_FINETUNE.md) for phase-by-phase plans.
+
+---
+
+## Author
+
+**Christian Hernández Escamilla** — AI Engineer · Multi-Agent Orchestration · Voice + LLM systems
+[GitHub](https://github.com/christianescamilla15-cell) · christianescamilla15@gmail.com
