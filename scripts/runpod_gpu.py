@@ -15,7 +15,7 @@ Setup (one time):
 Usage:
   python scripts/runpod_gpu.py start                  # 30B-A3B on an A6000, then wires .env
   python scripts/runpod_gpu.py start --model llama3.3:70b --gpu "NVIDIA RTX A6000" --disk 70
-  python scripts/runpod_gpu.py stop                   # stop billing (container wiped unless --volume was used)
+  python scripts/runpod_gpu.py stop                   # stop billing (wiped unless --volume was used)
   python scripts/runpod_gpu.py terminate              # destroy the pod
   python scripts/runpod_gpu.py status
 

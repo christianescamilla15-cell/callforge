@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from callforge.domain.value_objects import (
@@ -24,7 +24,7 @@ def new_id() -> str:
 
 
 def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 DEFAULT_TENANT_ID = "default"

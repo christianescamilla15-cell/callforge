@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import re
+from datetime import UTC
 
 from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from fastapi.responses import Response
@@ -281,12 +282,12 @@ async def voice_message(
     # references and QA). Best-effort, never blocks the turn.
     if settings.voice_inbox_enabled:
         try:
-            from datetime import datetime, timezone
+            from datetime import datetime
             from pathlib import Path
 
             inbox = Path(settings.voice_inbox_dir)
             inbox.mkdir(parents=True, exist_ok=True)
-            stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+            stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
             suffix = Path(file.filename or "audio.webm").suffix or ".webm"
             (inbox / f"{stamp}-{conversation_id[:8]}{suffix}").write_bytes(audio)
         except OSError:
@@ -303,9 +304,9 @@ async def voice_message(
             SendMessageInput(conversation_id=conversation_id, content=transcript)
         )
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     except ConversationClosedError:
-        raise HTTPException(status_code=409, detail="Conversation is closed")
+        raise HTTPException(status_code=409, detail="Conversation is closed") from None
 
     audio_b64 = None
     remaining: list[str] = []

@@ -62,7 +62,10 @@ def _store_with_docs() -> KeywordKnowledgeStore:
     store.add(
         KnowledgeDocument(
             title="Como reiniciar el modem",
-            content="Desconecta el modem 60 segundos, vuelve a conectarlo y espera a que las luces queden fijas.",
+            content=(
+                "Desconecta el modem 60 segundos, vuelve a conectarlo y espera a que "
+                "las luces queden fijas."
+            ),
             tags=["internet", "modem"],
         )
     )

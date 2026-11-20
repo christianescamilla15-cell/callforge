@@ -2,7 +2,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from callforge.presentation.api.app import create_app
-
 from tests.conftest import make_test_settings
 
 ADMIN = {"X-Admin-Token": "admin-secret"}

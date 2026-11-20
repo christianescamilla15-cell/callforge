@@ -101,11 +101,14 @@ async def run(n: int, out: Path) -> None:
                 # Quality gates: label-correct, has customer+reply, asks when required,
                 # and NOT the templated opener (the tone crack).
                 if not customer or not reply or ex.get("decision", "").lower() != c["d"]:
-                    dropped += 1; continue
+                    dropped += 1
+                    continue
                 if c.get("ask") and "?" not in reply:
-                    dropped += 1; continue
+                    dropped += 1
+                    continue
                 if reply.lower().startswith(("entiendo", "lamento", "comprendo")):
-                    dropped += 1; continue
+                    dropped += 1
+                    continue
                 user = f"POLÍTICA DE REEMBOLSOS:\n{POLICY}\n\nCLIENTE:\n{customer}"
                 record = {"messages": [
                     {"role": "system", "content": REFUND_AGENT_SYSTEM},

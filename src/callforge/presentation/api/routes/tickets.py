@@ -56,7 +56,7 @@ def update_ticket(
     try:
         status = TicketStatus(body.status)
     except ValueError:
-        raise HTTPException(status_code=422, detail=f"Invalid status '{body.status}'")
+        raise HTTPException(status_code=422, detail=f"Invalid status '{body.status}'") from None
     ticket = ListTickets(uow).update_status(ticket_id, status)
     if ticket is None:
         raise HTTPException(status_code=404, detail="Ticket not found")

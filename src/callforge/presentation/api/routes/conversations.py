@@ -67,9 +67,9 @@ async def send_message(
             SendMessageInput(conversation_id=conversation_id, content=body.content)
         )
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     except ConversationClosedError:
-        raise HTTPException(status_code=409, detail="Conversation is closed")
+        raise HTTPException(status_code=409, detail="Conversation is closed") from None
     return SendMessageResponse(**result.__dict__)
 
 
@@ -108,7 +108,7 @@ def close_conversation(
     try:
         status = CloseConversation(uow).execute(conversation_id, resolved=body.resolved)
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     return {"conversation_id": conversation_id, "status": status}
 
 
@@ -119,5 +119,5 @@ def get_conversation(
     try:
         result = GetConversation(uow).execute(conversation_id)
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     return ConversationDetailResponse(**result.__dict__)

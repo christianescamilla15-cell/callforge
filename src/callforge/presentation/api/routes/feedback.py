@@ -25,5 +25,5 @@ def submit_feedback(
             resolved=body.resolved,
         )
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     return FeedbackResponse(id=feedback_id)
