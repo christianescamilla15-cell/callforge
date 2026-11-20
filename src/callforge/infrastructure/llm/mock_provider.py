@@ -50,14 +50,6 @@ class MockProvider(LLMProvider):
         )
 
     def _respond(self, system: str, user_text: str) -> str:
-        if "memoria de un acompañante" in system:
-            return "NADA"  # deterministic: extract nothing in tests
-        if "CompanionAgent" in system:
-            # Companion mode is plain text, not JSON.
-            return (
-                "Aquí estoy contigo. Cuéntame, ¿qué traes en la cabeza hoy? "
-                "Te escucho sin prisa."
-            )
         if "RouterAgent" in system:
             return self._route(user_text)
         if "TroubleshootingAgent" in system:

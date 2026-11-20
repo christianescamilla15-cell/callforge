@@ -148,17 +148,6 @@ class KnowledgeDocumentModel(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
-class CompanionMemoryModel(Base):
-    __tablename__ = "companion_memories"
-
-    id: Mapped[str] = mapped_column(String(32), primary_key=True)
-    tenant_id: Mapped[str] = mapped_column(String(32), index=True)
-    content: Mapped[str] = mapped_column(Text)
-    embedding: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON array
-    source_conversation_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-
-
 class FeedbackModel(Base):
     __tablename__ = "feedback"
 

@@ -10,9 +10,6 @@ from __future__ import annotations
 
 import json
 import logging
-import re
-import time
-from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 
 from callforge.agents.base import AgentContext, AgentResult, BaseAgent
@@ -37,33 +34,16 @@ from callforge.domain.value_objects import (
     Urgency,
 )
 from callforge.infrastructure.knowledge.store import KeywordKnowledgeStore
+from callforge.infrastructure.voice.phrases import (
+    CONTROLLED_FALLBACK as _CONTROLLED_FALLBACK_REPLY,
+)
 from callforge.orchestration.policies import EscalationPolicy
 
 logger = logging.getLogger(__name__)
 
-from callforge.infrastructure.voice.phrases import (  # noqa: E402
-    CONTROLLED_FALLBACK as _CONTROLLED_FALLBACK_REPLY,
-)
-
 _VALID_INTENTS = {i.value for i in Intent}
 _VALID_URGENCIES = {u.value for u in Urgency}
 _VALID_PRIORITIES = {p.value for p in TicketPriority}
-
-# A complete sentence is text ending in . ! ? … (+ optional closing quote)
-# followed by whitespace — so we only emit once the sentence is surely done.
-_STREAM_SENTENCE = re.compile(r'(.+?[.!?…]+["\')\]]?)\s+', re.S)
-# First-clause flush for time-to-first-audio: a clause boundary (comma / colon /
-# semicolon / dash) only after enough characters to be worth speaking.
-_STREAM_CLAUSE = re.compile(r".{24,}?[,:;](?:\s|$)|.{24,}?\s[—–-]\s", re.S)
-
-# Abliterated models sometimes ramble past their turn into a fabricated
-# back-and-forth dialogue, separated by blank lines. A companion reply is one
-# block, so cut at the first blank line to drop any hallucinated turns.
-_DIALOGUE_BREAK = re.compile(r"\n\s*\n")
-
-
-def _first_block(text: str) -> str:
-    return _DIALOGUE_BREAK.split(text.strip(), maxsplit=1)[0].strip()
 
 
 @dataclass
@@ -96,7 +76,6 @@ class SupportWorkflow:
         quality: QualityAgent,
         policy: EscalationPolicy,
         knowledge_top_k: int = 3,
-        companion_mode: bool = False,
     ) -> None:
         self._router = router
         self._support = support
@@ -106,213 +85,6 @@ class SupportWorkflow:
         self._quality = quality
         self._policy = policy
         self._knowledge_top_k = knowledge_top_k
-        self._companion_mode = companion_mode
-
-    @property
-    def companion_mode(self) -> bool:
-        return self._companion_mode
-
-    def _companion_messages(
-        self, user_message: str, history: list[dict[str, str]]
-    ) -> list[dict[str, str]]:
-        # Last ~12 turns is plenty of context and keeps prompt-eval fast
-        # (long-term continuity comes from persistent memory, not raw history).
-        messages = [
-            {"role": "user" if h["role"] == "customer" else "assistant", "content": h["content"]}
-            for h in history[-12:]
-        ]
-        messages.append({"role": "user", "content": user_message})
-        return messages
-
-    async def extract_memories(
-        self, history: list[dict[str, str]], known: list[str] | None = None
-    ) -> list[str]:
-        """Distill durable facts about the person from recent conversation
-        (one LLM call). When `known` is given, the model is told what it already
-        remembers so it returns only what's NEW or changed. Returns [] on
-        failure or when there's nothing new."""
-        from callforge.agents.prompts import MEMORY_EXTRACT_SYSTEM
-        from callforge.infrastructure.llm.base import LLMUnavailableError
-
-        transcript = "\n".join(
-            f"{'persona' if h['role'] == 'customer' else 'tu'}: {h['content']}"
-            for h in history[-16:]
-        )
-        user_content = transcript
-        if known:
-            known_block = "\n".join(f"- {k}" for k in known)
-            user_content = (
-                f"YA RECUERDAS esto sobre la persona (NO lo repitas, solo agrega "
-                f"lo nuevo o lo que cambió):\n{known_block}\n\n"
-                f"CONVERSACIÓN RECIENTE:\n{transcript}"
-            )
-        try:
-            result = await self._support._llm.complete(
-                MEMORY_EXTRACT_SYSTEM,
-                [{"role": "user", "content": user_content}],
-                json_mode=False,
-            )
-        except LLMUnavailableError:
-            return []
-        text = result.text.strip()
-        if not text or text.upper().startswith("NADA"):
-            return []
-        return [line.strip("-• ").strip() for line in text.splitlines() if line.strip()]
-
-    async def opening_line(
-        self, memories: list[str], persona: str | None = None
-    ) -> str:
-        """Proactive contextual greeting that reopens the relationship using
-        memory (one LLM call). Empty memories or any failure -> '' so the caller
-        falls back to a generic greeting."""
-        from callforge.agents.prompts import companion_system
-        from callforge.infrastructure.llm.base import LLMUnavailableError
-
-        if not memories:
-            return ""
-        system = companion_system(memories, persona)
-        prompt = (
-            "Reanuda la conversación TÚ, de forma proactiva: salúdame cálido y "
-            "breve (1-2 frases) y retoma con naturalidad algo que recuerdas de mí "
-            "(un proyecto, un gusto, cómo venía). NO preguntes '¿en qué te ayudo?'; "
-            "háblame como un amigo que retoma el hilo. Un solo mensaje tuyo."
-        )
-        try:
-            result = await self._support._llm.complete(
-                system, [{"role": "user", "content": prompt}], json_mode=False
-            )
-        except LLMUnavailableError:
-            return ""
-        return _first_block(result.text).strip()
-
-    async def stream_companion(
-        self,
-        conversation_id: str,
-        user_message: str,
-        history: list[dict[str, str]],
-        out: dict,
-        memories: list[str] | None = None,
-        persona: str | None = None,
-    ) -> AsyncIterator[str]:
-        """Stream the companion's reply sentence by sentence as the model
-        generates it (low time-to-first-audio). Populates `out` with the full
-        reply and the AgentRun once the stream finishes."""
-        from callforge.agents.prompts import companion_system
-        from callforge.infrastructure.llm.base import LLMUnavailableError
-
-        system = companion_system(memories, persona)
-        messages = self._companion_messages(user_message, history)
-        llm = self._support._llm
-        started = time.perf_counter()
-        buffer, full = "", []
-        cut = False
-        first_emitted = False
-        try:
-            async for piece in llm.stream(system, messages):
-                full.append(piece)
-                buffer += piece
-                # Stop at a blank line: everything after is a hallucinated turn.
-                if _DIALOGUE_BREAK.search(buffer):
-                    buffer = _DIALOGUE_BREAK.split(buffer, maxsplit=1)[0]
-                    cut = True
-                last = 0
-                for m in _STREAM_SENTENCE.finditer(buffer):
-                    sentence = m.group(1).strip()
-                    last = m.end()
-                    if sentence:
-                        first_emitted = True
-                        yield sentence
-                buffer = buffer[last:]
-                # Time-to-first-audio: if the model is still building a long
-                # opening sentence (no terminator yet), flush the first clause
-                # at a comma/colon so the voice can start sooner. Only the very
-                # first unit — the rest stays sentence-level to avoid choppiness.
-                if not first_emitted and not cut:
-                    cm = _STREAM_CLAUSE.search(buffer)
-                    if cm:
-                        clause = buffer[: cm.end()].strip()
-                        if clause:
-                            first_emitted = True
-                            yield clause
-                            buffer = buffer[cm.end():]
-                if cut:
-                    break
-            tail = buffer.strip()
-            if tail:
-                yield tail
-        except LLMUnavailableError as exc:
-            out["reply"] = _CONTROLLED_FALLBACK_REPLY
-            out["run"] = AgentRun(
-                conversation_id=conversation_id, agent_name=AgentName.COMPANION,
-                input_text=user_message, output_text="", decision="error",
-                confidence=0.0, latency_ms=int((time.perf_counter() - started) * 1000),
-                error=str(exc),
-            )
-            yield _CONTROLLED_FALLBACK_REPLY
-            return
-
-        reply = _first_block("".join(full)) or _CONTROLLED_FALLBACK_REPLY
-        out["reply"] = reply
-        out["run"] = AgentRun(
-            conversation_id=conversation_id, agent_name=AgentName.COMPANION,
-            input_text=user_message, output_text=reply, decision="companion",
-            confidence=1.0, latency_ms=int((time.perf_counter() - started) * 1000),
-            model_used=self._support._llm.name, provider="stream",
-        )
-
-    async def _companion_reply(
-        self,
-        conversation_id: str,
-        user_message: str,
-        history: list[dict[str, str]],
-        memories: list[str] | None = None,
-        persona: str | None = None,
-    ) -> WorkflowOutcome:
-        """Single warm conversational turn — no routing, no JSON, no pipeline.
-        The right shape for free conversation and the uncensored local model."""
-        from callforge.agents.prompts import companion_system
-        from callforge.infrastructure.llm.base import LLMUnavailableError
-
-        system = companion_system(memories, persona)
-        messages = [
-            {"role": "user" if h["role"] == "customer" else "assistant", "content": h["content"]}
-            for h in history[-20:]
-        ]
-        messages.append({"role": "user", "content": user_message})
-
-        started = time.perf_counter()
-        llm = self._support._llm  # shared provider chain
-        try:
-            result = await llm.complete(system, messages, json_mode=False)
-        except LLMUnavailableError as exc:
-            run = AgentRun(
-                conversation_id=conversation_id, agent_name=AgentName.COMPANION,
-                input_text=user_message, output_text="", decision="error",
-                confidence=0.0, latency_ms=int((time.perf_counter() - started) * 1000),
-                error=str(exc),
-            )
-            return WorkflowOutcome(
-                reply=_CONTROLLED_FALLBACK_REPLY, agent_used=AgentName.COMPANION,
-                intent=Intent.OTHER, category="companion", urgency=Urgency.LOW,
-                confidence=0.0, quality_score=None, escalated=False, ticket=None,
-                escalation=None, summary=None, agent_runs=[run], events=[],
-                used_controlled_fallback=True,
-            )
-
-        reply = _first_block(result.text) or _CONTROLLED_FALLBACK_REPLY
-        run = AgentRun(
-            conversation_id=conversation_id, agent_name=AgentName.COMPANION,
-            input_text=user_message, output_text=reply, decision="companion",
-            confidence=1.0, latency_ms=result.latency_ms, model_used=result.model,
-            provider=result.provider, tokens_in=result.tokens_in,
-            tokens_out=result.tokens_out, estimated_cost=result.estimated_cost,
-        )
-        return WorkflowOutcome(
-            reply=reply, agent_used=AgentName.COMPANION, intent=Intent.OTHER,
-            category="companion", urgency=Urgency.LOW, confidence=1.0,
-            quality_score=None, escalated=False, ticket=None, escalation=None,
-            summary=None, agent_runs=[run], events=[],
-        )
 
     async def handle_message(
         self,
@@ -321,13 +93,7 @@ class SupportWorkflow:
         history: list[dict[str, str]],
         knowledge_store: KeywordKnowledgeStore,
         resolution_steps: list[ResolutionStep] | None = None,
-        memories: list[str] | None = None,
-        persona: str | None = None,
     ) -> WorkflowOutcome:
-        if self._companion_mode:
-            return await self._companion_reply(
-                conversation_id, user_message, history, memories, persona
-            )
         ctx = AgentContext(
             conversation_id=conversation_id,
             user_message=user_message,

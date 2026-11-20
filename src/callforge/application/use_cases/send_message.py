@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
-
 from callforge.application.dtos import (
     ConversationClosedError,
     ConversationNotFoundError,
@@ -11,19 +9,12 @@ from callforge.application.dtos import (
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.domain.entities import LLMUsage, Message, utcnow
 from callforge.domain.value_objects import (
-    AgentName,
     ConversationStatus,
-    Intent,
     MessageRole,
     ResolutionStepStatus,
-    Urgency,
 )
 from callforge.infrastructure.knowledge.store import KeywordKnowledgeStore
 from callforge.orchestration.workflow import SupportWorkflow
-
-
-_MEMORY_EXTRACT_EVERY = 6   # run fact extraction every N customer messages
-_MEMORY_RECALL_K = 5
 
 
 class SendMessage:
@@ -32,94 +23,10 @@ class SendMessage:
         uow: UnitOfWork,
         workflow: SupportWorkflow,
         knowledge_store: KeywordKnowledgeStore | None = None,
-        memory_store=None,
     ) -> None:
         self._uow = uow
         self._workflow = workflow
         self._knowledge_store = knowledge_store
-        self._memory_store = memory_store
-
-    def _recall(self, query: str) -> list[str] | None:
-        if self._memory_store is None or not self._workflow.companion_mode:
-            return None
-        try:
-            return self._memory_store.recall(query, k=_MEMORY_RECALL_K)
-        except Exception:  # noqa: BLE001 - memory is best-effort
-            return None
-
-    async def _maybe_remember(
-        self, conversation_id: str, prior_history: list[dict], user_msg: str, reply: str
-    ) -> None:
-        """Every Nth customer turn, distill durable facts and store them."""
-        if self._memory_store is None or not self._workflow.companion_mode:
-            return
-        customer_turns = sum(1 for h in prior_history if h["role"] == "customer") + 1
-        if customer_turns % _MEMORY_EXTRACT_EVERY != 0:
-            return
-        recent = prior_history + [
-            {"role": "customer", "content": user_msg},
-            {"role": "assistant", "content": reply},
-        ]
-        try:
-            known = None
-            if hasattr(self._memory_store, "recent_contents"):
-                known = self._memory_store.recent_contents()
-            facts = await self._workflow.extract_memories(recent, known=known)
-            if facts:
-                self._memory_store.remember(facts, conversation_id)
-                self._uow.commit()
-        except Exception:  # noqa: BLE001 - never break the turn on memory
-            self._uow.rollback()
-
-    async def stream(self, data: SendMessageInput) -> AsyncIterator[str]:
-        """Stream a companion reply sentence by sentence, persisting the turn
-        when the stream finishes. Companion mode only (no routing/escalation)."""
-        conversation = self._uow.conversations.get(data.conversation_id)
-        if conversation is None:
-            raise ConversationNotFoundError(data.conversation_id)
-        if conversation.status == ConversationStatus.CLOSED:
-            raise ConversationClosedError(data.conversation_id)
-
-        history = [
-            {"role": m.role.value, "content": m.content}
-            for m in self._uow.conversations.list_messages(conversation.id)
-        ]
-        self._uow.conversations.add_message(
-            Message(
-                conversation_id=conversation.id,
-                role=MessageRole.CUSTOMER,
-                content=data.content,
-            )
-        )
-
-        out: dict = {}
-        memories = self._recall(data.content)
-        async for sentence in self._workflow.stream_companion(
-            conversation.id, data.content, history, out, memories, data.persona
-        ):
-            yield sentence
-
-        reply = out.get("reply", "")
-        run = out.get("run")
-        self._uow.conversations.add_message(
-            Message(
-                conversation_id=conversation.id,
-                role=MessageRole.ASSISTANT,
-                content=reply,
-                agent_name=AgentName.COMPANION,
-                confidence=1.0,
-            )
-        )
-        if run is not None:
-            self._uow.telemetry.add_run(run)
-        conversation.intent = Intent.OTHER
-        conversation.category = "companion"
-        conversation.urgency = Urgency.LOW
-        conversation.updated_at = utcnow()
-        self._uow.conversations.update(conversation)
-        self._uow.commit()
-
-        await self._maybe_remember(conversation.id, history, data.content, reply)
 
     async def execute(self, data: SendMessageInput) -> SendMessageOutput:
         conversation = self._uow.conversations.get(data.conversation_id)
@@ -185,15 +92,12 @@ class SendMessage:
         knowledge_store = self._knowledge_store or KeywordKnowledgeStore(
             self._uow.knowledge
         )
-        memories = self._recall(data.content)
         outcome = await self._workflow.handle_message(
             conversation_id=conversation.id,
             user_message=data.content,
             history=history,
             knowledge_store=knowledge_store,
             resolution_steps=resolution_steps,
-            memories=memories,
-            persona=data.persona,
         )
 
         # Persist assistant reply
@@ -246,8 +150,6 @@ class SendMessage:
         self._uow.conversations.update(conversation)
 
         self._uow.commit()
-
-        await self._maybe_remember(conversation.id, history, data.content, outcome.reply)
 
         return SendMessageOutput(
             conversation_id=conversation.id,

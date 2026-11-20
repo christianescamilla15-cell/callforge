@@ -20,7 +20,6 @@ from callforge.infrastructure.knowledge.store import HybridKnowledgeStore
 from callforge.orchestration.workflow import SupportWorkflow
 from callforge.presentation.api.deps import (
     get_knowledge_store,
-    get_memory_store,
     get_uow,
     get_workflow,
     require_token,
@@ -62,10 +61,9 @@ async def send_message(
     uow: UnitOfWork = Depends(get_uow),
     workflow: SupportWorkflow = Depends(get_workflow),
     knowledge_store: HybridKnowledgeStore = Depends(get_knowledge_store),
-    memory_store=Depends(get_memory_store),
 ) -> SendMessageResponse:
     try:
-        result = await SendMessage(uow, workflow, knowledge_store, memory_store).execute(
+        result = await SendMessage(uow, workflow, knowledge_store).execute(
             SendMessageInput(conversation_id=conversation_id, content=body.content)
         )
     except ConversationNotFoundError:

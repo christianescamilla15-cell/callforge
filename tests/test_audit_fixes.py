@@ -1,75 +1,10 @@
 """Tests for the audit-driven fixes: escalation guard, management
 endpoints, pagination, and WS conversation resume."""
+from callforge.infrastructure.voice.phrases import ESCALATED_NOTICE
 
 
 def _start(client) -> str:
     return client.post("/api/v1/conversations/start", json={}).json()["conversation_id"]
-
-
-def test_first_block_drops_hallucinated_dialogue():
-    from callforge.orchestration.workflow import _first_block
-
-    hallucinated = (
-        "¿Qué te pasa? Aquí estoy para escucharte.\n\n"
-        "Estoy agobiado con el trabajo.\n\nSí, lo entiendo, ¿quieres hablar?"
-    )
-    assert _first_block(hallucinated) == "¿Qué te pasa? Aquí estoy para escucharte."
-    assert _first_block("Una sola frase limpia.") == "Una sola frase limpia."
-
-
-def test_companion_streaming_over_websocket(tmp_path):
-    from fastapi.testclient import TestClient
-
-    from callforge.presentation.api.app import create_app
-    from tests.conftest import make_test_settings
-
-    settings = make_test_settings(tmp_path)
-    settings.companion_mode = True
-    app = create_app(settings)
-    with TestClient(app) as client:
-        with client.websocket_connect("/webchat/ws") as ws:
-            ws.receive_json()  # session
-            ws.send_text("hola, cuentame algo")
-            # Mock has no real streaming -> at least one chunk, then done
-            chunks, done = [], None
-            for _ in range(10):
-                msg = ws.receive_json()
-                if msg["type"] == "reply_chunk":
-                    chunks.append(msg["text"])
-                elif msg["type"] == "reply_done":
-                    done = msg
-                    break
-            assert chunks
-            assert done is not None
-            assert done["reply"]
-            assert done["agent_used"] == "companion"
-
-
-def test_companion_mode_single_plain_turn(tmp_path):
-    from fastapi.testclient import TestClient
-
-    from callforge.presentation.api.app import create_app
-    from tests.conftest import make_test_settings
-
-    settings = make_test_settings(tmp_path)
-    settings.companion_mode = True
-    app = create_app(settings)
-    with TestClient(app) as client:
-        cid = client.post("/api/v1/conversations/start", json={}).json()[
-            "conversation_id"
-        ]
-        body = client.post(
-            f"/api/v1/conversations/{cid}/message",
-            json={"content": "Quiero hablar con un humano"},  # would escalate normally
-        ).json()
-        # Companion mode: no routing/escalation, just a warm plain reply.
-        assert body["agent_used"] == "companion"
-        assert body["escalated"] is False
-        assert body["ticket_id"] is None
-        assert body["reply"]
-        # One agent run (the single turn), no router/quality/escalation runs
-        detail = client.get(f"/api/v1/conversations/{cid}").json()
-        assert [m["role"] for m in detail["messages"]] == ["customer", "assistant"]
 
 
 def test_escalated_conversation_skips_bot_and_keeps_message(client):
@@ -87,8 +22,7 @@ def test_escalated_conversation_skips_bot_and_keeps_message(client):
     ).json()
     assert second["escalated"] is True
     assert second["agent_used"] == "escalation"
-    # companion persona: hands off to "una persona", not a support "humano"
-    assert "persona" in second["reply"].lower()
+    assert second["reply"] == ESCALATED_NOTICE  # fixed notice, not a bot answer
     # no new ticket, no re-run of the bot workflow
     assert len(client.get("/api/v1/tickets").json()) == tickets_before
 

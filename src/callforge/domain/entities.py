@@ -159,19 +159,6 @@ class KnowledgeDocument:
 
 
 @dataclass
-class CompanionMemory:
-    """A durable fact the companion remembers about the person, retrievable
-    across sessions by meaning (embedding)."""
-
-    content: str = ""
-    tenant_id: str = DEFAULT_TENANT_ID
-    embedding: list[float] | None = None
-    source_conversation_id: str | None = None
-    id: str = field(default_factory=new_id)
-    created_at: datetime = field(default_factory=utcnow)
-
-
-@dataclass
 class Feedback:
     conversation_id: str = ""
     rating: int = 0  # 1-5

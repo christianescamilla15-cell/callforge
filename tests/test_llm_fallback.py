@@ -43,7 +43,7 @@ def test_provider_stream_default_yields_full_text():
         return [
             piece
             async for piece in chain.stream(
-                "You are CompanionAgent.", [{"role": "user", "content": "hola"}]
+                "You are the SupportAgent.", [{"role": "user", "content": "hola"}]
             )
         ]
 
@@ -92,6 +92,6 @@ def test_remote_brain_down_falls_through_to_local():
         )
     )
     result = asyncio.run(
-        chain.complete("You are CompanionAgent.", [{"role": "user", "content": "hola"}])
+        chain.complete("You are the SupportAgent.", [{"role": "user", "content": "hola"}])
     )
     assert result.provider == "mock"  # remote dead -> falls through to mock

@@ -23,7 +23,6 @@ from callforge.orchestration.policies import EscalationPolicy
 from callforge.orchestration.workflow import SupportWorkflow
 from callforge.presentation.api.routes import (
     admin,
-    companion,
     conversations,
     feedback,
     knowledge,
@@ -53,7 +52,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         quality=QualityAgent(llm_chain),
         policy=EscalationPolicy.from_settings(settings),
         knowledge_top_k=settings.knowledge_top_k,
-        companion_mode=settings.companion_mode,
     )
 
     app = FastAPI(
@@ -139,7 +137,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(admin.router, prefix=api)
     app.include_router(voice.router, prefix=api)
     app.include_router(voice.conversation_router, prefix=api)
-    app.include_router(companion.router, prefix=api)
     app.include_router(webchat.router)  # page at /webchat, socket at /webchat/ws
     return app
 

@@ -22,7 +22,6 @@ class StartConversationOutput:
 class SendMessageInput:
     conversation_id: str
     content: str
-    persona: str | None = None  # active companion persona/mode (None = default)
 
 
 @dataclass

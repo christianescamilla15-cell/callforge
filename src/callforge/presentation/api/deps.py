@@ -87,12 +87,6 @@ def get_knowledge_store(
     )
 
 
-def get_memory_store(request: Request, uow: UnitOfWork = Depends(get_uow)):
-    from callforge.infrastructure.memory import MemoryStore
-
-    return MemoryStore(uow.memories, embedder=request.app.state.embedder)
-
-
 def require_admin(
     settings: Settings = Depends(get_settings_dep),
     x_admin_token: str | None = Header(default=None),
