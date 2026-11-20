@@ -2,7 +2,11 @@
 Kept as a Python string so it ships inside the wheel without package-data
 configuration. Replace with a real frontend later."""
 
-WEBCHAT_HTML = r"""<!doctype html>
+import json
+
+from callforge.infrastructure.voice.phrases import GREETING
+
+_WEBCHAT_TEMPLATE = r"""<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -66,7 +70,6 @@ let conversationId = null;
 let speakReplies = true;  // voz ON por defecto (el 1er clic/mensaje desbloquea el audio del navegador)
 let recorder = null;
 let chunks = [];
-let streamBubble = null;  // incremental bot bubble during streaming
 
 function add(text, cls, meta, audioB64) {
   const div = document.createElement("div");
@@ -150,14 +153,11 @@ async function playWav(arrayBuffer) {
   }
 }
 
-// A persona can pin its own voice (set via PERSONA_VOICES); the server sends it
-// in reply_done. Falls back to the voice picked in the UI.
-let personaVoice = "";
 async function fetchAndQueueTts(text) {
   const res = await fetch("/api/v1/voice/tts", {
     method: "POST",
     headers: { ...headers, "Content-Type": "application/json" },
-    body: JSON.stringify({ text, voice: (personaVoice || selectedVoice()) || null }),
+    body: JSON.stringify({ text, voice: selectedVoice() || null }),
   });
   if (res.ok) await playWav(await res.arrayBuffer());
 }
@@ -257,39 +257,14 @@ function connect() {
     if (data.type === "session") {
       const isNew = !data.resumed;
       conversationId = data.conversation_id;
-      if (isNew && log.childElementCount === 0 && !data.opener) {
-        // No server-side contextual opener -> show the default greeting.
-        add("Hola, qué bueno que estás aquí. Tómate tu tiempo y cuéntame cómo te sientes hoy.", "bot");
+      if (isNew && log.childElementCount === 0) {
+        add(__GREETING__, "bot");
       }
     } else if (data.type === "reply") {
       add(data.reply, "bot", data);
       if (speakReplies) speakText(data.reply);
       send.disabled = false;
-    } else if (data.type === "reply_chunk") {
-      // Streaming: build the bubble incrementally, speak each sentence now.
-      if (!streamBubble) {
-        streamBubble = document.createElement("div");
-        streamBubble.className = "msg bot";
-        log.appendChild(streamBubble);
-      }
-      streamBubble.textContent += (streamBubble.textContent ? " " : "") + data.text;
-      log.scrollTop = log.scrollHeight;
-      if (speakReplies) fetchAndQueueTts(data.text);
-    } else if (data.type === "reply_done") {
-      if ("voice" in data) personaVoice = data.voice || "";  // persona's pinned voice
-      if (streamBubble) {
-        const replay = document.createElement("div");
-        replay.className = "replay";
-        replay.innerHTML = "&#128266;";
-        replay.title = "Reproducir de nuevo";
-        const full = data.reply || streamBubble.textContent;
-        replay.onclick = () => replaySpeak(full);  // full reply, gapless
-        streamBubble.appendChild(replay);
-        streamBubble = null;
-      }
-      send.disabled = false;
     } else if (data.type === "error") {
-      streamBubble = null;
       add("Hubo un problema procesando tu mensaje. Intenta de nuevo.", "bot");
       send.disabled = false;
     }
@@ -552,3 +527,7 @@ handsfree.onclick = () => { hf.on ? stopHandsFree() : startHandsFree(); };
 </body>
 </html>
 """
+
+# The greeting comes from the single source of fixed phrases (also used by the
+# voice bank), serialized as a JS string literal.
+WEBCHAT_HTML = _WEBCHAT_TEMPLATE.replace("__GREETING__", json.dumps(GREETING, ensure_ascii=False))

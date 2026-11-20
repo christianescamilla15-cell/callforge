@@ -2,28 +2,28 @@
 voice bank (scripts/build_voice_bank.py pre-synthesizes ALL of these with
 the reference voice into the TTS cache)."""
 
-GREETING = "Hola, qué bueno que estás aquí. Tómate tu tiempo y cuéntame cómo te sientes hoy."
+GREETING = "Hola, soy el asistente de soporte. Cuéntame qué necesitas y te ayudo a resolverlo."
 
 ESCALATED_NOTICE = (
-    "Gracias por confiarme esto. Voy a conectarte con una persona que puede "
-    "acompañarte mejor; no estás solo en esto."
+    "Tu caso ya está con un agente humano y tiene todo el contexto de la "
+    "conversación. Te contactará a la brevedad; puedes seguir escribiendo aquí."
 )
 
 CONTROLLED_FALLBACK = (
-    "Perdona, tuve un problema para responderte en este momento. Aquí sigo "
-    "contigo; ¿me lo cuentas otra vez cuando puedas?"
+    "Perdona, tuve un problema para responderte en este momento. "
+    "¿Puedes intentarlo de nuevo en unos segundos?"
 )
 
-COULD_NOT_HEAR = "Perdona, no alcancé a escucharte bien. ¿Me lo repites con calma?"
+COULD_NOT_HEAR = "Perdona, no alcancé a escucharte bien. ¿Me lo repites?"
 
-GOODBYE = "Gracias por compartir este rato conmigo. Cuídate mucho; aquí estaré cuando quieras volver."
+GOODBYE = "Gracias por comunicarte con soporte. Si necesitas algo más, aquí estaremos."
 
-# Short, warm "I'm-with-you" sounds played the instant a voice turn starts,
-# masking the LLM's multi-second latency. Spoken in the same voice, cached.
+# Short "I'm-on-it" sounds played the instant a voice turn starts, masking
+# the LLM's multi-second latency. Spoken in the same voice, cached.
 FILLERS: list[str] = [
-    "Mmm, te escucho...",
-    "Claro, tómate tu tiempo...",
-    "Aquí estoy contigo...",
+    "Déjame revisarlo...",
+    "Un momento, por favor...",
+    "Claro, lo reviso...",
 ]
 
 FIXED_PHRASES: dict[str, str] = {
