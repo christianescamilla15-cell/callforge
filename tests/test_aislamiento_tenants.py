@@ -131,7 +131,7 @@ def test_una_credencial_con_caracteres_raros_es_401_no_500(tmp_path):
     settings.api_token = "token-global"
     settings.admin_token = "admin-global"
     with TestClient(create_app(settings)) as client:
-        raro = "contraseña-ñ".encode("utf-8")   # bytes no ASCII en la cabecera, tal cual llegan
+        raro = "contraseña-ñ".encode()   # bytes UTF-8 no ASCII en la cabecera, tal cual llegan
         assert client.get("/api/v1/metrics", headers={"X-API-Token": raro}).status_code == 401
         assert client.post("/api/v1/admin/tenants", json={"name": "X"},
                            headers={"X-Admin-Token": raro}).status_code == 401
