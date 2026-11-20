@@ -62,7 +62,10 @@ def _store_with_docs() -> KeywordKnowledgeStore:
     store.add(
         KnowledgeDocument(
             title="Como reiniciar el modem",
-            content="Desconecta el modem 60 segundos, vuelve a conectarlo y espera a que las luces queden fijas.",
+            content=(
+                "Desconecta el modem 60 segundos, vuelve a conectarlo y espera a que "
+                "las luces queden fijas."
+            ),
             tags=["internet", "modem"],
         )
     )
@@ -124,6 +127,25 @@ def test_hybrid_store_falls_back_to_keyword_when_embedder_fails():
     results = store.search("como reinicio el modem")
     assert results
     assert results[0].title == "Como reiniciar el modem"
+
+
+def test_hybrid_store_with_vectors_of_another_model_falls_back_to_keyword():
+    """Documentos embebidos con un modelo de 2 dimensiones y una consulta con uno de 3 (se cambió
+    EMBEDDING_MODEL): el coseno no puntúa un producto truncado, falla, y la búsqueda cae a palabras."""
+
+    class OtroModelo(EmbeddingProvider):
+        name = "otro"
+
+        def embed(self, texts):
+            return [[0.1, 0.2, 0.3] for _ in texts]
+
+    repo = InMemoryKnowledgeRepo()
+    repo.add(KnowledgeDocument(title="Como reiniciar el modem", content="Desconecta el modem.",
+                               embedding=[1.0, 0.0]))
+    repo.add(KnowledgeDocument(title="Pagos", content="factura y recargo", embedding=[0.0, 1.0]))
+    store = HybridKnowledgeStore(repo, embedder=OtroModelo(), min_similarity=0.0)
+    results = store.search("reiniciar el modem")
+    assert [r.title for r in results] == ["Como reiniciar el modem"]
 
 
 def test_hybrid_store_backfills_missing_embeddings():

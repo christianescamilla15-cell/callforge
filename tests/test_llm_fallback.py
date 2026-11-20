@@ -43,7 +43,7 @@ def test_provider_stream_default_yields_full_text():
         return [
             piece
             async for piece in chain.stream(
-                "You are CompanionAgent.", [{"role": "user", "content": "hola"}]
+                "You are the SupportAgent.", [{"role": "user", "content": "hola"}]
             )
         ]
 
@@ -92,6 +92,72 @@ def test_remote_brain_down_falls_through_to_local():
         )
     )
     result = asyncio.run(
-        chain.complete("You are CompanionAgent.", [{"role": "user", "content": "hola"}])
+        chain.complete("You are the SupportAgent.", [{"role": "user", "content": "hola"}])
     )
     assert result.provider == "mock"  # remote dead -> falls through to mock
+
+
+def test_el_mock_es_la_red_final_aunque_este_desactivado_si_no_hay_otro():
+    """Sin Groq ni Ollama, el MockProvider entra aunque MOCK_ENABLED=false: el sistema nunca
+    se queda sin quién conteste."""
+    from callforge.config import Settings
+    from callforge.infrastructure.llm.fallback import build_provider_chain
+
+    solo = build_provider_chain(Settings(_env_file=None, groq_api_key="", ollama_enabled=False,
+                                         mock_enabled=False))
+    assert [p.name for p in solo.providers] == ["mock"]
+    sin_mock = build_provider_chain(Settings(_env_file=None, groq_api_key="k", ollama_enabled=True,
+                                             mock_enabled=False))
+    assert [p.name for p in sin_mock.providers] == ["groq", "ollama"]
+
+
+def test_la_cadena_vacia_no_se_puede_construir():
+    with pytest.raises(ValueError):
+        FallbackLLMProvider([])
+
+
+def test_todos_los_proveedores_caidos_la_api_responde_con_el_mensaje_controlado(tmp_path, monkeypatch):
+    """Groq, Ollama y Mock fallan: la API responde 200 con el mensaje controlado, deja el evento
+    fallback_used y el error en la corrida, y no crea ticket. El sistema no se cae."""
+    from fastapi.testclient import TestClient
+    from sqlalchemy import text
+
+    import callforge.presentation.api.app as modulo_app
+    from callforge.infrastructure.voice.phrases import CONTROLLED_FALLBACK
+    from tests.conftest import make_test_settings
+
+    class Caido(LLMProvider):
+        def __init__(self, name):
+            self.name = name
+
+        async def complete(self, system, messages, json_mode=False):
+            raise ConnectionError(f"{self.name} caído")
+
+    monkeypatch.setattr(modulo_app, "build_provider_chain",
+                        lambda _s: FallbackLLMProvider([Caido("groq"), Caido("ollama"), Caido("mock")]))
+    with TestClient(modulo_app.create_app(make_test_settings(tmp_path))) as client:
+        cid = client.post("/api/v1/conversations/start", json={}).json()["conversation_id"]
+        respuesta = client.post(f"/api/v1/conversations/{cid}/message", json={"content": "Hola"})
+        assert respuesta.status_code == 200
+        cuerpo = respuesta.json()
+        assert cuerpo["reply"] == CONTROLLED_FALLBACK
+        assert cuerpo["escalated"] is False and cuerpo["ticket_id"] is None
+        assert client.get("/api/v1/tickets").json() == []
+        with client.app.state.engine.connect() as conexion:
+            error = conexion.execute(text("SELECT error FROM agent_runs")).scalar_one()
+            evento = conexion.execute(text("SELECT event_type FROM agent_events")).scalar_one()
+    assert error == "groq: groq caído; ollama: ollama caído; mock: mock caído"  # en orden de la cadena
+    assert evento == "fallback_used"
+
+
+def test_costo_estimado_por_millon_de_tokens_y_modelo_desconocido_gratis():
+    from decimal import Decimal
+
+    from callforge.infrastructure.llm.base import estimate_cost
+
+    costo = estimate_cost("llama-3.1-8b-instant", 1_000_000, 500_000)
+    assert Decimal(str(costo)) == Decimal("0.05") + Decimal("0.04")
+    assert estimate_cost("llama-3.3-70b-versatile", 2_000, 1_000) == pytest.approx(
+        float((Decimal(2_000) * Decimal("0.59") + Decimal(1_000) * Decimal("0.79")) / 1_000_000))
+    assert estimate_cost("mock", 10_000, 10_000) == 0.0
+    assert estimate_cost("modelo-local-cualquiera", 10_000, 10_000) == 0.0

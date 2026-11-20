@@ -29,7 +29,6 @@ converter_dir = ckpt_root / "converter"
 print(f"checkpoints: {converter_dir}")
 
 import torch  # noqa: E402
-
 from openvoice.api import ToneColorConverter  # noqa: E402
 
 converter = ToneColorConverter(str(converter_dir / "config.json"), device=DEVICE)

@@ -6,24 +6,25 @@ services:
     env_file:
       - .env
     environment:
-      # SQLite persisted in a volume; override with postgres profile below if desired
+      # SQLite en un volumen con nombre: la imagen corre sin root y el volumen hereda el dueño de /app/data.
       DATABASE_URL: sqlite:////app/data/support_agents.db
       # From inside the container, Ollama runs on the host
       OLLAMA_BASE_URL: http://host.docker.internal:11434
     volumes:
-      - ./data:/app/data
+      - datos:/app/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # Optional: run with `docker compose --profile postgres up`
-  # and set DATABASE_URL=postgresql+psycopg2://callforge:callforge@postgres:5432/callforge
+  # Optional: run with `docker compose --profile postgres up` (POSTGRES_PASSWORD in .env)
+  # and set DATABASE_URL=postgresql+psycopg2://callforge:<POSTGRES_PASSWORD>@postgres:5432/callforge
   # (requires installing the package with the [postgres] extra in the Dockerfile)
   postgres:
     image: postgres:16-alpine
     profiles: ["postgres"]
     environment:
       POSTGRES_USER: callforge
-      POSTGRES_PASSWORD: callforge
+      # Sin valor en .env el contenedor de Postgres se niega a iniciar (no hay contraseña por omisión).
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
       POSTGRES_DB: callforge
     ports:
       - "5432:5432"
@@ -31,4 +32,5 @@ services:
       - pgdata:/var/lib/postgresql/data
 
 volumes:
+  datos:
   pgdata:

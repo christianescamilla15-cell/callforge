@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import re
+from datetime import UTC
 
 from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from fastapi.responses import Response
@@ -21,16 +22,23 @@ from callforge.infrastructure.knowledge.store import HybridKnowledgeStore
 from callforge.orchestration.workflow import SupportWorkflow
 from callforge.presentation.api.deps import (
     get_knowledge_store,
-    get_memory_store,
     get_uow,
     get_workflow,
     require_token,
 )
+from callforge.presentation.api.schemas import CLOSED, NOT_FOUND, UNAUTHORIZED, ErrorResponse
 
-router = APIRouter(prefix="/voice", tags=["voice"], dependencies=[Depends(require_token)])
-conversation_router = APIRouter(
-    prefix="/conversations", tags=["voice"], dependencies=[Depends(require_token)]
+router = APIRouter(
+    prefix="/voice", tags=["voice"], dependencies=[Depends(require_token)], responses=UNAUTHORIZED
 )
+conversation_router = APIRouter(
+    prefix="/conversations", tags=["voice"], dependencies=[Depends(require_token)], responses=UNAUTHORIZED
+)
+
+_WAV = {"audio/wav": {"schema": {"type": "string", "format": "binary"}}}
+_TTS_OFF = {"model": ErrorResponse, "description": "TTS disabled (TTS_ENABLED=false)"}
+_STT_OFF = {"model": ErrorResponse, "description": "STT unavailable (GROQ_API_KEY not set)"}
+_TOO_LARGE = {"model": ErrorResponse, "description": "Audio larger than 15 MB"}
 
 MAX_AUDIO_BYTES = 15 * 1024 * 1024
 
@@ -60,6 +68,24 @@ class VoiceMessageResponse(BaseModel):
     remaining_sentences: list[str] = []
 
 
+class VoiceItem(BaseModel):
+    id: str
+    name: str
+
+
+class VoicesResponse(BaseModel):
+    default: str | None
+    engine: str
+    voices: list[VoiceItem]
+
+
+class VoiceUploadResponse(BaseModel):
+    name: str
+    id: str
+    engine: str
+    file: str | None = None
+
+
 def _get_tts(request: Request):
     tts = request.app.state.tts
     if tts is None:
@@ -76,16 +102,24 @@ def _get_stt(request: Request):
     return stt
 
 
-@router.post("/tts")
+@router.post(
+    "/tts",
+    response_class=Response,
+    summary="Synthesize speech",
+    responses={200: {"content": _WAV, "description": "WAV audio of the text"}, 503: _TTS_OFF},
+)
 async def synthesize(body: TTSRequest, request: Request) -> Response:
+    """Text to WAV with the configured engine (Kokoro on CPU by default; Chatterbox,
+    the cloned Kokoro or Cartesia degrade to Kokoro on failure). Cached on disk by
+    normalized text and voice."""
     tts = _get_tts(request)
     wav = await run_in_threadpool(tts.synthesize, body.text, body.voice)
     return Response(content=wav, media_type="audio/wav")
 
 
-@router.get("/fillers")
+@router.get("/fillers", summary="List filler phrases")
 def list_fillers() -> list[str]:
-    """Filler texts the client prefetches and plays while the LLM thinks."""
+    """Short filler texts the client prefetches and plays while the LLM thinks."""
     from callforge.infrastructure.voice.phrases import FILLERS
 
     return FILLERS
@@ -116,7 +150,7 @@ async def _cartesia_voices(request: Request) -> list[dict]:
     return voices
 
 
-@router.get("/voices")
+@router.get("/voices", response_model=VoicesResponse, summary="List available voices")
 async def list_voices(request: Request) -> dict:
     """Voices for the active engine: Cartesia stock/cloned voices when the
     cloud engine is on, otherwise the local OpenVoice references. Normalized
@@ -169,9 +203,20 @@ async def list_voices(request: Request) -> dict:
 
 
 _VOICE_NAME_RE = re.compile(r"^[a-z0-9_-]{2,32}$")
+# The uploaded file's extension only tells ffmpeg the container; anything else is ignored.
+_AUDIO_SUFFIXES = {".webm", ".ogg", ".opus", ".mp3", ".m4a", ".mp4", ".flac", ".wav"}
 
 
-@router.post("/voices", status_code=201)
+@router.post(
+    "/voices",
+    status_code=201,
+    response_model=VoiceUploadResponse,
+    summary="Clone a voice",
+    responses={
+        413: _TOO_LARGE,
+        502: {"model": ErrorResponse, "description": "The cloud cloning service failed"},
+    },
+)
 async def upload_voice(request: Request, file: UploadFile, name: str) -> dict:
     """Clone any voice from 10-60s of clean audio. In Cartesia mode it clones
     in the cloud (cuasi-human, returns a voice id); in local mode it stores a
@@ -221,13 +266,18 @@ async def upload_voice(request: Request, file: UploadFile, name: str) -> dict:
     voices_dir.mkdir(parents=True, exist_ok=True)
     target = voices_dir / f"{safe}.wav"
 
-    suffix = Path(file.filename or "ref.webm").suffix or ".webm"
+    suffix = Path(file.filename or "ref.webm").suffix.lower()
+    if suffix not in _AUDIO_SUFFIXES:
+        suffix = ".webm"
     if suffix == ".wav":
         target.write_bytes(audio)
     else:
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / f"in{suffix}"
             src.write_bytes(audio)
+            # Lista de argumentos sin shell: el ejecutable sale de la configuración y las rutas son del
+            # tempdir y de un nombre ya validado por _VOICE_NAME_RE (extensión de una lista cerrada).
+            # nosemgrep: python.django.security.injection.command.subprocess-injection.subprocess-injection
             result = subprocess.run(
                 [
                     settings.ffmpeg_path, "-y", "-loglevel", "error",
@@ -257,7 +307,10 @@ async def upload_voice(request: Request, file: UploadFile, name: str) -> dict:
 
 
 @conversation_router.post(
-    "/{conversation_id}/voice-message", response_model=VoiceMessageResponse
+    "/{conversation_id}/voice-message",
+    response_model=VoiceMessageResponse,
+    summary="Send a voice message",
+    responses={404: NOT_FOUND, 409: CLOSED, 413: _TOO_LARGE, 503: _STT_OFF},
 )
 async def voice_message(
     conversation_id: str,
@@ -268,8 +321,11 @@ async def voice_message(
     uow: UnitOfWork = Depends(get_uow),
     workflow: SupportWorkflow = Depends(get_workflow),
     knowledge_store: HybridKnowledgeStore = Depends(get_knowledge_store),
-    memory_store=Depends(get_memory_store),
 ) -> VoiceMessageResponse:
+    """One voice turn: audio -> Groq Whisper STT -> the same support workflow as a
+    text message -> spoken reply (base64 WAV). With `stream=true` the audio covers
+    only the first sentence and the rest come back as `remaining_sentences` for the
+    client to synthesize while it plays. Empty or untranscribable audio answers 422."""
     stt = _get_stt(request)
     settings = request.app.state.settings
 
@@ -283,12 +339,12 @@ async def voice_message(
     # references and QA). Best-effort, never blocks the turn.
     if settings.voice_inbox_enabled:
         try:
-            from datetime import datetime, timezone
+            from datetime import datetime
             from pathlib import Path
 
             inbox = Path(settings.voice_inbox_dir)
             inbox.mkdir(parents=True, exist_ok=True)
-            stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+            stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
             suffix = Path(file.filename or "audio.webm").suffix or ".webm"
             (inbox / f"{stamp}-{conversation_id[:8]}{suffix}").write_bytes(audio)
         except OSError:
@@ -301,13 +357,13 @@ async def voice_message(
         raise HTTPException(status_code=422, detail="Could not transcribe audio")
 
     try:
-        result = await SendMessage(uow, workflow, knowledge_store, memory_store).execute(
+        result = await SendMessage(uow, workflow, knowledge_store).execute(
             SendMessageInput(conversation_id=conversation_id, content=transcript)
         )
     except ConversationNotFoundError:
-        raise HTTPException(status_code=404, detail="Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found") from None
     except ConversationClosedError:
-        raise HTTPException(status_code=409, detail="Conversation is closed")
+        raise HTTPException(status_code=409, detail="Conversation is closed") from None
 
     audio_b64 = None
     remaining: list[str] = []

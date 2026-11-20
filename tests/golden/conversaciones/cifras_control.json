@@ -1,0 +1,34 @@
+{
+  "conversaciones": 7,
+  "turnos": 12,
+  "mensajes": 23,
+  "corridas_por_agente": {
+    "escalation": 2,
+    "quality": 9,
+    "router": 11,
+    "summarizer": 2,
+    "support": 5,
+    "troubleshooting": 4
+  },
+  "corridas_total": 33,
+  "eventos_por_tipo": {
+    "escalated": 2,
+    "knowledge_retrieved": 9,
+    "quality_checked": 9,
+    "routed": 11
+  },
+  "tickets_por_prioridad": {
+    "high": 2
+  },
+  "estado_final": {
+    "active": 5,
+    "escalated": 2
+  },
+  "pasos": {
+    "total": 4,
+    "answered": 4,
+    "proposed": 0
+  },
+  "hash_lote": "74868e007dbf11421e3733502163712b89125bf55f89ead8d61b03998442c27c",
+  "definicion_hash": "sha256 de las huellas sha256 por fila (campos de COLUMNAS unidos por «|»), ordenadas: no depende del orden de las filas"
+}

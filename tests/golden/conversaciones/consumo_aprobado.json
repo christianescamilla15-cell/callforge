@@ -1,0 +1,7 @@
+{
+  "proveedor": "mock-tarifado",
+  "modelo": "llama-3.1-8b-instant",
+  "llamadas": 33,
+  "tokens_in": 760,
+  "tokens_out": 796
+}

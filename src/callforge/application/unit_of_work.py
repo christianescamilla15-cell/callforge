@@ -9,7 +9,6 @@ from callforge.infrastructure.repositories import (
     SqlConversationRepository,
     SqlCustomerRepository,
     SqlKnowledgeRepository,
-    SqlMemoryRepository,
     SqlResolutionRepository,
     SqlTelemetryRepository,
     SqlTenantRepository,
@@ -26,7 +25,6 @@ class UnitOfWork:
         self.conversations = SqlConversationRepository(session, tenant_id)
         self.tickets = SqlTicketRepository(session, tenant_id)
         self.knowledge = SqlKnowledgeRepository(session, tenant_id)
-        self.memories = SqlMemoryRepository(session, tenant_id)
         self.resolutions = SqlResolutionRepository(session)
         self.telemetry = SqlTelemetryRepository(session)
         self.metrics = MetricsReader(session, tenant_id)

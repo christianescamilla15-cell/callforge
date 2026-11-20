@@ -1,0 +1,176 @@
+# CI (N02, N03, N07, N08, N08b, N09): pruebas por regla contra SQLite y PostgreSQL REAL, paridad contra el lote
+# golden, contrato OpenAPI al día, y la imagen de producción (la que despliega Render) construida, escaneada,
+# ARRANCADA con la configuración de render.yaml y recorrida por la prueba de humo y el E2E por rol.
+# Plantilla común del portafolio adaptada a Switchboard (CallForge: FastAPI + SQLAlchemy/Alembic, sin front aparte).
+#
+# Todo es sin red hacia proveedores de LLM: MockProvider determinista. Los scripts que necesitan GPU, Ollama o
+# RunPod son manuales (RUNBOOK.md) y no entran aquí.
+#
+# Un job «skipped» por depender de otro en rojo NO es verde: en la rama protegida (main) todos los jobs de este
+# flujo y los de seguridad.yml son checks requeridos (.github/rulesets/main.json).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: pruebas (Python 3.12 · ${{ matrix.bd }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # sqlite es la base del despliegue (Render) y la de `pytest` en local; postgresql la que declara compose.
+        bd: [sqlite, postgresql]
+    services:
+      postgres:
+        image: postgres:16@sha256:3950ad7c3148ca2175ef1b6c36c9efbf78957ae8fbe8b3a5d7c35af50500382f
+        env:
+          POSTGRES_USER: callforge
+          POSTGRES_PASSWORD: solo-para-ci
+          POSTGRES_DB: callforge_pruebas
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U callforge -d callforge_pruebas" --health-interval 5s
+          --health-timeout 5s --health-retries 12
+    env:
+      # Con CALLFORGE_EXIGIR_POSTGRES=1 la suite FALLA si no tiene PostgreSQL (no se salta en silencio).
+      CALLFORGE_TEST_POSTGRES_URL: ${{ matrix.bd == 'postgresql' && 'postgresql+psycopg2://callforge:solo-para-ci@localhost:5432/callforge_pruebas' || '' }}
+      CALLFORGE_EXIGIR_POSTGRES: ${{ matrix.bd == 'postgresql' && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: estilo (ruff, configuración del repo)
+        run: ruff check .
+      # pytest sale con 5 si no encontró pruebas: eso ya falla. La cobertura se reporta, no es la compuerta;
+      # la compuerta es una prueba por regla (docs/reglas.md), la paridad golden y su control negativo.
+      - run: pytest -q --junitxml=reporte.xml --cov=callforge --cov-report=xml --cov-report=term
+      - run: python3 herramientas/verificar_reportes.py pytest reporte.xml
+      - name: la integración con PostgreSQL corrió (no se saltó)
+        if: matrix.bd == 'postgresql'
+        shell: python
+        run: |
+          import re, sys
+          xml = open("reporte.xml", encoding="utf-8").read()
+          casos = re.findall(r'<testcase\b[^>]*\bname="(test_postgres_\w+)"[^>]*?(?:/>|>(.*?)</testcase>)', xml, re.S)
+          saltadas = [n for n, cuerpo in casos if "<skipped" in cuerpo]
+          print(f"PostgreSQL: {len(casos)} pruebas, {len(saltadas)} saltadas")
+          sys.exit(0 if casos and not saltadas else 1)
+      - name: golden y contrato al día (también lo exigen las pruebas)
+        run: |
+          python3 tests/golden/generar_golden.py --revisar
+          python3 herramientas/exportar_openapi.py --revisar
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: pruebas-${{ matrix.bd }}
+          path: |
+            reporte.xml
+            coverage.xml
+
+  # La imagen es la que despliega Render (render.yaml: env docker, Dockerfile de la raíz). Lección de Verificarro
+  # (19-nov): el CI probaba en 3.12 y la imagen traía otro Python; todo salía en verde y producción no servía.
+  imagen:
+    name: imagen de producción (construcción, escaneo y arranque)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: construir la imagen (el mismo Dockerfile que usa Render)
+        run: docker build -t callforge:ci .
+      - name: el Python de la imagen es el mismo que prueba el CI
+        run: >-
+          docker run --rm --entrypoint python3 callforge:ci
+          -c "import sys; v = sys.version_info[:2]; print('Python de la imagen:', sys.version);
+          assert v == (3, 12), f'la imagen trae {v}, el CI prueba 3.12'"
+      - name: la imagen no corre como root y no trae herramientas de pruebas
+        run: |
+          test "$(docker run --rm --entrypoint id callforge:ci -u)" != "0"
+          if docker run --rm --entrypoint python3 callforge:ci -c "import pytest" 2>/dev/null; then
+            echo "::error::la imagen de producción trae pytest (requirements-dev.txt no debe instalarse ahí)"
+            exit 1
+          fi
+      - name: inventario de la imagen (prueba de que hay qué analizar)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: image
+          image-ref: callforge:ci
+          format: json
+          output: trivy-imagen.json
+          list-all-pkgs: 'true'
+          exit-code: '0'
+      # Sin esto el escaneo bloqueante podría terminar en verde sin haber inventariado un solo paquete.
+      - run: python3 herramientas/verificar_reportes.py trivy trivy-imagen.json
+      - name: vulnerabilidades de la imagen (bloqueante en CRITICAL/HIGH con arreglo)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: image
+          image-ref: callforge:ci
+          severity: CRITICAL,HIGH
+          ignore-unfixed: 'true'
+          trivyignores: .trivyignore
+          exit-code: '1'
+      - name: arrancar con la configuración de render.yaml y esperar /api/v1/health
+        run: |
+          # Credenciales efímeras de esta corrida (como el API_TOKEN que genera el Blueprint de Render).
+          API_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')"
+          ADMIN_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')"
+          echo "::add-mask::$API_TOKEN"
+          echo "::add-mask::$ADMIN_TOKEN"
+          { echo "API_TOKEN=$API_TOKEN"; echo "ADMIN_TOKEN=$ADMIN_TOKEN"; } >> "$GITHUB_ENV"
+          docker run -d --name api -p 8000:8000 \
+            -e MOCK_ENABLED=true -e PORT=8000 -e API_TOKEN="$API_TOKEN" -e ADMIN_TOKEN="$ADMIN_TOKEN" \
+            -e RENDER_GIT_COMMIT="${{ github.sha }}" \
+            callforge:ci
+          for i in $(seq 1 45); do
+            if curl -fsS http://localhost:8000/api/v1/health | grep -q '"status":"ok"'; then
+              echo "la imagen arrancó (migraciones + uvicorn) y /api/v1/health respondió ok en ~$((i * 2)) s"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::la imagen no respondió /api/v1/health en 90 s"
+          exit 1
+      - name: prueba de humo (la misma que se corre tras desplegar en Render)
+        run: HUMO_TOKEN="$API_TOKEN" HUMO_COMMIT="${{ github.sha }}" herramientas/humo.sh http://localhost:8000
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+      - name: E2E por rol contra el contenedor (HTTP y WebSocket reales)
+        run: |
+          pip install -r requirements-dev.txt
+          CALLFORGE_E2E_URL=http://localhost:8000 CALLFORGE_E2E_API_TOKEN="$API_TOKEN" \
+            CALLFORGE_E2E_ADMIN_TOKEN="$ADMIN_TOKEN" pytest -q tests/e2e --junitxml=e2e.xml
+          python3 herramientas/verificar_reportes.py pytest e2e.xml
+      - name: el HEALTHCHECK de la imagen la declara sana
+        run: |
+          for _ in $(seq 1 30); do
+            estado="$(docker inspect --format '{{.State.Health.Status}}' api)"
+            [ "$estado" = "healthy" ] && { echo "HEALTHCHECK: $estado"; exit 0; }
+            sleep 2
+          done
+          echo "::error::HEALTHCHECK quedó en «$estado»"; exit 1
+      - name: bitácora del contenedor si algo falló
+        if: failure()
+        run: docker logs api 2>&1 | tail -80

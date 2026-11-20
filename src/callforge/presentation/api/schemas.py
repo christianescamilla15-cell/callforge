@@ -121,3 +121,52 @@ class HealthResponse(BaseModel):
     env: str
     database: str
     llm_providers: list[str]
+    version: str
+    commit: str | None = None
+
+
+class CloseConversationResponse(BaseModel):
+    conversation_id: str
+    status: str
+
+
+class ConversationCounts(BaseModel):
+    total: int
+    by_status: dict[str, int]
+    resolution_rate: float | None
+
+
+class ProviderUsage(BaseModel):
+    provider: str
+    calls: int
+    tokens_in: int
+    tokens_out: int
+    estimated_cost_usd: float
+
+
+class FeedbackSummary(BaseModel):
+    count: int
+    avg_rating: float | None
+
+
+class MetricsResponse(BaseModel):
+    tenant_id: str
+    conversations: ConversationCounts
+    messages_total: int
+    tickets_total: int
+    escalations_total: int
+    agent_runs_total: int
+    agent_errors_total: int
+    avg_quality_score: float | None
+    llm_usage: list[ProviderUsage]
+    feedback: FeedbackSummary
+
+
+class ErrorResponse(BaseModel):
+    detail: str
+
+
+# Shared error documentation for the OpenAPI contract (docs/api/openapi.json).
+UNAUTHORIZED = {401: {"model": ErrorResponse, "description": "Missing or invalid X-API-Token"}}
+NOT_FOUND = {"model": ErrorResponse, "description": "Not found (or owned by another tenant)"}
+CLOSED = {"model": ErrorResponse, "description": "The conversation is closed (terminal state)"}

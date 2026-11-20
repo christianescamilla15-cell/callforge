@@ -1,0 +1,22 @@
+{
+  "descripcion": "Lote golden de conversaciones de soporte (MockProvider, sin red). Cada conversación se abre por la API y sus mensajes se mandan en orden; el oráculo (generar_golden.py) deriva la ruta de agentes, el ticket y el estado de las reglas de docs/reglas.md sin importar callforge.",
+  "conversaciones": [
+    {"clave": "C01", "canal": "api", "cliente": "golden-01",
+     "mensajes": ["Hola, ¿qué planes tienen disponibles?"]},
+    {"clave": "C02", "canal": "webchat", "cliente": "golden-02",
+     "mensajes": ["Mi internet no funciona desde ayer",
+                  "Reinicié el modem y sigue igual",
+                  "Ya revisé el cable y nada"]},
+    {"clave": "C03", "canal": "api", "cliente": "golden-03",
+     "mensajes": ["Tengo una duda con el cargo de mi factura"]},
+    {"clave": "C04", "canal": "phone", "cliente": "golden-04",
+     "mensajes": ["Quiero hablar con un humano, es urgente", "¿Siguen ahí?"]},
+    {"clave": "C05", "canal": "webchat", "cliente": "golden-05",
+     "mensajes": ["El sistema está muy lento", "Prefiero que me atienda un supervisor"]},
+    {"clave": "C06", "canal": "email", "cliente": "golden-06",
+     "mensajes": ["Hello, I have a question about my invoice"]},
+    {"clave": "C07", "canal": "whatsapp", "cliente": "golden-07",
+     "mensajes": ["No funciona el cobro de mi factura, sale un error",
+                  "Gracias, ya quedó"]}
+  ]
+}

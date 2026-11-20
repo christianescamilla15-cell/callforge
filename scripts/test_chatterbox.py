@@ -18,7 +18,6 @@ def main() -> None:
     device = sys.argv[1] if len(sys.argv) > 1 else "cuda"
     print(f"device={device} | VRAM antes: {vram_mb()} MiB")
 
-    import torch
     import torchaudio
 
     try:

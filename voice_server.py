@@ -76,28 +76,37 @@ def get_target_se(converter, voice: str):
     """Zero-shot: a voice is just an embedding extracted once from its
     reference file in voices/. Cached in memory AND on disk (.se_cache/) so
     switching voices is instant even after a service restart - extraction is
-    the slow part, and now it happens only once per voice, ever."""
-    if voice in _target_se_cache:
-        return _target_se_cache[voice]
+    the slow part, and now it happens only once per voice, ever.
+
+    El nombre que se usa para el caché sale del DISCO (`_referencia`), nunca del
+    texto de la petición: un `voice` con «../» o separadores no coincide con
+    ningún archivo y responde 404 sin leer ni escribir nada fuera de voices/."""
+    ref = _referencia(voice)
+    if ref is None:
+        raise HTTPException(status_code=404, detail="Voice not found")
+    nombre = ref.stem
+    if nombre in _target_se_cache:
+        return _target_se_cache[nombre]
     import torch
 
     cache_dir = VOICES_DIR / ".se_cache"
-    cache_file = cache_dir / f"{voice}.pt"
+    cache_file = cache_dir / f"{nombre}.pt"
     if cache_file.exists():
         try:
-            se = torch.load(str(cache_file), map_location=VC_DEVICE)
-            _target_se_cache[voice] = se
+            # weights_only: el caché sólo guarda un tensor; nunca se deserializan objetos arbitrarios.
+            # nosemgrep: trailofbits.python.pickles-in-pytorch.pickles-in-pytorch
+            se = torch.load(str(cache_file), map_location=VC_DEVICE, weights_only=True)
+            _target_se_cache[nombre] = se
             return se
         except Exception:  # noqa: BLE001 - stale/corrupt cache -> re-extract
             pass
-    ref = _resolve_voice(voice)
-    if ref is None:
-        raise HTTPException(status_code=404, detail=f"Voice '{voice}' not found")
     with _lock:
-        se = converter.extract_se([ref])
-    _target_se_cache[voice] = se
+        se = converter.extract_se([str(ref)])
+    _target_se_cache[nombre] = se
     try:
         cache_dir.mkdir(parents=True, exist_ok=True)
+        # Guarda un tensor propio; se vuelve a leer con weights_only=True.
+        # nosemgrep: trailofbits.python.pickles-in-pytorch.pickles-in-pytorch
         torch.save(se, str(cache_file))
     except Exception:  # noqa: BLE001 - persistence is best-effort
         pass
@@ -110,15 +119,27 @@ class TTSRequest(BaseModel):
     voice: str | None = None  # filename stem inside voices/
 
 
-def _resolve_voice(voice: str | None) -> str | None:
-    if not voice:
+EXT_AUDIO = (".wav", ".mp3", ".flac")
+
+
+def _referencia(voice: str | None) -> Path | None:
+    """Archivo de referencia de `voice` dentro de voices/ (precedencia .wav, .mp3, .flac).
+
+    Se recorre el directorio y se devuelve la ruta que existe en disco: el texto de la
+    petición sólo se COMPARA con los nombres, nunca se usa para construir una ruta."""
+    if not voice or not VOICES_DIR.is_dir():
         return None
-    safe = Path(voice).name  # no path traversal
-    for ext in (".wav", ".mp3", ".flac"):
-        candidate = VOICES_DIR / f"{safe}{ext}"
-        if candidate.exists():
-            return str(candidate)
+    archivos = [p for p in VOICES_DIR.iterdir() if p.is_file()]
+    for ext in EXT_AUDIO:
+        for ref in archivos:
+            if ref.suffix == ext and ref.stem == voice:
+                return ref
     return None
+
+
+def _resolve_voice(voice: str | None) -> str | None:
+    ref = _referencia(voice)
+    return str(ref) if ref else None
 
 
 def _list_voices() -> list[str]:

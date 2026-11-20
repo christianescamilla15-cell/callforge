@@ -50,7 +50,7 @@ def tts_cache_key(text: str, voice: str | None = None) -> str:
     from callforge.infrastructure.voice.normalize import normalize_for_tts
 
     normalized = normalize_for_tts(text)
-    raw = f"{voice or ''}|{normalized}".encode("utf-8")
+    raw = f"{voice or ''}|{normalized}".encode()
     return hashlib.sha256(raw).hexdigest()[:32]
 
 

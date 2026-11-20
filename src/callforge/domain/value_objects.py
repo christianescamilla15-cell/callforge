@@ -60,7 +60,6 @@ class AgentName(StrEnum):
     ESCALATION = "escalation"
     SUMMARIZER = "summarizer"
     QUALITY = "quality"
-    COMPANION = "companion"
 
 
 class NextAction(StrEnum):

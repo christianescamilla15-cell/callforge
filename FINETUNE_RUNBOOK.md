@@ -12,8 +12,7 @@ El generador necesita el paquete `callforge` (que está en tu PC) + un teacher
 fuerte. NO uses el 4b local de teacher (genera datos pobres).
 
 1. Levanta un pod con **Mistral-24B** (imagen `ollama/ollama`), expón 11434.
-   En el Web Terminal: `ollama pull huihui_ai/mistral-small-abliterated:24b-instruct-2501-q4_K_M`
-   (o el `mistral-small-instruct` vanilla — para datos de soporte no necesitas abliterado).
+   En el Web Terminal: `ollama pull mistral-small:24b` (instruct, licencia Apache-2.0).
 2. En tu PC, apunta CallForge al pod:
    `scripts\gpu_remote.ps1 -Url https://<pod>-11434.proxy.runpod.net -Model <mistral>`
 3. Genera (~600 ejemplos; sube a 1000 si quieres):
@@ -46,8 +45,7 @@ El entrenamiento es self-contained (NO necesita `callforge`, solo el JSONL + el 
    tono-repetido <40%. Si no llega, más datos / más epochs / revisar ejemplos.
 
 ## Notas
-- Base: `unsloth/Qwen3-4B-Instruct-2507` (vanilla Apache, NO abliterado — el
-  reembolso no lo necesita y entrena más limpio).
+- Base: `unsloth/Qwen3-4B-Instruct-2507` (instruct oficial, Apache-2.0).
 - El `refund_eval.py` es el test held-out: NO entrenes con esos escenarios.
 - Si el A/B no mejora lo suficiente, el problema casi siempre es el DATASET
   (diversidad/calidad), no los hiperparámetros. Itera el Paso 1.

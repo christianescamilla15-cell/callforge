@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 from callforge.domain.entities import (
     AgentEvent,
     AgentRun,
-    CompanionMemory,
     Conversation,
     Customer,
     Escalation,
@@ -18,20 +17,6 @@ from callforge.domain.entities import (
     Tenant,
     Ticket,
 )
-
-
-class MemoryRepository(ABC):
-    @abstractmethod
-    def add(self, memory: CompanionMemory) -> None: ...
-
-    @abstractmethod
-    def list_all(self) -> list[CompanionMemory]: ...
-
-    @abstractmethod
-    def count(self) -> int: ...
-
-    @abstractmethod
-    def delete(self, memory_id: str) -> bool: ...
 
 
 class TenantRepository(ABC):

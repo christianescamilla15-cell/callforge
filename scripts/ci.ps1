@@ -22,10 +22,9 @@ if ($testsExit -ne 0) {
 
 Write-Host "=== STAGE 2: boot instance on :$Port ===" -ForegroundColor Cyan
 $env:DATABASE_URL = "sqlite:///" + (Join-Path $env:TEMP "callforge_ci.db")
-# Keep CI hermetic + deterministic: no cloud TTS, and exercise the SUPPORT
-# pipeline (companion mode + ollama-primary are covered by unit tests).
+# Keep CI hermetic + deterministic: no cloud TTS, cloud-first provider order
+# (ollama-primary is covered by unit tests).
 $env:TTS_ENGINE = "kokoro"
-$env:COMPANION_MODE = "false"
 $env:LLM_PRIMARY = "groq"
 Remove-Item -Force (Join-Path $env:TEMP "callforge_ci.db") -ErrorAction SilentlyContinue
 $server = Start-Process -FilePath $python -ArgumentList "-m","uvicorn","callforge.presentation.api.app:app","--port","$Port" -WorkingDirectory $root -WindowStyle Hidden -PassThru

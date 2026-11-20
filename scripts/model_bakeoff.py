@@ -172,7 +172,10 @@ def main() -> None:
         try:
             result = evaluate(model, client)
         except Exception as exc:  # noqa: BLE001
-            result = {"model": model, "passed": "ERROR", "avg_s": None, "max_s": None, "notes": [str(exc)[:200]]}
+            result = {
+                "model": model, "passed": "ERROR", "avg_s": None, "max_s": None,
+                "notes": [str(exc)[:200]],
+            }
         results.append(result)
         print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
 

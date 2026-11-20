@@ -1,0 +1,13 @@
+conversacion,turno,agente,ruta,intent,categoria,urgencia,escalada,ticket_prioridad,ticket_titulo,estado,paso,con_resumen
+C01,1,support,router>support>quality,question,general,low,no,,,active,,no
+C02,1,troubleshooting,router>troubleshooting>quality,technical_issue,technical,medium,no,,,active,1,no
+C02,2,support,router>support>quality,technical_issue,technical,medium,no,,,active,2,no
+C02,3,support,router>support>quality,question,general,low,no,,,active,,no
+C03,1,support,router>support>quality,billing,billing,medium,no,,,active,,no
+C04,1,router,router>escalation>summarizer,human_request,escalation,high,si,high,"[escalation] Quiero hablar con un humano, es urgente",escalated,,si
+C05,1,troubleshooting,router>troubleshooting>quality,technical_issue,technical,medium,no,,,active,1,no
+C05,2,router,router>escalation>summarizer,human_request,escalation,high,no,high,[escalation] Prefiero que me atienda un supervisor,active,,si
+C06,1,support,router>support>quality,billing,  billing  ,medium,no,,,active,,no
+C07,1,troubleshooting,router>troubleshooting>quality,technical_issue,technical,medium,no,,,active,1,no
+C07,2,support,router>support>quality,question,general,low,no,,,active,,no
+C99,1,support,router>support>quality,question,general,low,no,,,active,,no

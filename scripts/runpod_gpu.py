@@ -14,8 +14,8 @@ Setup (one time):
 
 Usage:
   python scripts/runpod_gpu.py start                  # 30B-A3B on an A6000, then wires .env
-  python scripts/runpod_gpu.py start --model huihui_ai/llama3.3-abliterated:70b-instruct-q4_K_M --gpu "NVIDIA RTX A6000" --disk 70
-  python scripts/runpod_gpu.py stop                   # stop billing (container wiped unless --volume was used)
+  python scripts/runpod_gpu.py start --model llama3.3:70b --gpu "NVIDIA RTX A6000" --disk 70
+  python scripts/runpod_gpu.py stop                   # stop billing (wiped unless --volume was used)
   python scripts/runpod_gpu.py terminate              # destroy the pod
   python scripts/runpod_gpu.py status
 
@@ -36,7 +36,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ENV = ROOT / ".env"
 STATE = ROOT / "data" / "runpod_pod.txt"
 
-DEFAULT_MODEL = "huihui_ai/qwen3-abliterated:30b-a3b-instruct-2507-q4_K_M"
+DEFAULT_MODEL = "qwen3:30b-a3b"
 DEFAULT_GPU = "NVIDIA RTX A6000"   # 48GB, best value; see runpod.get_gpus() for ids
 IMAGE = "ollama/ollama:latest"     # boots `ollama serve` on 0.0.0.0:11434 by itself
 PORT = 11434
@@ -94,6 +94,8 @@ def _pull(url: str, model: str) -> bool:
         "-H", "Content-Type: application/json",
         "--data-binary", json.dumps({"model": model}),
     ]
+    # La regla avisa de compatibilidad con Python 3.6; el proyecto exige 3.12.
+    # nosemgrep: python.lang.compatibility.python36.python36-compatibility-Popen2
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True, encoding="utf-8")
     last = ""
     ok = False

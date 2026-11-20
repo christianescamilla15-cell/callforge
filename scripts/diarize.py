@@ -87,7 +87,7 @@ def main() -> None:
             continue
         # pick longest segments until we reach TARGET_REF seconds
         chosen, acc = [], 0.0
-        for start, end, dur in sorted(segs_by_spk[spk], key=lambda s: s[2], reverse=True):
+        for start, _end, dur in sorted(segs_by_spk[spk], key=lambda s: s[2], reverse=True):
             take = min(dur, MAX_REF_SECONDS)
             chosen.append((start, start + take))
             acc += take
@@ -124,7 +124,7 @@ def main() -> None:
             break
 
     print(f"\n{len(made)} referencias listas en voice_sources/refs/:")
-    for rank, out, d in made:
+    for _rank, out, d in made:
         print(f"  {out}  (~{d:.0f}s)")
     print("\nEscucha cada una y clona la/las que quieras:")
     print("  python scripts/cartesia_clone.py voice_sources/refs/voz_0.wav nombre")

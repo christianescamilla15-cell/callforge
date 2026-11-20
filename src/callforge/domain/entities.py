@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from callforge.domain.value_objects import (
@@ -24,7 +24,7 @@ def new_id() -> str:
 
 
 def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 DEFAULT_TENANT_ID = "default"
@@ -155,19 +155,6 @@ class KnowledgeDocument:
     embedding: list[float] | None = None
     id: str = field(default_factory=new_id)
     tenant_id: str = DEFAULT_TENANT_ID
-    created_at: datetime = field(default_factory=utcnow)
-
-
-@dataclass
-class CompanionMemory:
-    """A durable fact the companion remembers about the person, retrievable
-    across sessions by meaning (embedding)."""
-
-    content: str = ""
-    tenant_id: str = DEFAULT_TENANT_ID
-    embedding: list[float] | None = None
-    source_conversation_id: str | None = None
-    id: str = field(default_factory=new_id)
     created_at: datetime = field(default_factory=utcnow)
 
 

@@ -24,7 +24,7 @@ _TOKEN_RE = re.compile(r"[a-z0-9]+")
 _STOPWORDS = {
     "de", "la", "el", "los", "las", "un", "una", "que", "con", "por", "para",
     "mi", "tu", "su", "es", "en", "y", "o", "a", "no", "se", "me", "te", "lo",
-    "the", "a", "an", "is", "are", "to", "of", "and", "or", "my", "your", "it",
+    "the", "an", "is", "are", "to", "of", "and", "or", "my", "your", "it",
     "in", "on", "for", "i", "do", "does", "not",
 }
 
@@ -81,7 +81,9 @@ def _embedding_text(doc: KnowledgeDocument) -> str:
 
 
 def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
+    # strict: vectors from different embedding models must fail loudly (the store
+    # then degrades to keyword search) instead of scoring a truncated product.
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     norm_a = math.sqrt(sum(x * x for x in a))
     norm_b = math.sqrt(sum(x * x for x in b))
     if norm_a == 0.0 or norm_b == 0.0:
@@ -130,7 +132,7 @@ class HybridKnowledgeStore:
         missing = [d for d in documents if not d.embedding]
         if missing:
             vectors = self._embedder.embed([_embedding_text(d) for d in missing])
-            for doc, vector in zip(missing, vectors):
+            for doc, vector in zip(missing, vectors, strict=True):
                 doc.embedding = vector
                 self._repo.update_embedding(doc.id, vector)
 

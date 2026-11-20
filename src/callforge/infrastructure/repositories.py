@@ -10,7 +10,6 @@ from callforge.domain.entities import (
     DEFAULT_TENANT_ID,
     AgentEvent,
     AgentRun,
-    CompanionMemory,
     Conversation,
     Customer,
     Escalation,
@@ -26,7 +25,6 @@ from callforge.domain.repositories import (
     ConversationRepository,
     CustomerRepository,
     KnowledgeRepository,
-    MemoryRepository,
     ResolutionRepository,
     TelemetryRepository,
     TenantRepository,
@@ -44,6 +42,15 @@ from callforge.domain.value_objects import (
     Urgency,
 )
 from callforge.infrastructure import models as m
+
+_AGENT_NAMES = {a.value for a in AgentName}
+
+
+def _agent_name(value: str | None) -> AgentName | None:
+    """Historical rows may name an agent that no longer exists (e.g. the retired
+    "companion" mode): read them as "no agent" instead of failing the whole
+    conversation."""
+    return AgentName(value) if value in _AGENT_NAMES else None
 
 
 class SqlTenantRepository(TenantRepository):
@@ -203,7 +210,7 @@ class SqlConversationRepository(ConversationRepository):
                 conversation_id=r.conversation_id,
                 role=MessageRole(r.role),
                 content=r.content,
-                agent_name=AgentName(r.agent_name) if r.agent_name else None,
+                agent_name=_agent_name(r.agent_name),
                 confidence=r.confidence,
                 created_at=r.created_at,
             )
@@ -348,62 +355,6 @@ class SqlKnowledgeRepository(KnowledgeRepository):
         row = self._s.get(m.KnowledgeDocumentModel, document_id)
         if row is not None:
             row.embedding = json.dumps(embedding)
-
-
-class SqlMemoryRepository(MemoryRepository):
-    def __init__(self, session: Session, tenant_id: str = DEFAULT_TENANT_ID) -> None:
-        self._s = session
-        self._tenant = tenant_id
-
-    def add(self, memory: CompanionMemory) -> None:
-        memory.tenant_id = self._tenant
-        self._s.add(
-            m.CompanionMemoryModel(
-                id=memory.id,
-                tenant_id=self._tenant,
-                content=memory.content,
-                embedding=json.dumps(memory.embedding) if memory.embedding else None,
-                source_conversation_id=memory.source_conversation_id,
-                created_at=memory.created_at,
-            )
-        )
-
-    def list_all(self) -> list[CompanionMemory]:
-        rows = self._s.execute(
-            select(m.CompanionMemoryModel)
-            .where(m.CompanionMemoryModel.tenant_id == self._tenant)
-            .order_by(m.CompanionMemoryModel.created_at)
-        ).scalars()
-        return [
-            CompanionMemory(
-                id=r.id,
-                tenant_id=r.tenant_id,
-                content=r.content,
-                embedding=json.loads(r.embedding) if r.embedding else None,
-                source_conversation_id=r.source_conversation_id,
-                created_at=r.created_at,
-            )
-            for r in rows
-        ]
-
-    def count(self) -> int:
-        from sqlalchemy import func
-
-        return (
-            self._s.execute(
-                select(func.count(m.CompanionMemoryModel.id)).where(
-                    m.CompanionMemoryModel.tenant_id == self._tenant
-                )
-            ).scalar()
-            or 0
-        )
-
-    def delete(self, memory_id: str) -> bool:
-        row = self._s.get(m.CompanionMemoryModel, memory_id)
-        if row is None or row.tenant_id != self._tenant:
-            return False
-        self._s.delete(row)
-        return True
 
 
 class SqlResolutionRepository(ResolutionRepository):

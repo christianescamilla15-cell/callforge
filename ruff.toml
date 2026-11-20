@@ -1,0 +1,24 @@
+# ruff: la misma configuración en local y en el CI (no depende de la del equipo de quien lo corre).
+target-version = "py312"
+line-length = 110
+extend-exclude = [".venv-calidad", ".venv-voice"]
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = [
+  "B008",   # Depends()/Header()/Query() en los valores por omisión es el idioma de FastAPI
+]
+
+[lint.per-file-ignores]
+# Texto largo a propósito: prompts, páginas HTML embebidas, escenarios y datos de evaluación.
+"src/callforge/agents/prompts.py" = ["E501"]
+"src/callforge/presentation/web/*.py" = ["E501"]
+"scripts/refund_eval.py" = ["E501"]
+"scripts/gen_refund_dataset.py" = ["E501"]
+# Migraciones ya publicadas: no se reescriben (ni el orden de sus imports). 0001 es la que generó
+# Alembic (autogenerate) y es la línea base de las bases ya desplegadas.
+"src/callforge/migrations/versions/0001_baseline.py" = ["E501", "W291", "I001"]
+"src/callforge/migrations/versions/000[2-5]_*.py" = ["I001"]
+
+[lint.isort]
+known-first-party = ["callforge"]

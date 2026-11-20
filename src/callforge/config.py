@@ -23,16 +23,17 @@ class Settings(BaseSettings):
     groq_model: str = "llama-3.1-8b-instant"
     groq_base_url: str = "https://api.groq.com/openai/v1"
 
-    # Ollama (local). llm_primary="ollama" makes it the FIRST responder
-    # (e.g. a private uncensored model), with Groq as fallback.
+    # Ollama (local). llm_primary="ollama" makes the local stack the FIRST
+    # responder (data stays on-premise, zero cost), with Groq as fallback.
     ollama_enabled: bool = True
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.1"
     llm_primary: str = "groq"  # groq | ollama
 
-    # Optional remote "big brain": an on-demand GPU box (cloud or LAN) running
-    # Ollama with a larger uncensored model. When set, it answers FIRST and
-    # the local model is the automatic fallback if the box is down.
+    # Optional remote Ollama: an on-demand GPU box (cloud or LAN) serving a
+    # larger model (e.g. the teacher used to generate the refund dataset, see
+    # FINETUNE_RUNBOOK.md). When set, it answers FIRST and the local model is
+    # the automatic fallback if the box is down.
     ollama_remote_url: str = ""  # e.g. http://1.2.3.4:11434 (empty = off)
     ollama_remote_model: str = ""
 
@@ -41,22 +42,11 @@ class Settings(BaseSettings):
     ollama_keep_alive: str = "30m"
     ollama_num_predict: int = 512
     # Context window. Ollama silently defaults to 4096 no matter what the model
-    # supports, which truncates the companion's injected memories + history.
-    # 8192 fits the 30B-A3B on a 24GB card (16384 OOMs it; bump it on a 48GB box).
+    # supports, which truncates long histories + knowledge context.
     ollama_num_ctx: int = 8192
-    # Sampling temperature. Low (0.3) is right for the JSON support pipeline;
-    # the companion wants more warmth/personality, so bump it via .env (~0.6-0.7).
+    # Sampling temperature. Low (0.3) keeps the JSON contracts of the support
+    # pipeline stable.
     ollama_temperature: float = 0.3
-
-    # Optional per-persona voice (engine voice name/id), so each personality can
-    # sound different. Format: "cinico=carnal,filosofo=sabio". Empty = every
-    # persona uses the voice selected in the UI.
-    persona_voices: str = ""
-
-    # Companion mode: a single warm conversational turn (no router/quality/
-    # escalation JSON pipeline). Correct shape for free conversation; lets the
-    # uncensored local model shine without the JSON contracts it is weak at.
-    companion_mode: bool = False
 
     # Mock (deterministic, final safety net / tests)
     mock_enabled: bool = True

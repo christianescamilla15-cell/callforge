@@ -1,0 +1,17 @@
+# Sólo requirements.txt y src/ entran a la imagen; esto aligera el contexto y evita copiar secretos.
+.git
+.github
+.venv*
+venv
+.env
+*.db
+data
+models
+voices
+cache
+logs
+htmlcov
+.pytest_cache
+.ruff_cache
+**/__pycache__
+*.egg-info

@@ -16,6 +16,10 @@ models/
 *.wav
 .venv-voice/
 voices/
-.venv-voice/
-voices/
 cache/
+node_modules/
+.ruff_cache/
+reporte.xml
+coverage.xml
+sbom.spdx.json
+*.sarif

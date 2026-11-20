@@ -20,8 +20,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-# Vanilla INSTRUCT base (NOT abliterated — refund handling doesn't need it; we
-# want it to LEARN the policy behavior cleanly). Apache-2.0.
+# Official INSTRUCT base: we want it to LEARN the refund-policy behavior
+# cleanly from the dataset. Apache-2.0.
 BASE_MODEL = "unsloth/Qwen3-4B-Instruct-2507"
 MAX_SEQ = 4096
 
@@ -36,10 +36,11 @@ def main() -> None:
     ap.add_argument("--quant", default="q4_k_m")
     args = ap.parse_args()
 
-    from unsloth import FastLanguageModel
-    from unsloth.chat_templates import train_on_responses_only
-    from datasets import load_dataset
-    from trl import SFTConfig, SFTTrainer
+    # unsloth MUST be imported before trl/transformers so its patches apply.
+    from unsloth import FastLanguageModel  # isort: skip
+    from unsloth.chat_templates import train_on_responses_only  # isort: skip
+    from datasets import load_dataset  # isort: skip
+    from trl import SFTConfig, SFTTrainer  # isort: skip
 
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=args.base,

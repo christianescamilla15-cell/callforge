@@ -1,6 +1,6 @@
-from callforge.presentation.api.app import create_app
 from fastapi.testclient import TestClient
 
+from callforge.presentation.api.app import create_app
 from tests.conftest import make_test_settings
 
 

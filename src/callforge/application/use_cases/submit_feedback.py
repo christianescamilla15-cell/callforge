@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from callforge.application.dtos import ConversationNotFoundError
 from callforge.application.unit_of_work import UnitOfWork
-from callforge.domain.entities import Feedback, utcnow
+from callforge.domain.entities import Feedback
+from callforge.domain.lifecycle import transition
 from callforge.domain.value_objects import ConversationStatus
 
 
@@ -29,10 +30,11 @@ class SubmitFeedback:
         )
         self._uow.telemetry.add_feedback(feedback)
 
-        # Customer confirming resolution closes the loop (unless already escalated).
+        # Customer confirming resolution closes the loop only for an ACTIVE
+        # conversation: an ESCALATED one belongs to the human agent and a
+        # CLOSED one is terminal (the rating is still recorded).
         if resolved is True and conversation.status == ConversationStatus.ACTIVE:
-            conversation.status = ConversationStatus.RESOLVED
-            conversation.updated_at = utcnow()
+            transition(conversation, ConversationStatus.RESOLVED)
             self._uow.conversations.update(conversation)
 
         self._uow.commit()
