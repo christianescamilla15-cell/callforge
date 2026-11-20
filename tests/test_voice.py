@@ -264,6 +264,30 @@ def test_upload_voice_wav_and_list(voice_client, tmp_path, monkeypatch):
     assert any(v["id"] == "cliente-vip" for v in listed["voices"])  # {id,name} shape
 
 
+def test_upload_voice_only_hands_ffmpeg_a_known_audio_extension(voice_client, tmp_path, monkeypatch):
+    """The uploaded filename's extension reaches ffmpeg only if it is a known audio container;
+    anything else (here «.sh») is treated as .webm. Arguments go as a list, never via a shell."""
+    import subprocess
+    from pathlib import Path
+
+    llamadas = []
+
+    def falso_ffmpeg(args, **kwargs):
+        llamadas.append(args)
+        return subprocess.CompletedProcess(args, 0, b"", b"")
+
+    monkeypatch.setattr(subprocess, "run", falso_ffmpeg)
+    voice_client.app.state.settings.voices_dir = str(tmp_path / "voices")
+    voice_client.app.state.settings.voice_server_url = "http://127.0.0.1:1"
+    audio = b"\x1a\x45\xdf\xa3" + b"\x00" * 60_000
+    casos = (("grabacion.ogg", ".ogg"), ("x; rm -rf ~.sh", ".webm"), ("sin_extension", ".webm"))
+    for nombre, extension in casos:
+        respuesta = voice_client.post("/api/v1/voice/voices?name=voz-prueba", files={"file": (nombre, audio)})
+        assert respuesta.status_code == 201
+        assert Path(llamadas[-1][llamadas[-1].index("-i") + 1]).name == f"in{extension}"
+    assert all(isinstance(a, list) for a in llamadas)
+
+
 def test_voices_endpoint_lists_cartesia_when_engine_cartesia(voice_client):
     # Pre-seed the cached voice list so the endpoint needs no network.
     voice_client.app.state.settings.tts_engine = "cartesia"
