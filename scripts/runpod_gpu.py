@@ -94,6 +94,8 @@ def _pull(url: str, model: str) -> bool:
         "-H", "Content-Type: application/json",
         "--data-binary", json.dumps({"model": model}),
     ]
+    # La regla avisa de compatibilidad con Python 3.6; el proyecto exige 3.12.
+    # nosemgrep: python.lang.compatibility.python36.python36-compatibility-Popen2
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True, encoding="utf-8")
     last = ""
     ok = False

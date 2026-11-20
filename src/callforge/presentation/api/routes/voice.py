@@ -203,6 +203,8 @@ async def list_voices(request: Request) -> dict:
 
 
 _VOICE_NAME_RE = re.compile(r"^[a-z0-9_-]{2,32}$")
+# The uploaded file's extension only tells ffmpeg the container; anything else is ignored.
+_AUDIO_SUFFIXES = {".webm", ".ogg", ".opus", ".mp3", ".m4a", ".mp4", ".flac", ".wav"}
 
 
 @router.post(
@@ -264,13 +266,18 @@ async def upload_voice(request: Request, file: UploadFile, name: str) -> dict:
     voices_dir.mkdir(parents=True, exist_ok=True)
     target = voices_dir / f"{safe}.wav"
 
-    suffix = Path(file.filename or "ref.webm").suffix or ".webm"
+    suffix = Path(file.filename or "ref.webm").suffix.lower()
+    if suffix not in _AUDIO_SUFFIXES:
+        suffix = ".webm"
     if suffix == ".wav":
         target.write_bytes(audio)
     else:
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / f"in{suffix}"
             src.write_bytes(audio)
+            # Lista de argumentos sin shell: el ejecutable sale de la configuración y las rutas son del
+            # tempdir y de un nombre ya validado por _VOICE_NAME_RE (extensión de una lista cerrada).
+            # nosemgrep: python.django.security.injection.command.subprocess-injection.subprocess-injection
             result = subprocess.run(
                 [
                     settings.ffmpeg_path, "-y", "-loglevel", "error",

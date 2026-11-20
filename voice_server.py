@@ -85,7 +85,9 @@ def get_target_se(converter, voice: str):
     cache_file = cache_dir / f"{voice}.pt"
     if cache_file.exists():
         try:
-            se = torch.load(str(cache_file), map_location=VC_DEVICE)
+            # weights_only: el caché sólo guarda un tensor; nunca se deserializan objetos arbitrarios.
+            # nosemgrep: trailofbits.python.pickles-in-pytorch.pickles-in-pytorch
+            se = torch.load(str(cache_file), map_location=VC_DEVICE, weights_only=True)
             _target_se_cache[voice] = se
             return se
         except Exception:  # noqa: BLE001 - stale/corrupt cache -> re-extract
@@ -98,6 +100,8 @@ def get_target_se(converter, voice: str):
     _target_se_cache[voice] = se
     try:
         cache_dir.mkdir(parents=True, exist_ok=True)
+        # Guarda un tensor propio; se vuelve a leer con weights_only=True.
+        # nosemgrep: trailofbits.python.pickles-in-pytorch.pickles-in-pytorch
         torch.save(se, str(cache_file))
     except Exception:  # noqa: BLE001 - persistence is best-effort
         pass

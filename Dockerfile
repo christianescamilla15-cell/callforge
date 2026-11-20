@@ -17,6 +17,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Parches de seguridad de Debian publicados después del digest (p. ej. zlib1g CVE-2026-85091, HIGH con
+# arreglo, ausente en el digest del 5-nov): el CI escanea la imagen y bloquea CRITICAL/HIGH con arreglo.
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 # Dependencias en su propia capa (cambian menos que el código), con versión exacta.
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
