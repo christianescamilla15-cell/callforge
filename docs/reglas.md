@@ -146,6 +146,7 @@ Mock**. Ver [ADR 0002](adr/0002-cadena-de-proveedores-llm.md).
 | V4 | El audio se cachea por texto normalizado y voz; el texto se normaliza para hablarse | `tests/test_voice.py::test_cached_tts_serves_from_disk_and_normalizes`, `tests/test_tts_normalize.py::test_normalize_expands_numbers_and_percent`, `tests/test_tts_normalize.py::test_normalize_strips_markdown_urls_and_emoji` |
 | V5 | Clonar una voz exige nombre seguro y audio suficiente; a ffmpeg sólo llega una extensión de audio conocida | `tests/test_voice.py::test_upload_voice_rejects_bad_name_and_short_audio`, `tests/test_voice.py::test_upload_voice_wav_and_list`, `tests/test_voice.py::test_upload_voice_only_hands_ffmpeg_a_known_audio_extension` |
 | V6 | El mensaje de voz entrante se guarda en el buzón (referencia de clonación y QA) | `tests/test_voice.py::test_voice_message_persists_audio_to_inbox` |
+| V7 | El servidor de voz sólo usa voces que existen en `voices/`: el nombre pedido se compara con los archivos y el caché de embeddings usa el nombre del disco; un nombre con ruta (`../`, separadores) da 404 sin leer ni escribir fuera de la carpeta | `tests/test_voice_server.py::test_la_voz_se_resuelve_solo_contra_archivos_de_voices`, `tests/test_voice_server.py::test_un_nombre_con_ruta_no_lee_ni_escribe_fuera_de_voices`, `tests/test_voice_server.py::test_el_cache_usa_el_nombre_del_disco` |
 
 ## 11. Paridad, contrato y recorrido de punta a punta
 
