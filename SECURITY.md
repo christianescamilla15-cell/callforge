@@ -25,8 +25,9 @@ fallo.
   con fecha de vencimiento (`exp:AAAA-MM-DD`) y motivo; al vencer, el CI vuelve a bloquear. La propone quien
   abre el PR y la aprueba el dueño del repositorio (CODEOWNERS) al revisarlo. Hoy: ninguna.
 - **Análisis estático:** un falso positivo se suprime en la línea con `# nosemgrep: <regla>` y su motivo en
-  el comentario de arriba (hoy tres: un `subprocess` con lista de argumentos sin shell, `torch.save` de un
-  tensor propio y un aviso de compatibilidad con Python 3.6). El SARIF que se sube omite lo suprimido.
+  el comentario de arriba (hoy cuatro: un `subprocess` con lista de argumentos sin shell, `torch.load` con
+  `weights_only=True` y `torch.save` de un tensor propio en el servidor de voz, y un aviso de compatibilidad
+  con Python 3.6). El SARIF que se sube omite lo suprimido.
 - **Secretos:** un hallazgo de gitleaks no se suprime: el valor se reemplaza (variable de entorno o valor
   generado) y, si llegó a publicarse, se rota.
 
