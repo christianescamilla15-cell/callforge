@@ -48,7 +48,7 @@ jobs:
       CALLFORGE_TEST_POSTGRES_URL: ${{ matrix.bd == 'postgresql' && 'postgresql+psycopg2://callforge:solo-para-ci@localhost:5432/callforge_pruebas' || '' }}
       CALLFORGE_EXIGIR_POSTGRES: ${{ matrix.bd == 'postgresql' && '1' || '0' }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: construir la imagen (el mismo Dockerfile que usa Render)
         run: docker build -t callforge:ci .
       - name: el Python de la imagen es el mismo que prueba el CI
