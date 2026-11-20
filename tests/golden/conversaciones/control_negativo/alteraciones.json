@@ -1,0 +1,38 @@
+{
+  "esperado_alterado": {
+    "faltantes": [
+      "C99/1"
+    ],
+    "sobrantes": [
+      "C04/2"
+    ],
+    "distintas": {
+      "C02/2": [
+        "agente",
+        "ruta"
+      ],
+      "C05/2": [
+        "escalada",
+        "estado"
+      ]
+    }
+  },
+  "entrada_alterada": {
+    "faltantes": [],
+    "sobrantes": [],
+    "distintas": {
+      "C03/1": [
+        "agente",
+        "categoria",
+        "con_resumen",
+        "escalada",
+        "estado",
+        "intent",
+        "ruta",
+        "ticket_prioridad",
+        "ticket_titulo",
+        "urgencia"
+      ]
+    }
+  }
+}
