@@ -8,6 +8,7 @@ from callforge.application.dtos import (
 )
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.domain.entities import LLMUsage, Message, utcnow
+from callforge.domain.lifecycle import transition
 from callforge.domain.value_objects import (
     ConversationStatus,
     MessageRole,
@@ -63,6 +64,11 @@ class SendMessage:
                 ticket_id=None,
                 conversation_status=conversation.status.value,
             )
+
+        # A customer writing again on a RESOLVED conversation reopens it: the
+        # bot answers an ACTIVE conversation (lifecycle: RESOLVED -> ACTIVE).
+        if conversation.status == ConversationStatus.RESOLVED:
+            transition(conversation, ConversationStatus.ACTIVE)
 
         history = [
             {"role": m.role.value, "content": m.content}
@@ -138,7 +144,7 @@ class SendMessage:
             self._uow.tickets.add(outcome.ticket)
             self._uow.tickets.add_escalation(outcome.escalation)
             ticket_id = outcome.ticket.id
-            conversation.status = ConversationStatus.ESCALATED
+            transition(conversation, ConversationStatus.ESCALATED)
 
         # Update conversation classification
         conversation.intent = outcome.intent

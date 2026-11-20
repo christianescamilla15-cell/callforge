@@ -109,6 +109,8 @@ def close_conversation(
         status = CloseConversation(uow).execute(conversation_id, resolved=body.resolved)
     except ConversationNotFoundError:
         raise HTTPException(status_code=404, detail="Conversation not found") from None
+    except ConversationClosedError:
+        raise HTTPException(status_code=409, detail="Conversation is closed") from None
     return {"conversation_id": conversation_id, "status": status}
 
 

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from callforge.application.dtos import ConversationNotFoundError
+from callforge.application.dtos import ConversationClosedError, ConversationNotFoundError
 from callforge.application.unit_of_work import UnitOfWork
-from callforge.domain.entities import Conversation, utcnow
+from callforge.domain.entities import Conversation
+from callforge.domain.lifecycle import transition
 from callforge.domain.value_objects import ConversationStatus
 
 
@@ -26,10 +27,13 @@ class CloseConversation:
         conversation = self._uow.conversations.get(conversation_id)
         if conversation is None:
             raise ConversationNotFoundError(conversation_id)
-        conversation.status = (
-            ConversationStatus.RESOLVED if resolved else ConversationStatus.CLOSED
+        if conversation.status == ConversationStatus.CLOSED:
+            # Terminal: a closed conversation is neither reopened nor re-closed.
+            raise ConversationClosedError(conversation_id)
+        transition(
+            conversation,
+            ConversationStatus.RESOLVED if resolved else ConversationStatus.CLOSED,
         )
-        conversation.updated_at = utcnow()
         self._uow.conversations.update(conversation)
         self._uow.commit()
         return conversation.status.value
