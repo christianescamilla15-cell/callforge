@@ -123,3 +123,17 @@ def test_la_clave_vacia_del_tenant_por_omision_no_es_una_credencial(tmp_path):
         assert SqlTenantRepository(sesion).get_by_api_key("") is None
     finally:
         sesion.close()
+
+
+def test_una_credencial_con_caracteres_raros_es_401_no_500(tmp_path):
+    """Las credenciales se comparan en tiempo constante; un valor no ASCII no debe tumbar la petición."""
+    settings = make_test_settings(tmp_path)
+    settings.api_token = "token-global"
+    settings.admin_token = "admin-global"
+    with TestClient(create_app(settings)) as client:
+        raro = "contraseña-ñ".encode("utf-8")   # bytes no ASCII en la cabecera, tal cual llegan
+        assert client.get("/api/v1/metrics", headers={"X-API-Token": raro}).status_code == 401
+        assert client.post("/api/v1/admin/tenants", json={"name": "X"},
+                           headers={"X-Admin-Token": raro}).status_code == 401
+        assert client.post("/api/v1/admin/tenants", json={"name": "X"},
+                           headers={"X-Admin-Token": "admin-global"}).status_code == 201

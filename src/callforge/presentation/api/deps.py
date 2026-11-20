@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import secrets
 from collections.abc import Iterator
 
 from fastapi import Depends, Header, HTTPException, Request
@@ -20,6 +21,11 @@ def get_workflow(request: Request) -> SupportWorkflow:
     return request.app.state.workflow
 
 
+def _iguales(recibido: str, esperado: str) -> bool:
+    """Constant-time comparison of credentials (bytes: a non-ASCII header must be a 401, not a 500)."""
+    return secrets.compare_digest(recibido.encode("utf-8"), esperado.encode("utf-8"))
+
+
 def resolve_tenant_id(
     settings: Settings, session_factory, x_api_token: str | None
 ) -> str | None:
@@ -31,7 +37,7 @@ def resolve_tenant_id(
     - Anything else                     -> None (unauthorized)
     """
     if x_api_token:
-        if settings.api_token and x_api_token == settings.api_token:
+        if settings.api_token and _iguales(x_api_token, settings.api_token):
             return DEFAULT_TENANT_ID
         session = session_factory()
         try:
@@ -93,5 +99,5 @@ def require_admin(
 ) -> None:
     if not settings.admin_token:
         raise HTTPException(status_code=403, detail="Admin API disabled (set ADMIN_TOKEN)")
-    if x_admin_token != settings.admin_token:
+    if not x_admin_token or not _iguales(x_admin_token, settings.admin_token):
         raise HTTPException(status_code=401, detail="Invalid or missing X-Admin-Token")

@@ -97,6 +97,7 @@ RESOLVED → ACTIVE (el cliente vuelve a escribir) / CLOSED; ESCALATED → RESOL
 | T8 | El alta de tenants exige `ADMIN_TOKEN` (403 sin configurar, 401 si no coincide) | `tests/test_multi_tenant.py::test_admin_api_disabled_without_admin_token`, `tests/test_multi_tenant.py::test_admin_requires_correct_token` |
 | T9 | Matriz perfil × ruta (anónimo, ajena, global, operador, administrador) con el código esperado | `tests/e2e/test_soporte_por_rol.py::test_matriz_de_acceso_por_perfil` |
 | T10 | El webchat exige la credencial cuando hay `API_TOKEN` y rechaza una inválida | `tests/test_webchat.py::test_webchat_requires_token_when_configured`, `tests/e2e/test_soporte_por_rol.py::test_el_webchat_rechaza_una_credencial_invalida` |
+| T11 | `API_TOKEN` y `ADMIN_TOKEN` se comparan en tiempo constante; una credencial con bytes no ASCII da 401, no 500 | `tests/test_aislamiento_tenants.py::test_una_credencial_con_caracteres_raros_es_401_no_500` |
 
 ## 7. Cadena de proveedores LLM, respaldo y costo · `infrastructure/llm/`
 
