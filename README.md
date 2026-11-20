@@ -2,10 +2,11 @@
 
 > **Multi-agent voice + LLM customer support platform.** Whisper STT (0.9s) → 6 specialized agents → Kokoro TTS (CPU, RTF 0.34). LLM provider fallback (Groq → Ollama → Mock) for zero-cost offline operation. Clean Architecture, multi-tenant, Windows-service deployable.
 
+[![ci](https://github.com/christianescamilla15-cell/callforge/actions/workflows/ci.yml/badge.svg)](https://github.com/christianescamilla15-cell/callforge/actions/workflows/ci.yml)
+[![seguridad](https://github.com/christianescamilla15-cell/callforge/actions/workflows/seguridad.yml/badge.svg)](https://github.com/christianescamilla15-cell/callforge/actions/workflows/seguridad.yml)
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-async-009688.svg)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/tests-15_suites_offline-green.svg)](#tests)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](#)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -18,12 +19,13 @@
 | **Cost-optimized resilience** | LLM provider chain (`Groq → Ollama → Mock`) keeps the system answering when any provider fails, with $0 floor (local + mock) |
 | **Hybrid RAG with graceful degradation** | `nomic-embed-text` embeddings + keyword fallback when embedder is unavailable — lazy backfill for legacy docs |
 | **Multi-tenant from day 1** | `tenant_id` scoping in every aggregate, per-tenant API keys, per-tenant metrics |
-| **Clean Architecture** | Domain → Application → Infrastructure → Presentation. 100% of tests run offline (MockProvider + SQLite tmp) — no flaky CI |
+| **Clean Architecture** | Domain → Application → Infrastructure → Presentation. 100% of tests run offline (MockProvider + SQLite tmp, PostgreSQL 16 in CI) — no flaky CI |
+| **Verifiable quality** | One test per business rule ([docs/reglas.md](docs/reglas.md), 75 rules), golden-file parity against an independent oracle with a negative control, E2E per role against the production image, versioned OpenAPI contract |
 | **Operational maturity** | Deployable as Windows service via nssm. Alembic migrations auto-stamp pre-existing DBs at boot. Agent runs persist full trace (tokens, cost, latency, confidence, error) |
 | **Cloning + voice synthesis** | Chatterbox MIT voice cloning in isolated micro-service (separate venv with torch cu124) avoids GPU contention — auto-fallback to Kokoro if down |
 | **LLM specialization roadmap** | QLoRA fine-tune plan documented in [FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md): synthetic dataset → Unsloth/RunPod → GGUF export → Ollama. Specialization > scale for narrow tasks |
 
-**By the numbers** — 8 agents · 9 use-cases · 14 routes · 75 Python modules · 8,403 LOC · 15 test suites (100% offline)
+**By the numbers** (2026-11-20) — 6 pipeline agents · 8 use-cases · 18 API operations + webchat · 75 Python modules · ~6,300 LOC in `src/` · 192 tests in 21 suites (100% offline)
 
 ---
 
@@ -64,6 +66,8 @@ flowchart TD
 
 Dependency rule: `presentation → application → domain`; `infrastructure` implements domain ports. Endpoints contain zero business logic.
 
+C4 model (context, containers, components), the support turn and the conversation lifecycle: [docs/arquitectura](docs/arquitectura/README.md). Design decisions: [docs/adr](docs/adr/). API contract: [docs/api/openapi.json](docs/api/openapi.json) (also live at `/docs`).
+
 ### Message flow (text)
 
 1. **Router** classifies intent, category, urgency, frustration → picks next agent.
@@ -98,6 +102,8 @@ If all fail, workflow returns a controlled message and logs a `fallback_used` ev
 ---
 
 ## Quick start (zero cost default)
+
+Requires Python 3.12 (the same version CI tests and the Docker image ships).
 
 ```powershell
 python -m venv .venv
@@ -172,10 +178,24 @@ If `API_TOKEN` is set in `.env`, add `-H "X-API-Token: <token>"` to each request
 ## Tests
 
 ```bash
-pytest
+pip install -r requirements-dev.txt
+ruff check .
+pytest                                   # 192 tests, offline (PostgreSQL ones skip without a database)
 ```
 
-All 15 test suites run offline with `MockProvider` + SQLite in tmp. Coverage: router, fallback chain, end-to-end conversation flow, escalation policy + flow, knowledge retrieval, health/metrics/feedback, API-token gate.
+- **One test per business rule**: [docs/reglas.md](docs/reglas.md) maps every rule (routing, quality retry, escalation, conversation lifecycle incl. invalid transitions, tenant isolation, LLM fallback order, RAG, migrations, voice) to the tests that cover it; `tests/test_reglas_doc.py` keeps the table honest.
+- **Golden parity** (`tests/test_paridad_golden.py`): 7 conversations / 12 turns through the API vs. an independent oracle (`tests/golden/generar_golden.py`), multiset comparison, control figures (runs, events, tickets, tokens, cost in `Decimal`) and a negative control that must detect seeded differences.
+- **E2E per role** (`tests/e2e/`): admin, tenant operator, global token, anonymous and webchat customer; CI also runs it over real HTTP/WebSocket against the production image.
+- **PostgreSQL 16**: `CALLFORGE_TEST_POSTGRES_URL=postgresql+psycopg2://... pytest tests/test_postgres.py`.
+- Scripts that need a GPU, Ollama, RunPod or real API keys are manual and listed in [RUNBOOK.md](RUNBOOK.md).
+
+## Deployment
+
+Render Blueprint ([render.yaml](render.yaml)): Docker image from `main`, health check `/api/v1/health`. CI builds that same image, starts it with the Blueprint's variables and runs the smoke test and the E2E against it. Deploy, verification (`herramientas/humo.sh`), rollback and the Windows/nssm service: [RUNBOOK.md](RUNBOOK.md).
+
+## Security
+
+Every change runs CodeQL, Semgrep, Trivy (dependencies, Dockerfile and image), gitleaks over the whole history and an SBOM; how to report a vulnerability and how exceptions are handled: [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
@@ -193,6 +213,10 @@ All 15 test suites run offline with `MockProvider` + SQLite in tmp. Coverage: ro
 See [ROADMAP_VOZ.md](ROADMAP_VOZ.md) and [ROADMAP_FINETUNE.md](ROADMAP_FINETUNE.md) for phase-by-phase plans.
 
 ---
+
+## License
+
+[MIT](LICENSE) © 2026 Christian Hernández Escamilla.
 
 ## Author
 
