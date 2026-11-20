@@ -20,8 +20,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-# Vanilla INSTRUCT base (NOT abliterated — refund handling doesn't need it; we
-# want it to LEARN the policy behavior cleanly). Apache-2.0.
+# Official INSTRUCT base: we want it to LEARN the refund-policy behavior
+# cleanly from the dataset. Apache-2.0.
 BASE_MODEL = "unsloth/Qwen3-4B-Instruct-2507"
 MAX_SEQ = 4096
 

@@ -190,7 +190,7 @@ All 15 test suites run offline with `MockProvider` + SQLite in tmp. Coverage: ro
 - 🔮 Redis session/response cache (deferred until volume justifies)
 - 🔮 Dedicated vector DB (ChromaDB/FAISS) when corpus exceeds ~thousands of docs
 
-See [ROADMAP_VOZ.md](ROADMAP_VOZ.md), [ROADMAP_LLM_LOCAL.md](ROADMAP_LLM_LOCAL.md), [ROADMAP_FINETUNE.md](ROADMAP_FINETUNE.md) for phase-by-phase plans.
+See [ROADMAP_VOZ.md](ROADMAP_VOZ.md) and [ROADMAP_FINETUNE.md](ROADMAP_FINETUNE.md) for phase-by-phase plans.
 
 ---
 

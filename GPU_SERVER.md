@@ -1,75 +1,62 @@
-# Servidor GPU on-demand para el cerebro grande
+# Servidor GPU bajo demanda (Ollama remoto)
 
-Para correr un modelo uncensored 12-14B (mejor personaje/español/velocidad que
-el 4b local) **solo cuando conversas**, pagando por hora. Tu arquitectura ya es
-remota-ready: CallForge apunta su Ollama a una IP remota y **cae solo al modelo
-local si la caja está apagada** — nunca pierdes el compañero.
+Para correr un modelo más grande que el local **sólo mientras se necesita**, pagando por hora: el
+«maestro» que genera el dataset del agente de reembolsos ([FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md)),
+o un modelo mayor para comparar contra el especialista afinado con `scripts/refund_eval.py`.
+CallForge apunta su Ollama a una IP remota y **cae solo al modelo local si la caja está apagada**.
+
+> Manual: nada de esto corre en el CI (necesita GPU y una cuenta del proveedor). Ver RUNBOOK.md.
 
 ## Cómo funciona (la pieza ya está construida)
 
-`.env` tiene dos llaves nuevas:
+`.env` tiene dos llaves:
 ```
-OLLAMA_REMOTE_URL=        # http://<ip>:11434 de la caja GPU (vacío = off)
+OLLAMA_REMOTE_URL=        # http://<ip>:11434 de la caja GPU (vacío = apagado)
 OLLAMA_REMOTE_MODEL=      # el modelo grande de la caja
 ```
-Cadena resultante (con LLM_PRIMARY=ollama): **remoto → local 4b → groq → mock**.
-Si la caja se apaga o no responde, sigue tu 4b local sin que hagas nada.
+Cadena resultante (con `LLM_PRIMARY=ollama`): **remoto → local → groq → mock**.
+Si la caja se apaga o no responde, sigue el modelo local sin que hagas nada.
 
-El toggle: `scripts\gpu_remote.ps1 -Ip <ip> -Model <modelo>` (verifica la caja,
-escribe el .env) y `scripts\gpu_remote.ps1 -Off` para volver al local. Luego un
-restart elevado de callforge.
-
----
-
-## Camino A — manual (funciona con CUALQUIER caja: Vast.ai, RunPod, LAN)
-
-El más simple y a prueba de todo:
-
-1. **Renta una GPU** (Vast.ai o TensorDock, RTX 4090 24GB, ~$0.30-0.55/h). Elige
-   una plantilla con **Ollama** preinstalado, o una Ubuntu + CUDA y corre:
-   `curl -fsSL https://ollama.com/install.sh | sh`
-2. En la caja, baja el modelo grande:
-   `ollama pull huihui_ai/qwen3-abliterated:14b`   (Apache-2.0, ~9GB)
-3. **Expón Ollama de forma segura.** NO lo dejes abierto a internet sin candado.
-   Opciones:
-   - El **proxy del proveedor** (RunPod da `https://<pod>-11434.proxy.runpod.net`).
-   - Un **túnel** (`cloudflared tunnel` o `tailscale`) — tienes cloudflared.
-   - O firewall: abre 11434 solo a tu IP.
-4. En tu PC: `scripts\gpu_remote.ps1 -Ip <host> -Model huihui_ai/qwen3-abliterated:14b`
-   (si usas el proxy https, pasa `-Port 443`).
-5. Restart elevado de callforge. Listo: el compañero usa el cerebro grande, con
-   tu 4b local de red de seguridad.
-6. **Cuando termines**: apaga/borra la caja en el panel del proveedor (deja de
-   cobrar) y `scripts\gpu_remote.ps1 -Off` + restart para volver al local.
-
-Costo a 1-2h/día: **~$11-33/mes** (deep-research verificado). Vast.ai no prohíbe
-contenido uncensored explícitamente; RunPod tampoco.
+El interruptor: `scripts\gpu_remote.ps1 -Ip <ip> -Model <modelo>` (verifica la caja y escribe el `.env`)
+y `scripts\gpu_remote.ps1 -Off` para volver al local. Después, reinicia el servicio de CallForge.
 
 ---
 
-## Camino B — automatizado (RunPod API, opcional)
+## Camino A — manual (cualquier proveedor: Vast.ai, RunPod, una caja en la LAN)
 
-`scripts/runpod_gpu.py` arranca/para una caja por script:
-1. Cuenta RunPod + crédito + **API key** → `RUNPOD_API_KEY` en `.env`.
-2. Crea un **Network Volume** (~20GB) para que el modelo persista entre arranques
-   (no re-descargar). Pon su id en `VOLUME_ID` arriba del script.
+1. **Renta una GPU** (p. ej. RTX 4090 de 24 GB). Elige una plantilla con **Ollama** preinstalado, o una
+   Ubuntu + CUDA y corre: `curl -fsSL https://ollama.com/install.sh | sh`
+2. En la caja, baja el modelo: `ollama pull mistral-small:24b` (o el que vayas a usar de maestro).
+3. **Expón Ollama de forma segura.** NO lo dejes abierto a internet sin candado:
+   - el **proxy del proveedor** (RunPod da `https://<pod>-11434.proxy.runpod.net`);
+   - un **túnel** (`cloudflared tunnel` o `tailscale`);
+   - o un firewall que abra 11434 sólo a tu IP.
+4. En tu PC: `scripts\gpu_remote.ps1 -Ip <host> -Model mistral-small:24b` (con el proxy https, `-Port 443`).
+5. Reinicia CallForge: el modelo grande responde primero y el local queda de red de seguridad.
+6. **Cuando termines**: apaga o borra la caja en el panel del proveedor (deja de cobrar) y
+   `scripts\gpu_remote.ps1 -Off` + reinicio para volver al local.
+
+---
+
+## Camino B — automatizado (API de RunPod, opcional)
+
+`scripts/runpod_gpu.py` arranca y para una caja por script:
+1. Cuenta de RunPod con crédito y **API key** → `RUNPOD_API_KEY` en `.env`.
+2. (Opcional) un **Network Volume** (~20 GB) para que el modelo persista entre arranques; pásalo con
+   `--volume <id>`.
 3. `.venv\Scripts\python.exe -m pip install runpod`
-4. `python scripts/runpod_gpu.py start` → arranca Ollama en GPU, imprime la URL.
-5. Baja el modelo una vez (curl al `/api/pull` que imprime).
-6. `gpu_remote.ps1` con la URL + restart.
-7. `python scripts/runpod_gpu.py stop` cuando termines (corta el cobro, guarda el
-   volumen).
+4. `python scripts/runpod_gpu.py start` → arranca Ollama en la GPU, baja el modelo y escribe el `.env`.
+5. Reinicia CallForge.
+6. `python scripts/runpod_gpu.py stop` cuando termines (corta el cobro; el volumen se conserva).
 
-Es un scaffold honesto: revisa `GPU_TYPE_ID`/`VOLUME_ID` y la cuenta antes de
-correr en serio.
+Es un andamio honesto: revisa la GPU, el disco y la cuenta antes de correrlo en serio.
 
 ---
 
-## Modelo recomendado para la caja (12GB+ VRAM)
+## Modelos sugeridos para la caja
 
-- `huihui_ai/qwen3-abliterated:14b` — Apache-2.0, 9GB, generación nueva.
-- `huihui_ai/qwen2.5-abliterate:14b` — Apache-2.0, 9GB, limpio (sin la alucinación
-  de turnos de los qwen3; aunque el trim ya la maneja).
-- Mistral-Nemo-12B uncensored (Apache-2.0) — el mejor español, ~7.5GB.
+- `mistral-small:24b` — buen español y JSON estable; maestro del dataset de reembolsos.
+- `qwen3:30b-a3b` — MoE, rápido en una tarjeta de 24 GB.
+- `llama3.3:70b` — en una A6000 de 48 GB, para comparar contra el especialista afinado.
 
-Todos caben en una 4090/3090 24GB con muchísimo margen y corren a tiempo real.
+Todos con licencia abierta y publicados en la biblioteca oficial de Ollama.

@@ -1,4 +1,5 @@
-# Point CallForge's companion at a remote GPU "big brain" (or revert to local).
+# Point CallForge at a remote GPU Ollama box (or revert to local). Manual tool:
+# needs a GPU box and is never run by CI. See GPU_SERVER.md.
 # ASCII-only (PowerShell 5.1 reads .ps1 as ANSI).
 #
 # RunPod (proxy URL, https, no port):
@@ -7,18 +8,18 @@
 #   scripts\gpu_remote.ps1 -Ip 1.2.3.4
 #   scripts\gpu_remote.ps1 -Off
 #
-# Default model = the uncensored Apache-2.0 30B-A3B MoE (near-70B quality,
-# ~70-120 tok/s on a 24GB card, ~19-20GB VRAM). Override with -Model.
+# Default model = qwen3:30b-a3b (Apache-2.0 MoE, fits a 24GB card).
+# Override with -Model (e.g. mistral-small:24b as dataset teacher).
 #
 # Updates .env (OLLAMA_REMOTE_URL / OLLAMA_REMOTE_MODEL), health-checks the
 # remote Ollama, and reminds you to restart. When the box is down, CallForge
-# falls back to the LOCAL model automatically - you never lose the companion.
+# falls back to the LOCAL model automatically.
 
 param(
     [string]$Url = "",
     [string]$Ip = "",
     [int]$Port = 11434,
-    [string]$Model = "huihui_ai/qwen3-abliterated:30b-a3b-instruct-2507-q4_K_M",
+    [string]$Model = "qwen3:30b-a3b",
     [switch]$Off
 )
 
