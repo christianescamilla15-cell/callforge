@@ -107,6 +107,17 @@ jobs:
             echo "::error::la imagen de producción trae pytest (requirements-dev.txt no debe instalarse ahí)"
             exit 1
           fi
+      - name: inventario de la imagen (prueba de que hay qué analizar)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: image
+          image-ref: callforge:ci
+          format: json
+          output: trivy-imagen.json
+          list-all-pkgs: 'true'
+          exit-code: '0'
+      # Sin esto el escaneo bloqueante podría terminar en verde sin haber inventariado un solo paquete.
+      - run: python3 herramientas/verificar_reportes.py trivy trivy-imagen.json
       - name: vulnerabilidades de la imagen (bloqueante en CRITICAL/HIGH con arreglo)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
