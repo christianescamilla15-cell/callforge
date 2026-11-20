@@ -1,0 +1,16 @@
+# CallForge · dependencias de pruebas y calidad (no van a la imagen de producción).
+# Versión exacta por la misma razón que requirements.txt.
+-r requirements.txt
+
+# Directas
+pytest==9.2.0
+pytest-cov==7.1.0
+ruff==0.17.4
+numpy==2.5.4          # sólo la prueba del pulido de audio de Kokoro (tests/test_voice.py)
+
+# Transitivas
+coverage==7.17.2
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+pygments==2.21.0
