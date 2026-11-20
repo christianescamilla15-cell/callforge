@@ -1,10 +1,19 @@
 from __future__ import annotations
 
-import pytest
-from fastapi.testclient import TestClient
+import os
 
-from callforge.config import Settings
-from callforge.presentation.api.app import create_app
+# Importar callforge.presentation.api.app crea la app del módulo (la de uvicorn) con la configuración
+# del entorno: en las pruebas, que sea en memoria y sin proveedores externos (sin crear
+# ./support_agents.db en el repo). Cada prueba arma su propia app con make_test_settings.
+for _clave, _valor in {"DATABASE_URL": "sqlite://", "OLLAMA_ENABLED": "false", "TTS_ENABLED": "false",
+                       "GROQ_API_KEY": "", "MOCK_ENABLED": "true"}.items():
+    os.environ.setdefault(_clave, _valor)
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+
+from callforge.config import Settings  # noqa: E402
+from callforge.presentation.api.app import create_app  # noqa: E402
 
 
 def make_test_settings(tmp_path) -> Settings:

@@ -35,4 +35,5 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]   # el CI instala requirements-dev.txt, no el paquete: src/ entra por aquí
 addopts = "-q"
