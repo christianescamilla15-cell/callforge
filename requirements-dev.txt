@@ -7,6 +7,7 @@ pytest==9.2.0
 pytest-cov==7.1.0
 ruff==0.17.4
 numpy==2.5.4          # sólo la prueba del pulido de audio de Kokoro (tests/test_voice.py)
+psycopg2-binary==2.9.13  # integración contra PostgreSQL real (tests/test_postgres.py, extra [postgres])
 
 # Transitivas
 coverage==7.17.2
