@@ -1,7 +1,9 @@
 # ruff: la misma configuración en local y en el CI (no depende de la del equipo de quien lo corre).
 target-version = "py312"
 line-length = 110
-extend-exclude = [".venv-calidad", ".venv-voice"]
+# herramientas/confidencialidad.py y verificar_reportes.py son copias literales de la plantilla común del
+# portafolio (con su propio largo de línea): no se reescriben en cada repo. exportar_openapi.py sí se revisa.
+extend-exclude = [".venv-calidad", ".venv-voice", "herramientas/confidencialidad.py", "herramientas/verificar_reportes.py"]
 
 [lint]
 select = ["E", "F", "W", "I", "B", "UP"]
