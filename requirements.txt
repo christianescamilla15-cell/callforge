@@ -9,14 +9,14 @@
 # Extras opcionales que NO van a la imagen: voz local (kokoro-onnx, soundfile) y PostgreSQL.
 
 # Directas
-fastapi==0.162.7
+fastapi==0.163.2
 uvicorn[standard]==0.54.0
-sqlalchemy==2.1.8
+sqlalchemy==2.1.9
 alembic==1.20.1
 pydantic==2.14.3
 pydantic-settings==2.16.3
 httpx==0.28.1
-python-multipart==0.0.33
+python-multipart==0.0.34
 
 # Transitivas
 annotated-doc==0.0.6
