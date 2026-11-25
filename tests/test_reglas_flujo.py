@@ -1,7 +1,8 @@
 """Reglas del SupportWorkflow (la máquina de estados del turno), una prueba por regla.
 
 Un turno recorre: Router → (conocimiento) → especialista → calidad → [reintento] → política de
-escalamiento → [Escalation + Summarizer]. Cada prueba fija qué contesta cada agente (GuionLLM) y
+escalamiento → [Escalation + Summarizer]. Cada prueba corre con los DOS motores del turno (la máquina de
+estados y el adaptador LangGraph, fixture `motor`) y fija qué contesta cada agente (GuionLLM) y
 afirma la RUTA (agentes que corrieron, en orden), los eventos y el resultado. Las transiciones
 inválidas (un agente que el router no puede elegir, prioridades o urgencias fuera del catálogo,
 un proveedor caído a mitad del turno) se prueban igual que las válidas.
@@ -15,6 +16,7 @@ import pytest
 from callforge.domain.entities import ResolutionStep
 from callforge.domain.value_objects import ResolutionStepStatus
 from callforge.infrastructure.voice.phrases import CONTROLLED_FALLBACK
+from tests import apoyo
 from tests.apoyo import (
     CAIDO,
     GuionLLM,
@@ -27,6 +29,14 @@ from tests.apoyo import (
     responder,
     ruta,
 )
+
+
+@pytest.fixture(autouse=True, params=["state_machine", "langgraph"])
+def motor(request, monkeypatch):
+    """Cada regla del turno se prueba con la máquina de estados y con el adaptador LangGraph."""
+    monkeypatch.setattr(apoyo, "MOTOR", request.param)
+    return request.param
+
 
 # --------------------------------------------------------------------------- #
 # Enrutamiento por intención y urgencia

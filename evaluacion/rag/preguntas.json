@@ -1,0 +1,1081 @@
+{
+  "descripcion": "Preguntas de evaluación sobre corpus.json (literales, paráfrasis, multi-documento y fuera de dominio) con sus fuentes, una respuesta de referencia y los hechos clave que toda respuesta correcta debe contener.",
+  "version": "2026-11-25",
+  "preguntas": [
+    {
+      "id": "P001",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos segundos tengo que desconectar el módem de la corriente para reiniciarlo?",
+      "fuentes": [
+        "KB01"
+      ],
+      "respuesta_referencia": "Desconecta el módem de la corriente 60 segundos, vuelve a conectarlo y espera a que la luz de internet quede fija en verde.",
+      "hechos_clave": [
+        "60 segundos",
+        "fija en verde"
+      ]
+    },
+    {
+      "id": "P002",
+      "tipo": "literal",
+      "pregunta": "¿Qué día se emiten las facturas y hasta qué día se puede pagar sin recargo?",
+      "fuentes": [
+        "KB02"
+      ],
+      "respuesta_referencia": "Las facturas se emiten el día 1 de cada mes y puedes pagar sin recargo hasta el día 10.",
+      "hechos_clave": [
+        "día 1 de cada mes",
+        "día 10"
+      ]
+    },
+    {
+      "id": "P003",
+      "tipo": "literal",
+      "pregunta": "La luz de internet de mi módem está en rojo fijo, ¿qué significa?",
+      "fuentes": [
+        "KB03"
+      ],
+      "respuesta_referencia": "El rojo fijo en la luz de internet indica que no llega señal al domicilio; revisa que el cable coaxial esté bien apretado y consulta si hay una falla en tu zona.",
+      "hechos_clave": [
+        "no llega señal",
+        "cable coaxial"
+      ]
+    },
+    {
+      "id": "P004",
+      "tipo": "literal",
+      "pregunta": "tengo el wifi lento, en donde coloco el modem?",
+      "fuentes": [
+        "KB04"
+      ],
+      "respuesta_referencia": "Colócalo en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras.",
+      "hechos_clave": [
+        "alto y central",
+        "1 metro"
+      ]
+    },
+    {
+      "id": "P005",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos caracteres debe tener la nueva contraseña del wifi?",
+      "fuentes": [
+        "KB05"
+      ],
+      "respuesta_referencia": "La contraseña nueva del wifi debe tener entre 8 y 63 caracteres e incluir al menos un número.",
+      "hechos_clave": [
+        "entre 8 y 63 caracteres",
+        "un número"
+      ]
+    },
+    {
+      "id": "P006",
+      "tipo": "literal",
+      "pregunta": "¿Qué porcentaje de la velocidad contratada me garantizan y cómo hago bien la prueba de velocidad?",
+      "fuentes": [
+        "KB06"
+      ],
+      "respuesta_referencia": "Se garantiza al menos el 80 % de la velocidad contratada medida por cable; conecta una computadora con cable de red, cierra descargas y repite la prueba de la app 3 veces en horarios distintos.",
+      "hechos_clave": [
+        "80 %",
+        "por cable"
+      ]
+    },
+    {
+      "id": "P007",
+      "tipo": "literal",
+      "pregunta": "¿Dónde puedo consultar si hay una falla masiva en mi zona?",
+      "fuentes": [
+        "KB07"
+      ],
+      "respuesta_referencia": "En la app, en la sección Estado del servicio, o en el menú de voz de la línea de atención eligiendo la opción 1.",
+      "hechos_clave": [
+        "Estado del servicio",
+        "opción 1"
+      ]
+    },
+    {
+      "id": "P008",
+      "tipo": "literal",
+      "pregunta": "¿Cada cuánto puedo bajar de plan?",
+      "fuentes": [
+        "KB08"
+      ],
+      "respuesta_referencia": "Bajar de plan sólo se permite una vez cada 6 meses y entra en vigor al inicio del siguiente periodo de facturación.",
+      "hechos_clave": [
+        "una vez cada 6 meses"
+      ]
+    },
+    {
+      "id": "P009",
+      "tipo": "literal",
+      "pregunta": "¿Me podría decir cuánto cuesta al mes el plan de 300 megas?",
+      "fuentes": [
+        "KB09"
+      ],
+      "respuesta_referencia": "El plan de 300 megas cuesta $549 al mes, con impuestos incluidos.",
+      "hechos_clave": [
+        "$549 al mes"
+      ]
+    },
+    {
+      "id": "P010",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos perfiles puedo crear en el control parental y tiene algún costo?",
+      "fuentes": [
+        "KB10"
+      ],
+      "respuesta_referencia": "Puedes crear hasta 5 perfiles y el control parental se activa sin costo desde la app.",
+      "hechos_clave": [
+        "hasta 5 perfiles",
+        "sin costo"
+      ]
+    },
+    {
+      "id": "P011",
+      "tipo": "literal",
+      "pregunta": "¿Qué antigüedad máxima debe tener el comprobante de domicilio para contratar?",
+      "fuentes": [
+        "KB11"
+      ],
+      "respuesta_referencia": "El comprobante de domicilio debe tener una antigüedad no mayor a 3 meses.",
+      "hechos_clave": [
+        "3 meses"
+      ]
+    },
+    {
+      "id": "P012",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos metros de cable incluye la instalación y cuánto cobran por metro adicional?",
+      "fuentes": [
+        "KB12"
+      ],
+      "respuesta_referencia": "La instalación incluye hasta 30 metros de cable y cada metro adicional cuesta $15.",
+      "hechos_clave": [
+        "30 metros",
+        "$15"
+      ]
+    },
+    {
+      "id": "P013",
+      "tipo": "literal",
+      "pregunta": "¿Cuánto cuesta la visita técnica cuando el problema lo causó el cliente?",
+      "fuentes": [
+        "KB13"
+      ],
+      "respuesta_referencia": "Si el problema lo causó el cliente, la visita técnica cuesta $250 y se carga en la siguiente factura.",
+      "hechos_clave": [
+        "$250"
+      ]
+    },
+    {
+      "id": "P014",
+      "tipo": "literal",
+      "pregunta": "con cuanta anticipacion tengo que cancelar la visita tecnica para que no me cobren penalizacion?",
+      "fuentes": [
+        "KB14"
+      ],
+      "respuesta_referencia": "Debes cancelar con al menos 2 horas de anticipación al inicio de la ventana horaria; si no, se cobra una penalización de $120 por visita fallida.",
+      "hechos_clave": [
+        "2 horas",
+        "$120"
+      ]
+    },
+    {
+      "id": "P015",
+      "tipo": "literal",
+      "pregunta": "¿Cuánto cuesta el cambio de domicilio y con cuántos días de anticipación debo solicitarlo?",
+      "fuentes": [
+        "KB15"
+      ],
+      "respuesta_referencia": "El cambio de domicilio cuesta $300 y debes solicitarlo con al menos 5 días hábiles de anticipación.",
+      "hechos_clave": [
+        "$300",
+        "5 días hábiles"
+      ]
+    },
+    {
+      "id": "P016",
+      "tipo": "literal",
+      "pregunta": "¿En cuánto tiempo se completa la portabilidad de mi número fijo?",
+      "fuentes": [
+        "KB16"
+      ],
+      "respuesta_referencia": "La portabilidad se completa en un máximo de 24 horas hábiles, con una posible interrupción de hasta 1 hora.",
+      "hechos_clave": [
+        "24 horas hábiles"
+      ]
+    },
+    {
+      "id": "P017",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos mensajes guarda el buzón de voz y de cuántos minutos cada uno?",
+      "fuentes": [
+        "KB17"
+      ],
+      "respuesta_referencia": "El buzón de voz guarda hasta 20 mensajes de un máximo de 3 minutos cada uno.",
+      "hechos_clave": [
+        "20 mensajes",
+        "3 minutos"
+      ]
+    },
+    {
+      "id": "P018",
+      "tipo": "literal",
+      "pregunta": "¿Cómo activo el desvío de llamadas de mi línea fija?",
+      "fuentes": [
+        "KB18"
+      ],
+      "respuesta_referencia": "Marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación; para desactivarlo marca *73.",
+      "hechos_clave": [
+        "*72",
+        "10 dígitos"
+      ]
+    },
+    {
+      "id": "P019",
+      "tipo": "literal",
+      "pregunta": "Mi decodificador muestra «Error E-12», ¿qué significa?",
+      "fuentes": [
+        "KB19"
+      ],
+      "respuesta_referencia": "Significa que el cable coaxial del decodificador está flojo o dañado.",
+      "hechos_clave": [
+        "cable coaxial",
+        "flojo o dañado"
+      ]
+    },
+    {
+      "id": "P020",
+      "tipo": "literal",
+      "pregunta": "Que pilas lleva el control remoto del decodificador?",
+      "fuentes": [
+        "KB20"
+      ],
+      "respuesta_referencia": "El control remoto usa 2 pilas AAA.",
+      "hechos_clave": [
+        "2 pilas AAA"
+      ]
+    },
+    {
+      "id": "P021",
+      "tipo": "literal",
+      "pregunta": "¿Cuánto cuesta el paquete de canales de deportes?",
+      "fuentes": [
+        "KB21"
+      ],
+      "respuesta_referencia": "El paquete de deportes cuesta $189 al mes.",
+      "hechos_clave": [
+        "$189 al mes"
+      ]
+    },
+    {
+      "id": "P022",
+      "tipo": "literal",
+      "pregunta": "Si pago por transferencia bancaria, ¿en cuánto tiempo se refleja y qué referencia uso?",
+      "fuentes": [
+        "KB22"
+      ],
+      "respuesta_referencia": "Las transferencias se reflejan en un máximo de 1 día hábil y debes usar la referencia de 12 dígitos que aparece en tu factura.",
+      "hechos_clave": [
+        "1 día hábil",
+        "referencia de 12 dígitos"
+      ]
+    },
+    {
+      "id": "P023",
+      "tipo": "literal",
+      "pregunta": "¿Qué descuento me dan con el pago domiciliado y qué día hacen el cargo?",
+      "fuentes": [
+        "KB23"
+      ],
+      "respuesta_referencia": "Con el pago domiciliado recibes un descuento de $30 al mes y el cargo se hace el día 5 de cada mes.",
+      "hechos_clave": [
+        "$30 al mes",
+        "día 5"
+      ]
+    },
+    {
+      "id": "P024",
+      "tipo": "literal",
+      "pregunta": "¿Cuánto cobra de comisión la tienda de conveniencia por cada pago?",
+      "fuentes": [
+        "KB24"
+      ],
+      "respuesta_referencia": "La tienda de conveniencia cobra una comisión de $12 por pago.",
+      "hechos_clave": [
+        "$12"
+      ]
+    },
+    {
+      "id": "P025",
+      "tipo": "literal",
+      "pregunta": "Si no pago mi factura, ¿qué día se suspende el servicio?",
+      "fuentes": [
+        "KB25"
+      ],
+      "respuesta_referencia": "Si el adeudo sigue pendiente el día 20, el servicio se suspende.",
+      "hechos_clave": [
+        "día 20"
+      ]
+    },
+    {
+      "id": "P026",
+      "tipo": "literal",
+      "pregunta": "¿Cuánto cuesta la reconexión de un servicio suspendido por falta de pago?",
+      "fuentes": [
+        "KB26"
+      ],
+      "respuesta_referencia": "La reconexión cuesta $90 y se carga en la siguiente factura.",
+      "hechos_clave": [
+        "$90"
+      ]
+    },
+    {
+      "id": "P027",
+      "tipo": "literal",
+      "pregunta": "¿Cuántos días tengo para pedir una aclaración de un cargo que no reconozco en mi factura?",
+      "fuentes": [
+        "KB27"
+      ],
+      "respuesta_referencia": "Tienes 60 días naturales a partir de la emisión de la factura para pedir la aclaración.",
+      "hechos_clave": [
+        "60 días naturales"
+      ]
+    },
+    {
+      "id": "P028",
+      "tipo": "literal",
+      "pregunta": "¿Qué datos fiscales tengo que registrar para recibir factura electrónica?",
+      "fuentes": [
+        "KB29"
+      ],
+      "respuesta_referencia": "Debes registrar RFC, razón social, código postal fiscal, régimen fiscal y uso de la factura.",
+      "hechos_clave": [
+        "RFC",
+        "régimen fiscal"
+      ]
+    },
+    {
+      "id": "P029",
+      "tipo": "literal",
+      "pregunta": "¿De cuánto es la penalización si cancelo el servicio antes de terminar el plazo forzoso?",
+      "fuentes": [
+        "KB30"
+      ],
+      "respuesta_referencia": "La penalización es del 20 % de las rentas mensuales que falten para completar el plazo forzoso de 12 meses.",
+      "hechos_clave": [
+        "20 %",
+        "12 meses"
+      ]
+    },
+    {
+      "id": "P030",
+      "tipo": "literal",
+      "pregunta": "Al cancelar, ¿en cuántos días tengo que devolver los equipos?",
+      "fuentes": [
+        "KB31"
+      ],
+      "respuesta_referencia": "Debes devolver los equipos en un plazo de 30 días naturales.",
+      "hechos_clave": [
+        "30 días naturales"
+      ]
+    },
+    {
+      "id": "P031",
+      "tipo": "literal",
+      "pregunta": "Olvidé la contraseña de la app, ¿cómo la recupero?",
+      "fuentes": [
+        "KB34"
+      ],
+      "respuesta_referencia": "Toca «¿Olvidaste tu contraseña?» y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos.",
+      "hechos_clave": [
+        "código de 6 dígitos",
+        "10 minutos"
+      ]
+    },
+    {
+      "id": "P032",
+      "tipo": "literal",
+      "pregunta": "¿Qué días y en qué horario abren los centros de atención?",
+      "fuentes": [
+        "KB37"
+      ],
+      "respuesta_referencia": "Los centros de atención abren de lunes a sábado de 10:00 a 19:00.",
+      "hechos_clave": [
+        "10:00 a 19:00"
+      ]
+    },
+    {
+      "id": "P033",
+      "tipo": "parafrasis",
+      "pregunta": "Pagué dos veces el mismo mes por error, ¿me regresan esa lana?",
+      "fuentes": [
+        "KB28"
+      ],
+      "respuesta_referencia": "Si el saldo a favor es de $200 o más, pide el reembolso en la línea de atención y se deposita en un máximo de 15 días hábiles; si es menor, se abona a tus siguientes facturas.",
+      "hechos_clave": [
+        "$200",
+        "15 días hábiles"
+      ]
+    },
+    {
+      "id": "P034",
+      "tipo": "parafrasis",
+      "pregunta": "El aparatito del internet dejó de prender de la nada, yo no le hice nada. ¿Me toca pagar uno nuevo?",
+      "fuentes": [
+        "KB32"
+      ],
+      "respuesta_referencia": "Si el equipo falla por desgaste normal, se reemplaza sin costo después de un diagnóstico remoto.",
+      "hechos_clave": [
+        "desgaste normal",
+        "sin costo"
+      ]
+    },
+    {
+      "id": "P035",
+      "tipo": "parafrasis",
+      "pregunta": "Se metieron a mi casa y se llevaron el aparato del internet, ¿qué hago?",
+      "fuentes": [
+        "KB33"
+      ],
+      "respuesta_referencia": "Repórtalo en la línea de atención en un máximo de 5 días naturales para bloquear el equipo; con la denuncia, el reemplazo cuesta $350.",
+      "hechos_clave": [
+        "5 días naturales",
+        "$350"
+      ]
+    },
+    {
+      "id": "P036",
+      "tipo": "parafrasis",
+      "pregunta": "Todo está a nombre de mi papá y quiero que quede como mío, ¿cómo le hacemos?",
+      "fuentes": [
+        "KB35"
+      ],
+      "respuesta_referencia": "El titular puede ceder el contrato sin costo, acudiendo ambos con identificación o firmando una carta de cesión, siempre que la cuenta esté al corriente en sus pagos.",
+      "hechos_clave": [
+        "carta de cesión",
+        "al corriente"
+      ]
+    },
+    {
+      "id": "P037",
+      "tipo": "parafrasis",
+      "pregunta": "Me marcaron diciendo que eran de ustedes y me pidieron el codiguito que me llegó al cel, ¿es normal?",
+      "fuentes": [
+        "KB36"
+      ],
+      "respuesta_referencia": "No: la compañía nunca te pedirá el código de verificación que recibes por SMS; cuelga y reporta el intento en la línea de atención.",
+      "hechos_clave": [
+        "código de verificación",
+        "cuelga"
+      ]
+    },
+    {
+      "id": "P038",
+      "tipo": "parafrasis",
+      "pregunta": "El de soporte no me resolvió nada y estoy muy molesto, ¿con quién me puedo quejar más arriba?",
+      "fuentes": [
+        "KB38"
+      ],
+      "respuesta_referencia": "Puedes presentar una queja formal en la app o pedir que te comuniquen con un supervisor; te responden en un máximo de 3 días hábiles.",
+      "hechos_clave": [
+        "supervisor",
+        "3 días hábiles"
+      ]
+    },
+    {
+      "id": "P039",
+      "tipo": "parafrasis",
+      "pregunta": "Me quedé dos días desconectado por culpa de ustedes, ¿me rebajan algo del recibo?",
+      "fuentes": [
+        "KB39"
+      ],
+      "respuesta_referencia": "Si la falla duró más de 24 horas continuas por causa de la compañía, se bonifica la renta proporcional de cada día sin servicio más un 25 % adicional.",
+      "hechos_clave": [
+        "24 horas continuas",
+        "25 %"
+      ]
+    },
+    {
+      "id": "P040",
+      "tipo": "parafrasis",
+      "pregunta": "Me voy fuera del país como ocho semanas, ¿puedo congelar lo de mi casa para no pagar la mensualidad completa?",
+      "fuentes": [
+        "KB40"
+      ],
+      "respuesta_referencia": "Sí, puedes pausar el servicio por un mínimo de 1 mes y un máximo de 3 meses, pagando una cuota de $99 al mes en lugar de tu renta.",
+      "hechos_clave": [
+        "$99 al mes",
+        "máximo de 3 meses"
+      ]
+    },
+    {
+      "id": "P041",
+      "tipo": "parafrasis",
+      "pregunta": "No me carga nada en la compu ni en el cel, ¿qué hago, apago y prendo la cajita?",
+      "fuentes": [
+        "KB01"
+      ],
+      "respuesta_referencia": "Desconecta el módem de la corriente 60 segundos, vuelve a conectarlo y espera a que la luz de internet quede fija en verde; si sigue sin funcionar, se escala a un técnico.",
+      "hechos_clave": [
+        "60 segundos",
+        "fija en verde"
+      ]
+    },
+    {
+      "id": "P042",
+      "tipo": "parafrasis",
+      "pregunta": "Ya no quiero seguir con ustedes y apenas llevo medio año, ¿me cobran por irme?",
+      "fuentes": [
+        "KB30"
+      ],
+      "respuesta_referencia": "Sí: si cancelas antes de cumplir el plazo forzoso de 12 meses pagas una penalización del 20 % de las rentas que falten.",
+      "hechos_clave": [
+        "20 %",
+        "12 meses"
+      ]
+    },
+    {
+      "id": "P043",
+      "tipo": "parafrasis",
+      "pregunta": "En la recámara de arriba todo carga lentísimo y en la sala no, ¿qué puedo acomodar?",
+      "fuentes": [
+        "KB04"
+      ],
+      "respuesta_referencia": "Coloca el módem en un lugar alto y central; en casas de dos pisos puedes rentar un repetidor por $49 al mes.",
+      "hechos_clave": [
+        "alto y central",
+        "repetidor"
+      ]
+    },
+    {
+      "id": "P044",
+      "tipo": "parafrasis",
+      "pregunta": "Quiero ponerle otra clave a la señal de la casa para que el vecino ya no se cuelgue",
+      "fuentes": [
+        "KB05"
+      ],
+      "respuesta_referencia": "Cámbiala desde la app en Mi módem > Red wifi; el cambio tarda unos 2 minutos y tendrás que volver a conectar tus dispositivos.",
+      "hechos_clave": [
+        "Red wifi",
+        "2 minutos"
+      ]
+    },
+    {
+      "id": "P045",
+      "tipo": "parafrasis",
+      "pregunta": "Pagué por 300 megas y siento que me llega bien poquito, ¿cómo compruebo que me están dando lo que pago?",
+      "fuentes": [
+        "KB06"
+      ],
+      "respuesta_referencia": "Haz la prueba de velocidad de la app conectado por cable, 3 veces en horarios distintos; se garantiza al menos el 80 % de lo contratado.",
+      "hechos_clave": [
+        "80 %",
+        "3 veces"
+      ]
+    },
+    {
+      "id": "P046",
+      "tipo": "parafrasis",
+      "pregunta": "Todos en mi cuadra andamos desconectados desde la mañana, ¿es algo general?",
+      "fuentes": [
+        "KB07"
+      ],
+      "respuesta_referencia": "Consulta en la app, en Estado del servicio, si hay una falla masiva en tu zona y su hora estimada de solución.",
+      "hechos_clave": [
+        "Estado del servicio",
+        "hora estimada"
+      ]
+    },
+    {
+      "id": "P047",
+      "tipo": "parafrasis",
+      "pregunta": "No me acuerdo con qué entraba a la aplicación del celular y no me deja meterme",
+      "fuentes": [
+        "KB34"
+      ],
+      "respuesta_referencia": "Toca «¿Olvidaste tu contraseña?» para recibir un código de 6 dígitos; si fallaste 5 intentos, el acceso queda bloqueado 30 minutos.",
+      "hechos_clave": [
+        "código de 6 dígitos",
+        "30 minutos"
+      ]
+    },
+    {
+      "id": "P048",
+      "tipo": "parafrasis",
+      "pregunta": "¿Qué es lo más barato que manejan para navegar desde mi depa?",
+      "fuentes": [
+        "KB09"
+      ],
+      "respuesta_referencia": "La opción más económica es el plan de 100 megas por $399 al mes.",
+      "hechos_clave": [
+        "100 megas",
+        "$399 al mes"
+      ]
+    },
+    {
+      "id": "P049",
+      "tipo": "parafrasis",
+      "pregunta": "¿Puedo evitar que mi niño vea cosas que no debe y que a cierta hora ya no navegue?",
+      "fuentes": [
+        "KB10"
+      ],
+      "respuesta_referencia": "Sí, con el control parental puedes bloquear categorías de contenido y programar horarios de descanso por perfil.",
+      "hechos_clave": [
+        "control parental",
+        "horarios de descanso"
+      ]
+    },
+    {
+      "id": "P050",
+      "tipo": "parafrasis",
+      "pregunta": "¿Qué papeles me piden para meter el servicio a mi casa?",
+      "fuentes": [
+        "KB11"
+      ],
+      "respuesta_referencia": "Necesitas identificación oficial vigente con fotografía y un comprobante de domicilio no mayor a 3 meses, además de un correo y un celular de contacto.",
+      "hechos_clave": [
+        "identificación oficial vigente",
+        "3 meses"
+      ]
+    },
+    {
+      "id": "P051",
+      "tipo": "parafrasis",
+      "pregunta": "Ya firmé, ¿qué tan pronto vienen a dejarme todo conectado?",
+      "fuentes": [
+        "KB12"
+      ],
+      "respuesta_referencia": "La instalación se agenda en un plazo de 2 a 5 días hábiles y el técnico tarda entre 1 y 2 horas.",
+      "hechos_clave": [
+        "2 a 5 días hábiles"
+      ]
+    },
+    {
+      "id": "P052",
+      "tipo": "parafrasis",
+      "pregunta": "¿Cuánto me sale que venga alguien a mi casa si fue mi perro el que mordió el cable?",
+      "fuentes": [
+        "KB13"
+      ],
+      "respuesta_referencia": "Si el daño lo causó el cliente, la visita técnica cuesta $250 y se carga en la siguiente factura.",
+      "hechos_clave": [
+        "$250"
+      ]
+    },
+    {
+      "id": "P053",
+      "tipo": "parafrasis",
+      "pregunta": "Ya no voy a estar el jueves cuando vienen a arreglar, ¿lo puedo mover para otro día?",
+      "fuentes": [
+        "KB14"
+      ],
+      "respuesta_referencia": "Sí, puedes reprogramar la visita en la app o en la línea de atención con al menos 2 horas de anticipación, hasta 2 veces por cita.",
+      "hechos_clave": [
+        "2 horas",
+        "hasta 2 veces"
+      ]
+    },
+    {
+      "id": "P054",
+      "tipo": "parafrasis",
+      "pregunta": "Me voy a vivir a otra colonia el próximo mes, ¿me llevo lo que tengo contratado?",
+      "fuentes": [
+        "KB15"
+      ],
+      "respuesta_referencia": "Sí, si el nuevo domicilio tiene cobertura; el cambio cuesta $300 y se pide con al menos 5 días hábiles de anticipación.",
+      "hechos_clave": [
+        "$300",
+        "5 días hábiles"
+      ]
+    },
+    {
+      "id": "P055",
+      "tipo": "parafrasis",
+      "pregunta": "Llevo años con el mismo teléfono de la casa en otro proveedor, ¿me lo quedo si me cambio con ustedes?",
+      "fuentes": [
+        "KB16"
+      ],
+      "respuesta_referencia": "Sí, la portabilidad es sin costo; necesitas ser titular, identificación oficial y el código de portabilidad de 4 dígitos.",
+      "hechos_clave": [
+        "sin costo",
+        "código de portabilidad"
+      ]
+    },
+    {
+      "id": "P056",
+      "tipo": "parafrasis",
+      "pregunta": "Cuando no contesto en la casa, ¿dónde quedan los recados que me dejan y cómo los oigo?",
+      "fuentes": [
+        "KB17"
+      ],
+      "respuesta_referencia": "Quedan en el buzón de voz, que guarda hasta 20 mensajes; para escucharlos desde tu línea marca *95.",
+      "hechos_clave": [
+        "*95",
+        "20 mensajes"
+      ]
+    },
+    {
+      "id": "P057",
+      "tipo": "parafrasis",
+      "pregunta": "Voy a estar fuera y quiero que si me marcan a la casa me suene en el cel, ¿cuánto cobran?",
+      "fuentes": [
+        "KB18"
+      ],
+      "respuesta_referencia": "El desvío hacia un celular se cobra a $1.50 por minuto.",
+      "hechos_clave": [
+        "$1.50 por minuto"
+      ]
+    },
+    {
+      "id": "P058",
+      "tipo": "parafrasis",
+      "pregunta": "La tele se queda en negro y dice que no detecta nada, ¿qué le hago a la cajita?",
+      "fuentes": [
+        "KB19"
+      ],
+      "respuesta_referencia": "Verifica la entrada de video de la televisión y reinicia el decodificador desconectándolo 30 segundos; tarda unos 3 minutos en cargar.",
+      "hechos_clave": [
+        "30 segundos",
+        "3 minutos"
+      ]
+    },
+    {
+      "id": "P059",
+      "tipo": "parafrasis",
+      "pregunta": "El mando ya no le hace caso a la caja, ¿qué hago para que vuelva a jalar?",
+      "fuentes": [
+        "KB20"
+      ],
+      "respuesta_referencia": "Cambia sus 2 pilas AAA o emparéjalo manteniendo presionados OK y Menú durante 5 segundos.",
+      "hechos_clave": [
+        "OK y Menú",
+        "5 segundos"
+      ]
+    },
+    {
+      "id": "P060",
+      "tipo": "parafrasis",
+      "pregunta": "Quiero ver las pelis de estreno en la tele, ¿cuánto me sale mensual?",
+      "fuentes": [
+        "KB21"
+      ],
+      "respuesta_referencia": "El paquete de películas cuesta $139 al mes.",
+      "hechos_clave": [
+        "$139 al mes"
+      ]
+    },
+    {
+      "id": "P061",
+      "tipo": "parafrasis",
+      "pregunta": "Quiero que me lo descuenten solito de mi plástico para no andar acordándome, ¿hay algún beneficio?",
+      "fuentes": [
+        "KB23"
+      ],
+      "respuesta_referencia": "Con el pago domiciliado se carga a tu tarjeta el día 5 de cada mes y recibes un descuento de $30 al mes.",
+      "hechos_clave": [
+        "$30 al mes",
+        "día 5"
+      ]
+    },
+    {
+      "id": "P062",
+      "tipo": "parafrasis",
+      "pregunta": "¿Puedo liquidar con billetes en la tiendita de la esquina?",
+      "fuentes": [
+        "KB24"
+      ],
+      "respuesta_referencia": "Sí, en tiendas de conveniencia y farmacias afiliadas, con una comisión de $12; el pago se refleja en un máximo de 48 horas.",
+      "hechos_clave": [
+        "$12",
+        "48 horas"
+      ]
+    },
+    {
+      "id": "P063",
+      "tipo": "parafrasis",
+      "pregunta": "Se me paso la fecha y no he abonado, ¿cuándo me cortan todo?",
+      "fuentes": [
+        "KB25"
+      ],
+      "respuesta_referencia": "Se agrega un recargo de $80 y, si el adeudo sigue pendiente el día 20, el servicio se suspende.",
+      "hechos_clave": [
+        "día 20",
+        "$80"
+      ]
+    },
+    {
+      "id": "P064",
+      "tipo": "parafrasis",
+      "pregunta": "Ya salde lo que debía, ¿qué tan rápido me vuelven a dar señal y me cobran algo extra?",
+      "fuentes": [
+        "KB26"
+      ],
+      "respuesta_referencia": "Si pagaste con tarjeta en la app se reactiva en un máximo de 2 horas (en tienda o transferencia, cuando el pago se refleje), y la reconexión cuesta $90.",
+      "hechos_clave": [
+        "2 horas",
+        "$90"
+      ]
+    },
+    {
+      "id": "P065",
+      "tipo": "multi",
+      "pregunta": "Si me mudo, ¿cuánto cuesta el cambio de domicilio? Y si mejor cancelo antes de cumplir el plazo forzoso, ¿qué penalización pago?",
+      "fuentes": [
+        "KB15",
+        "KB30"
+      ],
+      "respuesta_referencia": "El cambio de domicilio cuesta $300 y no reinicia tu plazo forzoso; si cancelas antes de cumplir los 12 meses, pagas una penalización del 20 % de las rentas que falten.",
+      "hechos_clave": [
+        "$300",
+        "20 %"
+      ]
+    },
+    {
+      "id": "P066",
+      "tipo": "multi",
+      "pregunta": "Me suspendieron el servicio por falta de pago, ¿de cuánto es el recargo y cuánto cuesta la reconexión?",
+      "fuentes": [
+        "KB25",
+        "KB26"
+      ],
+      "respuesta_referencia": "Se agrega un recargo de $80 por pagar después del día 10 y la reconexión cuesta $90, que se carga en la siguiente factura.",
+      "hechos_clave": [
+        "$80",
+        "$90"
+      ]
+    },
+    {
+      "id": "P067",
+      "tipo": "multi",
+      "pregunta": "¿En qué horarios puede llegar el técnico y qué pasa si no hay nadie en mi casa cuando llegue?",
+      "fuentes": [
+        "KB13",
+        "KB14"
+      ],
+      "respuesta_referencia": "Las visitas se agendan en ventanas de 4 horas de lunes a sábado; si el técnico no encuentra a nadie, se cobra una penalización de $120 por visita fallida.",
+      "hechos_clave": [
+        "ventanas de 4 horas",
+        "$120"
+      ]
+    },
+    {
+      "id": "P068",
+      "tipo": "multi",
+      "pregunta": "Quiero cambiar la contraseña del wifi y también la de mi cuenta de la app, ¿qué requisitos tiene cada una?",
+      "fuentes": [
+        "KB05",
+        "KB34"
+      ],
+      "respuesta_referencia": "La del wifi debe tener entre 8 y 63 caracteres con al menos un número; la de la cuenta, al menos 10 caracteres, una mayúscula y un número.",
+      "hechos_clave": [
+        "entre 8 y 63 caracteres",
+        "al menos 10 caracteres"
+      ]
+    },
+    {
+      "id": "P069",
+      "tipo": "multi",
+      "pregunta": "Tengo pago domiciliado y me rechazaron el cargo, ¿cuándo lo vuelven a intentar y de cuánto es el recargo si no pago a tiempo?",
+      "fuentes": [
+        "KB23",
+        "KB25"
+      ],
+      "respuesta_referencia": "El cargo rechazado se reintenta el día 8; si vuelve a fallar y no pagas por otro medio a más tardar el día 10, se agrega un recargo de $80.",
+      "hechos_clave": [
+        "día 8",
+        "$80"
+      ]
+    },
+    {
+      "id": "P070",
+      "tipo": "multi",
+      "pregunta": "Pedí una aclaración por un cobro raro y no me contestan, ¿cuánto se tardan y, si no me resuelven, con quién me quejo?",
+      "fuentes": [
+        "KB27",
+        "KB38"
+      ],
+      "respuesta_referencia": "La aclaración se responde en un máximo de 10 días hábiles; si no quedas conforme, puedes presentar una queja formal o pedir que te comuniquen con un supervisor.",
+      "hechos_clave": [
+        "10 días hábiles",
+        "supervisor"
+      ]
+    },
+    {
+      "id": "P071",
+      "tipo": "multi",
+      "pregunta": "Hay una falla masiva en mi colonia desde ayer, ¿dónde veo para cuándo se arregla y me van a descontar algo?",
+      "fuentes": [
+        "KB07",
+        "KB39"
+      ],
+      "respuesta_referencia": "La hora estimada de solución aparece en la app, en Estado del servicio; en fallas masivas de más de 24 horas la bonificación se aplica sola en la siguiente factura.",
+      "hechos_clave": [
+        "Estado del servicio",
+        "siguiente factura"
+      ]
+    },
+    {
+      "id": "P072",
+      "tipo": "multi",
+      "pregunta": "Mi wifi está lento; ¿sirve hacer la prueba de velocidad por wifi para reclamar o qué puedo ajustar en mi red?",
+      "fuentes": [
+        "KB04",
+        "KB06"
+      ],
+      "respuesta_referencia": "Para reclamar la velocidad la prueba debe hacerse por cable, porque las de wifi no sirven; para mejorar el wifi, coloca el módem alto y central y aprovecha la banda de 5 GHz, más rápida pero de menor alcance.",
+      "hechos_clave": [
+        "por cable",
+        "5 GHz"
+      ]
+    },
+    {
+      "id": "P073",
+      "tipo": "multi",
+      "pregunta": "Si el decodificador se descompone por uso normal, ¿pago algo? ¿Y si me lo roban, cuánto me cobran?",
+      "fuentes": [
+        "KB32",
+        "KB33"
+      ],
+      "respuesta_referencia": "Por desgaste normal se reemplaza sin costo; si te lo roban y presentas la denuncia, el reemplazo cuesta $350, y sin ella pagas el precio completo del equipo.",
+      "hechos_clave": [
+        "desgaste normal",
+        "$350"
+      ]
+    },
+    {
+      "id": "P074",
+      "tipo": "multi",
+      "pregunta": "¿Con qué código activo el buzón de voz y con cuál el desvío de llamadas?",
+      "fuentes": [
+        "KB17",
+        "KB18"
+      ],
+      "respuesta_referencia": "El buzón de voz se activa marcando *94 y el desvío con *72 seguido del número de destino a 10 dígitos.",
+      "hechos_clave": [
+        "*94",
+        "*72"
+      ]
+    },
+    {
+      "id": "P075",
+      "tipo": "multi",
+      "pregunta": "Ya reinicié el módem pero la luz de internet sigue parpadeando en naranja, ¿cuánto tiempo hay que esperar?",
+      "fuentes": [
+        "KB01",
+        "KB03"
+      ],
+      "respuesta_referencia": "El reinicio requiere dejarlo desconectado 60 segundos; la luz naranja parpadeando indica que busca señal y puede tardar hasta 5 minutos en quedar fija en verde.",
+      "hechos_clave": [
+        "60 segundos",
+        "hasta 5 minutos"
+      ]
+    },
+    {
+      "id": "P076",
+      "tipo": "multi",
+      "pregunta": "¿Dónde descargo mi factura y qué tengo que hacer para que salga con mis datos fiscales?",
+      "fuentes": [
+        "KB02",
+        "KB29"
+      ],
+      "respuesta_referencia": "Se descarga del portal de clientes en la sección Mis Facturas; para que salga a tu nombre, registra tus datos fiscales en la app antes del día 25.",
+      "hechos_clave": [
+        "Mis Facturas",
+        "día 25"
+      ]
+    },
+    {
+      "id": "P077",
+      "tipo": "multi",
+      "pregunta": "¿Qué se refleja más rápido en mi cuenta, una transferencia bancaria o un pago en tienda de conveniencia?",
+      "fuentes": [
+        "KB22",
+        "KB24"
+      ],
+      "respuesta_referencia": "La transferencia se refleja en un máximo de 1 día hábil y el pago en tienda en un máximo de 48 horas.",
+      "hechos_clave": [
+        "1 día hábil",
+        "48 horas"
+      ]
+    },
+    {
+      "id": "P078",
+      "tipo": "multi",
+      "pregunta": "Vino el técnico porque corté un cable sin querer y me pidió $250 en efectivo, ¿así funciona?",
+      "fuentes": [
+        "KB13",
+        "KB36"
+      ],
+      "respuesta_referencia": "La visita por un daño del cliente sí cuesta $250, pero se carga en la siguiente factura: los técnicos no cobran en efectivo en tu domicilio.",
+      "hechos_clave": [
+        "$250",
+        "cobran en efectivo"
+      ]
+    },
+    {
+      "id": "P079",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Me pasas una receta de pozole para 10 personas?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P080",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Va a llover mañana en mi ciudad?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P081",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Cuánto cuesta un celular de gama alta de otra marca?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P082",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Ofrecen IP fija para mi negocio y cuánto cuesta?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P083",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Tienen descuento para adultos mayores o estudiantes?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P084",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Comparten o venden mis datos personales a otras empresas?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P085",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "¿Puedo contratar con ustedes un plan de telefonía celular con datos móviles?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    },
+    {
+      "id": "P086",
+      "tipo": "fuera_de_dominio",
+      "pregunta": "quien gano el partido de futbol de anoche?",
+      "fuentes": [],
+      "respuesta_referencia": "La base de conocimiento no tiene esa información.",
+      "hechos_clave": []
+    }
+  ]
+}

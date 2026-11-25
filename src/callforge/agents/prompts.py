@@ -52,11 +52,14 @@ Return JSON with exactly these fields:
   "reply": "<respuesta clara y breve para el cliente, con el siguiente paso>",
   "confidence": <float 0..1>,
   "needs_more_info": <bool>,
-  "suggest_escalation": <bool>
+  "suggest_escalation": <bool>,
+  "citations": [<enteros: el número n de cada fragmento [n] del KNOWLEDGE CONTEXT que respalda la respuesta, p. ej. [1, 3]>]
 }}
 Pon "suggest_escalation" en true si el cliente pide un humano o si el caso requiere una
 acción que no puedes hacer tú (reembolsos, cambios de cuenta, excepciones de política).
 Baja "confidence" cuando la respuesta no esté respaldada por el contexto.
+En "citations" van SOLO los fragmentos de donde sale lo que afirmas (cifras, plazos y montos
+incluidos); si el contexto no trae la respuesta, deja la lista vacía y dilo en "reply".
 """
 
 TROUBLESHOOTING_SYSTEM = f"""You are the TroubleshootingAgent of a customer support center.

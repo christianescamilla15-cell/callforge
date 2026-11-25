@@ -1,6 +1,6 @@
 # CallForge · dependencias de pruebas y calidad (no van a la imagen de producción).
 # Versión exacta por la misma razón que requirements.txt.
--r requirements.txt
+-r requirements-langgraph.txt   # incluye requirements.txt; el adaptador LangGraph se prueba en el CI
 
 # Directas
 pytest==9.2.0

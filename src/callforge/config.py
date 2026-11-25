@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -98,6 +99,11 @@ class Settings(BaseSettings):
     confidence_threshold: float = 0.4
     max_quality_retries: int = 1
     knowledge_top_k: int = 3
+
+    # Engine of the support turn, behind the same application port. "state_machine" (default) is the
+    # explicit SupportWorkflow, framework-free; "langgraph" is the opt-in adapter (requirements-langgraph.txt,
+    # ADR 0005), with parity measured by tests/test_paridad_motores.py.
+    workflow_engine: Literal["state_machine", "langgraph"] = "state_machine"
 
 
 @lru_cache

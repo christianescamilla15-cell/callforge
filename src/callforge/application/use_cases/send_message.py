@@ -6,6 +6,7 @@ from callforge.application.dtos import (
     SendMessageInput,
     SendMessageOutput,
 )
+from callforge.application.ports import KnowledgeSearch, SupportWorkflowPort
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.domain.entities import LLMUsage, Message, utcnow
 from callforge.domain.lifecycle import transition
@@ -15,15 +16,14 @@ from callforge.domain.value_objects import (
     ResolutionStepStatus,
 )
 from callforge.infrastructure.knowledge.store import KeywordKnowledgeStore
-from callforge.orchestration.workflow import SupportWorkflow
 
 
 class SendMessage:
     def __init__(
         self,
         uow: UnitOfWork,
-        workflow: SupportWorkflow,
-        knowledge_store: KeywordKnowledgeStore | None = None,
+        workflow: SupportWorkflowPort,
+        knowledge_store: KnowledgeSearch | None = None,
     ) -> None:
         self._uow = uow
         self._workflow = workflow

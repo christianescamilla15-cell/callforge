@@ -1,0 +1,2326 @@
+{
+ "modelo": "qwen2.5-1.5b-instruct-q4_k_m",
+ "motor": "llama-cpp-python 0.3.38 (CPU, en proceso) · qwen2.5-1.5b-instruct-q4_k_m.gguf · temperatura 0",
+ "juez": "qwen2.5-1.5b-instruct-q4_k_m",
+ "generado": "2026-11-25",
+ "recuperador": "hibrido",
+ "top_k": 3,
+ "conjunto": "2026-11-25/2026-11-25",
+ "respuestas": [
+  {
+   "id": "P001",
+   "mostrados": [
+    "KB01",
+    "KB03",
+    "KB32"
+   ],
+   "reply": "Para reiniciar el módem, desconecta el módem de la corriente por 60 segundos.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para reiniciar el módem, desconecta el módem de la corriente por 60 segundos.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P002",
+   "mostrados": [
+    "KB02",
+    "KB27",
+    "KB25"
+   ],
+   "reply": "Las facturas se emiten el día 1 de cada mes. Los pagos se pueden hacer hasta el día 10 sin recargo.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Las facturas se emiten el día 1 de cada mes. Los pagos se pueden hacer hasta el día 10 sin recargo.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Las facturas se emiten el día 1 de cada mes.",
+      "respaldada": true
+     },
+     {
+      "texto": "Los pagos se pueden hacer hasta el día 10 sin recargo.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P003",
+   "mostrados": [
+    "KB03",
+    "KB01",
+    "KB05"
+   ],
+   "reply": "La luz de internet de tu módem está en rojo fijo, lo que indica que no llega señal al domicilio. Revisa que el cable coaxial esté bien apretado y consulta si hay una falla en tu zona. Si el problema persiste, es posible que debas escalar a un técnico.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"La luz de internet de tu módem está en rojo fijo, lo que indica que no llega señal al domicilio. Revisa que el cable coaxial esté bien apretado y consulta si hay una falla en tu zona. Si el problema persiste, es posible que debas escalar a un técnico.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "La luz de internet de tu módem está en rojo fijo, lo que indica que no llega señal al domicilio.",
+      "respaldada": true
+     },
+     {
+      "texto": "Revisa que el cable coaxial esté bien apretado y consulta si hay una falla en tu zona.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el problema persiste, es posible que debas escalar a un técnico.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P004",
+   "mostrados": [
+    "KB04",
+    "KB03",
+    "KB01"
+   ],
+   "reply": "Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras. La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta. Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja. Para casas de dos pisos se puede rentar un repetidor por $49 al mes.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras. La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta. Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja. Para casas de dos pisos se puede rentar un repetidor por $49 al mes.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras.",
+      "respaldada": true
+     },
+     {
+      "texto": "La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta.",
+      "respaldada": true
+     },
+     {
+      "texto": "Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para casas de dos pisos se puede rentar un repetidor por $49 al mes.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P005",
+   "mostrados": [
+    "KB05",
+    "KB03",
+    "KB01"
+   ],
+   "reply": "La nueva contraseña del wifi debe tener entre 8 y 63 caracteres.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"La nueva contraseña del wifi debe tener entre 8 y 63 caracteres.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "La nueva contraseña del wifi debe tener entre 8 y 63 caracteres.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P006",
+   "mostrados": [
+    "KB06",
+    "KB36",
+    "KB32"
+   ],
+   "reply": "Para garantizar al menos el 80% de la velocidad contratada, conecta una computadora al módem con cable de red, cierra descargas y aplicaciones, y usa la prueba de velocidad de la app. Repite la prueba 3 veces en horarios distintos. Si el promedio queda por debajo del 80%, levanta un reporte adjuntando las capturas; un técnico revisará el reporte en un máximo de 72 horas.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para garantizar al menos el 80% de la velocidad contratada, conecta una computadora al módem con cable de red, cierra descargas y aplicaciones, y usa la prueba de velocidad de la app. Repite la prueba 3 veces en horarios distintos. Si el promedio queda por debajo del 80%, levanta un reporte adjuntando las capturas; un técnico revisará el reporte en un máximo de 72 horas.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para garantizar al menos el 80% de la velocidad contratada, conecta una computadora al módem con cable de red, cierra descargas y aplicaciones, y usa la prueba de velocidad de la app.",
+      "respaldada": true
+     },
+     {
+      "texto": "Repite la prueba 3 veces en horarios distintos.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el promedio queda por debajo del 80%, levanta un reporte adjuntando las capturas; un técnico revisará el reporte en un máximo de 72 horas.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P007",
+   "mostrados": [
+    "KB07",
+    "KB39",
+    "KB14"
+   ],
+   "reply": "Puedes consultar si hay una falla masiva en tu zona en la sección Estado del servicio de la app, en la sección Mis citas o en la línea de atención. Allí verás la hora estimada de solución.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Puedes consultar si hay una falla masiva en tu zona en la sección Estado del servicio de la app, en la sección Mis citas o en la línea de atención. Allí verás la hora estimada de solución.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Puedes consultar si hay una falla masiva en tu zona en la sección Estado del servicio de la app, en la sección Mis citas o en la línea de atención.",
+      "respaldada": true
+     },
+     {
+      "texto": "Allí verás la hora estimada de solución.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P008",
+   "mostrados": [
+    "KB08",
+    "KB15",
+    "KB23"
+   ],
+   "reply": "Puedes bajar de plan una vez cada 6 meses. El cambio de plan no reinicia tu plazo forzoso.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Puedes bajar de plan una vez cada 6 meses. El cambio de plan no reinicia tu plazo forzoso.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Puedes bajar de plan una vez cada 6 meses.",
+      "respaldada": true
+     },
+     {
+      "texto": "El cambio de plan no reinicia tu plazo forzoso.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P009",
+   "mostrados": [
+    "KB08",
+    "KB09",
+    "KB15"
+   ],
+   "reply": "El plan de 300 megas por $549 al mes incluye módem en comodato, wifi de doble banda e instalación sin costo. Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. Si tienes más preguntas, puedes contactar con un agente humano.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"El plan de 300 megas por $549 al mes incluye módem en comodato, wifi de doble banda e instalación sin costo. Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. Si tienes más preguntas, puedes contactar con un agente humano.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El plan de 300 megas por $549 al mes incluye módem en comodato, wifi de doble banda e instalación sin costo.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tienes más preguntas, puedes contactar con un agente humano.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P010",
+   "mostrados": [
+    "KB10",
+    "KB21",
+    "KB20"
+   ],
+   "reply": "Puedes crear hasta 5 perfiles en el control parental. No hay costo para crear perfiles.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Puedes crear hasta 5 perfiles en el control parental. No hay costo para crear perfiles.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Puedes crear hasta 5 perfiles en el control parental.",
+      "respaldada": true
+     },
+     {
+      "texto": "No hay costo para crear perfiles.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P011",
+   "mostrados": [
+    "KB15",
+    "KB11",
+    "KB23"
+   ],
+   "reply": "El comprobante de domicilio debe tener antigüedad no mayor a 3 meses para contratar.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"El comprobante de domicilio debe tener antigüedad no mayor a 3 meses para contratar.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P012",
+   "mostrados": [
+    "KB12",
+    "KB31",
+    "KB03"
+   ],
+   "reply": "La instalación incluye hasta 30 metros de cable. Cada metro adicional cuesta $15.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"La instalación incluye hasta 30 metros de cable. Cada metro adicional cuesta $15.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "La instalación incluye hasta 30 metros de cable.",
+      "respaldada": true
+     },
+     {
+      "texto": "Cada metro adicional cuesta $15.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P013",
+   "mostrados": [
+    "KB13",
+    "KB14",
+    "KB12"
+   ],
+   "reply": "La visita técnica cuesta $250 cuando el problema lo causó el cliente.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"La visita técnica cuesta $250 cuando el problema lo causó el cliente.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "La visita técnica cuesta $250 cuando el problema lo causó el cliente.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P014",
+   "mostrados": [
+    "KB14",
+    "KB30",
+    "KB13"
+   ],
+   "reply": "Para evitar la penalización de $120 por visita fallida, debes cancelar la visita técnica con al menos 2 horas de anticipación al inicio de la ventana horaria.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para evitar la penalización de $120 por visita fallida, debes cancelar la visita técnica con al menos 2 horas de anticipación al inicio de la ventana horaria.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P015",
+   "mostrados": [
+    "KB15",
+    "KB23",
+    "KB11"
+   ],
+   "reply": "El cambio de domicilio cuesta $300 y se puede solicitar con al menos 5 días hábiles de anticipación.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El cambio de domicilio cuesta $300 y se puede solicitar con al menos 5 días hábiles de anticipación.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P016",
+   "mostrados": [
+    "KB16",
+    "KB18",
+    "KB34"
+   ],
+   "reply": "La portabilidad de tu número fijo se completa en un máximo de 24 horas hábiles. Durante ese tiempo puede haber una interrupción de hasta 1 hora.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"La portabilidad de tu número fijo se completa en un máximo de 24 horas hábiles. Durante ese tiempo puede haber una interrupción de hasta 1 hora.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "La portabilidad de tu número fijo se completa en un máximo de 24 horas hábiles.",
+      "respaldada": true
+     },
+     {
+      "texto": "Durante ese tiempo puede haber una interrupción de hasta 1 hora.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P017",
+   "mostrados": [
+    "KB17",
+    "KB18",
+    "KB36"
+   ],
+   "reply": "El buzón de voz guarda hasta 20 mensajes, cada uno de un máximo de 3 minutos. Los mensajes ya escuchados se borran a los 15 días.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El buzón de voz guarda hasta 20 mensajes, cada uno de un máximo de 3 minutos. Los mensajes ya escuchados se borran a los 15 días.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El buzón de voz guarda hasta 20 mensajes, cada uno de un máximo de 3 minutos.",
+      "respaldada": true
+     },
+     {
+      "texto": "Los mensajes ya escuchados se borran a los 15 días.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P018",
+   "mostrados": [
+    "KB18",
+    "KB17",
+    "KB16"
+   ],
+   "reply": "Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación. Si ya tienes un número de destino activo, marca *73 para desactivarlo.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación. Si ya tienes un número de destino activo, marca *73 para desactivarlo.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si ya tienes un número de destino activo, marca *73 para desactivarlo.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P019",
+   "mostrados": [
+    "KB19",
+    "KB20",
+    "KB31"
+   ],
+   "reply": "El error E-12 en tu decodificador indica que el cable coaxial está flojo o dañado. Para solucionarlo, asegúrate de conectar el cable correctamente y en la entrada de video correcta. Si el problema persiste, prueba a cambiar el cable coaxial.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El error E-12 en tu decodificador indica que el cable coaxial está flojo o dañado. Para solucionarlo, asegúrate de conectar el cable correctamente y en la entrada de video correcta. Si el problema persiste, prueba a cambiar el cable coaxial.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El error E-12 en tu decodificador indica que el cable coaxial está flojo o dañado.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para solucionarlo, asegúrate de conectar el cable correctamente y en la entrada de video correcta.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el problema persiste, prueba a cambiar el cable coaxial.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P020",
+   "mostrados": [
+    "KB20",
+    "KB19",
+    "KB31"
+   ],
+   "reply": "El control remoto del decodificador lleva 2 pilas AAA.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El control remoto del decodificador lleva 2 pilas AAA.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P021",
+   "mostrados": [
+    "KB21",
+    "KB19",
+    "KB02"
+   ],
+   "reply": "El paquete de canales de deportes cuesta $189 al mes.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"El paquete de canales de deportes cuesta $189 al mes.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P022",
+   "mostrados": [
+    "KB22",
+    "KB23",
+    "KB26"
+   ],
+   "reply": "Si pagas por transferencia bancaria, el pago se reflejará en tu cuenta en un máximo de 1 día hábil. Para confirmar que el pago se ha realizado correctamente, necesitarás proporcionar la referencia de 12 dígitos que aparece en tu factura.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Si pagas por transferencia bancaria, el pago se reflejará en tu cuenta en un máximo de 1 día hábil. Para confirmar que el pago se ha realizado correctamente, necesitarás proporcionar la referencia de 12 dígitos que aparece en tu factura.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si pagas por transferencia bancaria, el pago se reflejará en tu cuenta en un máximo de 1 día hábil.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para confirmar que el pago se ha realizado correctamente, necesitarás proporcionar la referencia de 12 dígitos que aparece en tu factura.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P023",
+   "mostrados": [
+    "KB23",
+    "KB15",
+    "KB36"
+   ],
+   "reply": "El descuento de $30 al mes se aplica al día 5 de cada mes. El cargo se realiza automáticamente a tu tarjeta de crédito o débito el día 5 de cada mes.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El descuento de $30 al mes se aplica al día 5 de cada mes. El cargo se realiza automáticamente a tu tarjeta de crédito o débito el día 5 de cada mes.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El descuento de $30 al mes se aplica al día 5 de cada mes.",
+      "respaldada": true
+     },
+     {
+      "texto": "El cargo se realiza automáticamente a tu tarjeta de crédito o débito el día 5 de cada mes.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P024",
+   "mostrados": [
+    "KB24",
+    "KB26",
+    "KB31"
+   ],
+   "reply": "La tienda de conveniencia cobra una comisión de $12 por cada pago.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"La tienda de conveniencia cobra una comisión de $12 por cada pago.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P025",
+   "mostrados": [
+    "KB25",
+    "KB02",
+    "KB26"
+   ],
+   "reply": "El servicio se suspende el día 20 si el adeudo sigue pendiente después de 15 días.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"El servicio se suspende el día 20 si el adeudo sigue pendiente después de 15 días.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El servicio se suspende el día 20 si el adeudo sigue pendiente después de 15 días.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P026",
+   "mostrados": [
+    "KB26",
+    "KB25",
+    "KB40"
+   ],
+   "reply": "La reconexión de un servicio suspendido por falta de pago cuesta $90.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"La reconexión de un servicio suspendido por falta de pago cuesta $90.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P027",
+   "mostrados": [
+    "KB27",
+    "KB02",
+    "KB36"
+   ],
+   "reply": "Tienes 60 días naturales para pedir una aclaración de un cargo que no reconozcas en tu factura.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Tienes 60 días naturales para pedir una aclaración de un cargo que no reconozcas en tu factura.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P028",
+   "mostrados": [
+    "KB29",
+    "KB02",
+    "KB23"
+   ],
+   "reply": "Para recibir una factura electrónica, registra tus datos fiscales en la app. En Cuenta > Datos fiscales: RFC, razón social, código postal fiscal, régimen fiscal y uso de la factura. Regíralos antes del 25 de cada mes para que la factura de ese mes ya salga con ellos. Los meses anteriores sólo se pueden refacturar dentro del mismo año fiscal.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para recibir una factura electrónica, registra tus datos fiscales en la app. En Cuenta > Datos fiscales: RFC, razón social, código postal fiscal, régimen fiscal y uso de la factura. Regíralos antes del 25 de cada mes para que la factura de ese mes ya salga con ellos. Los meses anteriores sólo se pueden refacturar dentro del mismo año fiscal.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para recibir una factura electrónica, registra tus datos fiscales en la app.",
+      "respaldada": true
+     },
+     {
+      "texto": "En Cuenta > Datos fiscales: RFC, razón social, código postal fiscal, régimen fiscal y uso de la factura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Regíralos antes del 25 de cada mes para que la factura de ese mes ya salga con ellos.",
+      "respaldada": true
+     },
+     {
+      "texto": "Los meses anteriores sólo se pueden refacturar dentro del mismo año fiscal.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P029",
+   "mostrados": [
+    "KB30",
+    "KB14",
+    "KB26"
+   ],
+   "reply": "La penalización es del 20% de las rentas mensuales que falten para completar el plazo forzoso.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"La penalización es del 20% de las rentas mensuales que falten para completar el plazo forzoso.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P030",
+   "mostrados": [
+    "KB31",
+    "KB30",
+    "KB28"
+   ],
+   "reply": "Debes devolver los equipos dentro de 30 días naturales desde la cancelación del servicio.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Debes devolver los equipos dentro de 30 días naturales desde la cancelación del servicio.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P031",
+   "mostrados": [
+    "KB34",
+    "KB26",
+    "KB14"
+   ],
+   "reply": "Para recuperar tu contraseña de la app, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Después de 5 intentos fallidos el acceso se bloquea 30 minutos.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para recuperar tu contraseña de la app, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Después de 5 intentos fallidos el acceso se bloquea 30 minutos.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para recuperar tu contraseña de la app, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos.",
+      "respaldada": true
+     },
+     {
+      "texto": "La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número.",
+      "respaldada": true
+     },
+     {
+      "texto": "Después de 5 intentos fallidos el acceso se bloquea 30 minutos.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P032",
+   "mostrados": [
+    "KB37",
+    "KB38",
+    "KB21"
+   ],
+   "reply": "Los centros de atención abren de lunes a sábado de 10:00 a 19:00 y cierran domingos y días festivos.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Los centros de atención abren de lunes a sábado de 10:00 a 19:00 y cierran domingos y días festivos.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Los centros de atención abren de lunes a sábado de 10:00 a 19:00 y cierran domingos y días festivos.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P033",
+   "mostrados": [
+    "KB19",
+    "KB07",
+    "KB26"
+   ],
+   "reply": "Lo siento, no puedo ayudar con eso. Por favor, contacta al servicio al cliente para resolver este problema.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, no puedo ayudar con eso. Por favor, contacta al servicio al cliente para resolver este problema.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, no puedo ayudar con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, contacta al servicio al cliente para resolver este problema.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P034",
+   "mostrados": [
+    "KB01",
+    "KB05",
+    "KB09"
+   ],
+   "reply": "No, no tienes que pagar un nuevo módem. Intenta reiniciarlo siguiendo los pasos que te muestro en la guía.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"No, no tienes que pagar un nuevo módem. Intenta reiniciarlo siguiendo los pasos que te muestro en la guía.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "No, no tienes que pagar un nuevo módem.",
+      "respaldada": false
+     },
+     {
+      "texto": "Intenta reiniciarlo siguiendo los pasos que te muestro en la guía.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P035",
+   "mostrados": [
+    "KB09",
+    "KB01",
+    "KB05"
+   ],
+   "reply": "Por favor, contacta a un agente humano para resolver este problema.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Por favor, contacta a un agente humano para resolver este problema.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": true,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Por favor, contacta a un agente humano para resolver este problema.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P036",
+   "mostrados": [
+    "KB35",
+    "KB11",
+    "KB05"
+   ],
+   "reply": "Para cambiar el nombre de tu red Wi-Fi, debes seguir estos pasos: 1. Inicia sesión en la app de tu módem. 2. Ve a la sección 'Mi módem' y luego a 'Red Wi-Fi'. 3. Cambia el nombre de tu red Wi-Fi. 4. Asegúrate de que la contraseña nueva tenga entre 8 y 63 caracteres e incluya al menos un número. 5. Asegúrate de que todos los dispositivos se hayan desconectado antes de cambiar la contraseña. 6. Si olvidaste la contraseña actual, la de fábrica está impresa en la etiqueta de la parte inferior del módem. Si tienes más preguntas, puedes contactar a un asesor en línea.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Para cambiar el nombre de tu red Wi-Fi, debes seguir estos pasos: 1. Inicia sesión en la app de tu módem. 2. Ve a la sección 'Mi módem' y luego a 'Red Wi-Fi'. 3. Cambia el nombre de tu red Wi-Fi. 4. Asegúrate de que la contraseña nueva tenga entre 8 y 63 caracteres e incluya al menos un número. 5. Asegúrate de que todos los dispositivos se hayan desconectado antes de cambiar la contraseña. 6. Si olvidaste la contraseña actual, la de fábrica está impresa en la etiqueta de la parte inferior del módem. Si tienes más preguntas, puedes contactar a un asesor en línea.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para cambiar el nombre de tu red Wi-Fi, debes seguir estos pasos: 1.",
+      "respaldada": true
+     },
+     {
+      "texto": "Inicia sesión en la app de tu módem.",
+      "respaldada": true
+     },
+     {
+      "texto": "Ve a la sección 'Mi módem' y luego a 'Red Wi-Fi'.",
+      "respaldada": true
+     },
+     {
+      "texto": "Cambia el nombre de tu red Wi-Fi.",
+      "respaldada": true
+     },
+     {
+      "texto": "Asegúrate de que la contraseña nueva tenga entre 8 y 63 caracteres e incluya al menos un número.",
+      "respaldada": true
+     },
+     {
+      "texto": "Asegúrate de que todos los dispositivos se hayan desconectado antes de cambiar la contraseña.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si olvidaste la contraseña actual, la de fábrica está impresa en la etiqueta de la parte inferior del módem.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tienes más preguntas, puedes contactar a un asesor en línea.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P037",
+   "mostrados": [
+    "KB36",
+    "KB34",
+    "KB18"
+   ],
+   "reply": "Es normal que te hayan llamado y te hayan pedido el código de verificación. Este proceso es para validar tu identidad y asegurarte que eres tú quien está hablando con la compañía.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Es normal que te hayan llamado y te hayan pedido el código de verificación. Este proceso es para validar tu identidad y asegurarte que eres tú quien está hablando con la compañía.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Es normal que te hayan llamado y te hayan pedido el código de verificación.",
+      "respaldada": false
+     },
+     {
+      "texto": "Este proceso es para validar tu identidad y asegurarte que eres tú quien está hablando con la compañía.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P038",
+   "mostrados": [
+    "KB38",
+    "KB27",
+    "KB25"
+   ],
+   "reply": "Puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor. Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles. Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales. Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor. Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles. Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales. Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": true,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor.",
+      "respaldada": true
+     },
+     {
+      "texto": "Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P039",
+   "mostrados": [
+    "KB25",
+    "KB38",
+    "KB26"
+   ],
+   "reply": "Sí, si no pagas a más tardar el día 10, se agrega un recargo de $80 a tu siguiente factura. El día 15 recibes un aviso por mensaje y por correo. Si el adeudo sigue pendiente el día 20, el servicio se suspende: el internet y la televisión dejan de funcionar y la línea fija sólo recibe llamadas y permite marcar a números de emergencia. Después de 60 días de suspensión la cuenta se cancela y el adeudo se envía a cobranza.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Sí, si no pagas a más tardar el día 10, se agrega un recargo de $80 a tu siguiente factura. El día 15 recibes un aviso por mensaje y por correo. Si el adeudo sigue pendiente el día 20, el servicio se suspende: el internet y la televisión dejan de funcionar y la línea fija sólo recibe llamadas y permite marcar a números de emergencia. Después de 60 días de suspensión la cuenta se cancela y el adeudo se envía a cobranza.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Sí, si no pagas a más tardar el día 10, se agrega un recargo de $80 a tu siguiente factura.",
+      "respaldada": true
+     },
+     {
+      "texto": "El día 15 recibes un aviso por mensaje y por correo.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el adeudo sigue pendiente el día 20, el servicio se suspende: el internet y la televisión dejan de funcionar y la línea fija sólo recibe llamadas y permite marcar a números de emergencia.",
+      "respaldada": true
+     },
+     {
+      "texto": "Después de 60 días de suspensión la cuenta se cancela y el adeudo se envía a cobranza.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P040",
+   "mostrados": [
+    "KB23",
+    "KB15",
+    "KB24"
+   ],
+   "reply": "Lo siento, pero no puedo ayudarte con eso. Por favor, contacta a tu proveedor de servicios de telecomunicaciones para obtener más información sobre cómo puedes congelar tu servicio o cambiarlo a tu nuevo domicilio.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo ayudarte con eso. Por favor, contacta a tu proveedor de servicios de telecomunicaciones para obtener más información sobre cómo puedes congelar tu servicio o cambiarlo a tu nuevo domicilio.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo ayudarte con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, contacta a tu proveedor de servicios de telecomunicaciones para obtener más información sobre cómo puedes congelar tu servicio o cambiarlo a tu nuevo domicilio.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P041",
+   "mostrados": [
+    "KB24",
+    "KB25",
+    "KB35"
+   ],
+   "reply": "Por favor, prueba a cargar el dinero en efectivo en una tienda de conveniencia o farmacia afiliada. Si no se carga, contacta al servicio al cliente para obtener asistencia.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Por favor, prueba a cargar el dinero en efectivo en una tienda de conveniencia o farmacia afiliada. Si no se carga, contacta al servicio al cliente para obtener asistencia.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Por favor, prueba a cargar el dinero en efectivo en una tienda de conveniencia o farmacia afiliada.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si no se carga, contacta al servicio al cliente para obtener asistencia.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P042",
+   "mostrados": [
+    "KB31",
+    "KB25",
+    "KB24"
+   ],
+   "reply": "No, no cobramos por cancelar el servicio. Si ya no quieres seguir con nosotros, puedes devolver los equipos que te proporcionamos y recibir un comprobante de devolución.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"No, no cobramos por cancelar el servicio. Si ya no quieres seguir con nosotros, puedes devolver los equipos que te proporcionamos y recibir un comprobante de devolución.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "No, no cobramos por cancelar el servicio.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si ya no quieres seguir con nosotros, puedes devolver los equipos que te proporcionamos y recibir un comprobante de devolución.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P043",
+   "mostrados": [
+    "KB27",
+    "KB25",
+    "KB26"
+   ],
+   "reply": "Puedes intentar reiniciar el módem y el decodificador en la sala para resolver el problema de la carga lenta. Si eso no funciona, puedes contactar a la compañía para solicitar una aclaración sobre el cargo que apareció en tu factura.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Puedes intentar reiniciar el módem y el decodificador en la sala para resolver el problema de la carga lenta. Si eso no funciona, puedes contactar a la compañía para solicitar una aclaración sobre el cargo que apareció en tu factura.\",\n  \"confidence\": 0.8,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Puedes intentar reiniciar el módem y el decodificador en la sala para resolver el problema de la carga lenta.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si eso no funciona, puedes contactar a la compañía para solicitar una aclaración sobre el cargo que apareció en tu factura.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P044",
+   "mostrados": [
+    "KB15",
+    "KB23",
+    "KB40"
+   ],
+   "reply": "Lo siento, pero no puedo ayudarte con eso. Por favor, contacta al servicio al cliente para resolver este problema.",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo ayudarte con eso. Por favor, contacta al servicio al cliente para resolver este problema.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": []\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo ayudarte con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, contacta al servicio al cliente para resolver este problema.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P045",
+   "mostrados": [
+    "KB24",
+    "KB09",
+    "KB21"
+   ],
+   "reply": "Para comprobar que estás recibiendo lo que pagaste, puedes verificar tu cuenta en la app. Si el monto que se refleja es 300 megas, entonces eso es lo que pagaste. Si tienes dudas, puedes contactar al soporte para confirmar.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para comprobar que estás recibiendo lo que pagaste, puedes verificar tu cuenta en la app. Si el monto que se refleja es 300 megas, entonces eso es lo que pagaste. Si tienes dudas, puedes contactar al soporte para confirmar.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para comprobar que estás recibiendo lo que pagaste, puedes verificar tu cuenta en la app.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el monto que se refleja es 300 megas, entonces eso es lo que pagaste.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si tienes dudas, puedes contactar al soporte para confirmar.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P046",
+   "mostrados": [
+    "KB24",
+    "KB35",
+    "KB31"
+   ],
+   "reply": "Todos los clientes en tu cuadra están desconectados desde la mañana. Esto podría ser un problema general en la red. ¿Podrías presentar tu factura o número de referencia de la app para que podamos verificarlo?",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Todos los clientes en tu cuadra están desconectados desde la mañana. Esto podría ser un problema general en la red. ¿Podrías presentar tu factura o número de referencia de la app para que podamos verificarlo?\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": true,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Todos los clientes en tu cuadra están desconectados desde la mañana.",
+      "respaldada": false
+     },
+     {
+      "texto": "Esto podría ser un problema general en la red.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P047",
+   "mostrados": [
+    "KB18",
+    "KB27",
+    "KB34"
+   ],
+   "reply": "Para acceder a la aplicación, necesitas usar el número de cuenta de 10 dígitos o el correo registrado, más una contraseña. Si olvidaste la contraseña, puedes intentar con '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Si perdiste el correo y el número móvil registrados, puedes actualizarlos en la línea de atención validando tu identidad.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Para acceder a la aplicación, necesitas usar el número de cuenta de 10 dígitos o el correo registrado, más una contraseña. Si olvidaste la contraseña, puedes intentar con '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Si perdiste el correo y el número móvil registrados, puedes actualizarlos en la línea de atención validando tu identidad.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para acceder a la aplicación, necesitas usar el número de cuenta de 10 dígitos o el correo registrado, más una contraseña.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si olvidaste la contraseña, puedes intentar con '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos.",
+      "respaldada": true
+     },
+     {
+      "texto": "La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si perdiste el correo y el número móvil registrados, puedes actualizarlos en la línea de atención validando tu identidad.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P048",
+   "mostrados": [
+    "KB23",
+    "KB02",
+    "KB18"
+   ],
+   "reply": "Lo más barato que manejan para navegar desde tu depa es el pago domiciliado. Se activa en la app, en Pagos > Domiciliar, y aplica a partir de la siguiente factura. Al domiciliar recibes un descuento de $30 al mes. Si el banco rechaza el cargo, se reintenta el día 8; si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Lo más barato que manejan para navegar desde tu depa es el pago domiciliado. Se activa en la app, en Pagos > Domiciliar, y aplica a partir de la siguiente factura. Al domiciliar recibes un descuento de $30 al mes. Si el banco rechaza el cargo, se reintenta el día 8; si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo más barato que manejan para navegar desde tu depa es el pago domiciliado.",
+      "respaldada": false
+     },
+     {
+      "texto": "Se activa en la app, en Pagos > Domiciliar, y aplica a partir de la siguiente factura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Al domiciliar recibes un descuento de $30 al mes.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el banco rechaza el cargo, se reintenta el día 8; si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P049",
+   "mostrados": [
+    "KB01",
+    "KB15"
+   ],
+   "reply": "Lo siento, pero no puedo asistir con eso. Por favor, contacta a un técnico para solucionar este problema.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo asistir con eso. Por favor, contacta a un técnico para solucionar este problema.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo asistir con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, contacta a un técnico para solucionar este problema.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P050",
+   "mostrados": [
+    "KB40",
+    "KB36",
+    "KB15"
+   ],
+   "reply": "Para meter el servicio a tu casa, necesitarás presentar los siguientes documentos: tu tarjeta de crédito o débito, tu número de línea fija, y tu número de cuenta. También necesitarás una copia de tu identificación oficial, como tu pasaporte o cédula de identidad. Si tienes más preguntas, puedes contactar a la línea de atención para obtener más detalles.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Para meter el servicio a tu casa, necesitarás presentar los siguientes documentos: tu tarjeta de crédito o débito, tu número de línea fija, y tu número de cuenta. También necesitarás una copia de tu identificación oficial, como tu pasaporte o cédula de identidad. Si tienes más preguntas, puedes contactar a la línea de atención para obtener más detalles.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para meter el servicio a tu casa, necesitarás presentar los siguientes documentos: tu tarjeta de crédito o débito, tu número de línea fija, y tu número de cuenta.",
+      "respaldada": false
+     },
+     {
+      "texto": "También necesitarás una copia de tu identificación oficial, como tu pasaporte o cédula de identidad.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si tienes más preguntas, puedes contactar a la línea de atención para obtener más detalles.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P051",
+   "mostrados": [
+    "KB35",
+    "KB15",
+    "KB36"
+   ],
+   "reply": "Los técnicos se conectarán a tu domicilio en el mismo día. Si la nueva dirección no tiene cobertura, puedes cancelar sin penalización presentando un comprobante del nuevo domicilio.",
+   "citations": [
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Los técnicos se conectarán a tu domicilio en el mismo día. Si la nueva dirección no tiene cobertura, puedes cancelar sin penalización presentando un comprobante del nuevo domicilio.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Los técnicos se conectarán a tu domicilio en el mismo día.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si la nueva dirección no tiene cobertura, puedes cancelar sin penalización presentando un comprobante del nuevo domicilio.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P052",
+   "mostrados": [
+    "KB04",
+    "KB01",
+    "KB05"
+   ],
+   "reply": "Lo siento, no puedo asistir con eso. Por favor, llama a tu proveedor de servicios de internet para que te asista.",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"Lo siento, no puedo asistir con eso. Por favor, llama a tu proveedor de servicios de internet para que te asista.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": []\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, no puedo asistir con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, llama a tu proveedor de servicios de internet para que te asista.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P053",
+   "mostrados": [
+    "KB25",
+    "KB22",
+    "KB27"
+   ],
+   "reply": "Lo siento, no puedo mover tu cita para otro día. Por favor, contacta al servicio al cliente para más información.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, no puedo mover tu cita para otro día. Por favor, contacta al servicio al cliente para más información.\",\n  \"confidence\": 0.8,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, no puedo mover tu cita para otro día.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, contacta al servicio al cliente para más información.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P054",
+   "mostrados": [
+    "KB11",
+    "KB15",
+    "KB35"
+   ],
+   "reply": "Sí, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. Solicítalo con al menos 5 días hábiles de anticipación.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Sí, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. Solicítalo con al menos 5 días hábiles de anticipación.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Sí, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Solicítalo con al menos 5 días hábiles de anticipación.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P055",
+   "mostrados": [
+    "KB05",
+    "KB36",
+    "KB04"
+   ],
+   "reply": "Si tienes el mismo teléfono de la casa con otro proveedor, puedes seguir usando el mismo número de teléfono con nosotros. Sin embargo, si cambias de proveedor, tendrás que cambiar el número de teléfono.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Si tienes el mismo teléfono de la casa con otro proveedor, puedes seguir usando el mismo número de teléfono con nosotros. Sin embargo, si cambias de proveedor, tendrás que cambiar el número de teléfono.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si tienes el mismo teléfono de la casa con otro proveedor, puedes seguir usando el mismo número de teléfono con nosotros.",
+      "respaldada": false
+     },
+     {
+      "texto": "Sin embargo, si cambias de proveedor, tendrás que cambiar el número de teléfono.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P056",
+   "mostrados": [
+    "KB23",
+    "KB25",
+    "KB26"
+   ],
+   "reply": "Los recados que me dejan se pueden encontrar en la sección 'Recados' en la app. Para oírlos, simplemente toma el teléfono y llama al número que aparece en la notificación.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Los recados que me dejan se pueden encontrar en la sección 'Recados' en la app. Para oírlos, simplemente toma el teléfono y llama al número que aparece en la notificación.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Los recados que me dejan se pueden encontrar en la sección 'Recados' en la app.",
+      "respaldada": false
+     },
+     {
+      "texto": "Para oírlos, simplemente toma el teléfono y llama al número que aparece en la notificación.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P057",
+   "mostrados": [
+    "KB15",
+    "KB36",
+    "KB23"
+   ],
+   "reply": "Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. El cambio de domicilio cuesta $300, que se cargan en tu siguiente factura; conservas tu plan y tu número de cuenta, y tu plazo forzoso no se reinicia. El técnico desconecta los equipos en el domicilio anterior y los instala en el nuevo el mismo día.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. El cambio de domicilio cuesta $300, que se cargan en tu siguiente factura; conservas tu plan y tu número de cuenta, y tu plazo forzoso no se reinicia. El técnico desconecta los equipos en el domicilio anterior y los instala en el nuevo el mismo día.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura.",
+      "respaldada": true
+     },
+     {
+      "texto": "El cambio de domicilio cuesta $300, que se cargan en tu siguiente factura; conservas tu plan y tu número de cuenta, y tu plazo forzoso no se reinicia.",
+      "respaldada": true
+     },
+     {
+      "texto": "El técnico desconecta los equipos en el domicilio anterior y los instala en el nuevo el mismo día.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P058",
+   "mostrados": [
+    "KB36",
+    "KB01",
+    "KB05"
+   ],
+   "reply": "Por favor, desconecta el módem de la corriente por 60 segundos y vuelve a conectarlo. Espera a que la luz de internet quede fija en verde. Si el problema persiste, escala a un técnico.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Por favor, desconecta el módem de la corriente por 60 segundos y vuelve a conectarlo. Espera a que la luz de internet quede fija en verde. Si el problema persiste, escala a un técnico.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Por favor, desconecta el módem de la corriente por 60 segundos y vuelve a conectarlo.",
+      "respaldada": true
+     },
+     {
+      "texto": "Espera a que la luz de internet quede fija en verde.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el problema persiste, escala a un técnico.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P059",
+   "mostrados": [
+    "KB40",
+    "KB24",
+    "KB27"
+   ],
+   "reply": "Por favor, contacta con el soporte técnico para resolver este problema.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Por favor, contacta con el soporte técnico para resolver este problema.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": true,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Por favor, contacta con el soporte técnico para resolver este problema.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P060",
+   "mostrados": [
+    "KB36",
+    "KB17",
+    "KB19"
+   ],
+   "reply": "Lo siento, pero no puedo ayudarte con eso. Por favor, llama al 123456789 o visita la página web de la compañía para obtener más información.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo ayudarte con eso. Por favor, llama al 123456789 o visita la página web de la compañía para obtener más información.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo ayudarte con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, llama al 123456789 o visita la página web de la compañía para obtener más información.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P061",
+   "mostrados": [
+    "KB31",
+    "KB26",
+    "KB24"
+   ],
+   "reply": "No, no hay ningún beneficio para descuentar el adeudo con tarjeta de crédito. Los descuentos se aplican a la factura y se reflejan en tu próxima factura. Si no devuelves los equipos dentro del plazo, se cobra $1,500 por el módem y $900 por cada decodificador.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"No, no hay ningún beneficio para descuentar el adeudo con tarjeta de crédito. Los descuentos se aplican a la factura y se reflejan en tu próxima factura. Si no devuelves los equipos dentro del plazo, se cobra $1,500 por el módem y $900 por cada decodificador.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "No, no hay ningún beneficio para descuentar el adeudo con tarjeta de crédito.",
+      "respaldada": false
+     },
+     {
+      "texto": "Los descuentos se aplican a la factura y se reflejan en tu próxima factura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si no devuelves los equipos dentro del plazo, se cobra $1,500 por el módem y $900 por cada decodificador.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P062",
+   "mostrados": [
+    "KB40",
+    "KB27",
+    "KB29"
+   ],
+   "reply": "Lo siento, pero no puedo ayudarte con eso. Por favor, llama al 1-800-MyService o visita la tienda de la esquina para realizar la compra.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo ayudarte con eso. Por favor, llama al 1-800-MyService o visita la tienda de la esquina para realizar la compra.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo ayudarte con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, llama al 1-800-MyService o visita la tienda de la esquina para realizar la compra.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P063",
+   "mostrados": [
+    "KB27",
+    "KB35",
+    "KB33"
+   ],
+   "reply": "Si no abonaste la factura en el plazo de 60 días naturales desde la emisión del cargo, se aplicará un recargo sobre el monto en disputa. Sin embargo, el resto de la factura debe pagarse a tiempo. Si no abonaste, puedes pedir una aclaración en la app o en la línea de atención para recibir un folio. La compañía responde en un máximo de 10 días hábiles. Si la aclaración procede, el monto se bonifica en tu siguiente factura.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Si no abonaste la factura en el plazo de 60 días naturales desde la emisión del cargo, se aplicará un recargo sobre el monto en disputa. Sin embargo, el resto de la factura debe pagarse a tiempo. Si no abonaste, puedes pedir una aclaración en la app o en la línea de atención para recibir un folio. La compañía responde en un máximo de 10 días hábiles. Si la aclaración procede, el monto se bonifica en tu siguiente factura.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si no abonaste la factura en el plazo de 60 días naturales desde la emisión del cargo, se aplicará un recargo sobre el monto en disputa.",
+      "respaldada": true
+     },
+     {
+      "texto": "Sin embargo, el resto de la factura debe pagarse a tiempo.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si no abonaste, puedes pedir una aclaración en la app o en la línea de atención para recibir un folio.",
+      "respaldada": true
+     },
+     {
+      "texto": "La compañía responde en un máximo de 10 días hábiles.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si la aclaración procede, el monto se bonifica en tu siguiente factura.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P064",
+   "mostrados": [
+    "KB31",
+    "KB19",
+    "KB25"
+   ],
+   "reply": "Para devolver los equipos y obtener la señal, necesitarás devolver los módem, decodificadores, controles remotos y cables de corriente dentro de los 30 días naturales. Si no lo haces, se te cobrará $1,500 por el módem y $900 por cada decodificador. Si tienes un decodificador sin señal, primero verifica que la televisión esté en la entrada de video correcta y luego reinicia el decodificador. Si el problema persiste, revisa que estén incluidos en tu paquete o que el cable coaxial esté bien conectado. Si tienes más de un decodificador, puedes tener hasta 4 por domicilio. Si no devuelves los equipos dentro del plazo, se te cobrará $1,500 por el módem y $900 por cada decodificador. Si tienes un adeudo, el servicio se suspende y la línea fija sólo recibe llamadas y permite marcar a números de emergencia. Después de 60 días de suspensión, la cuenta se cancela y el adeudo se envía a cobranza.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Para devolver los equipos y obtener la señal, necesitarás devolver los módem, decodificadores, controles remotos y cables de corriente dentro de los 30 días naturales. Si no lo haces, se te cobrará $1,500 por el módem y $900 por cada decodificador. Si tienes un decodificador sin señal, primero verifica que la televisión esté en la entrada de video correcta y luego reinicia el decodificador. Si el problema persiste, revisa que estén incluidos en tu paquete o que el cable coaxial esté bien conectado. Si tienes más de un decodificador, puedes tener hasta 4 por domicilio. Si no devuelves los equipos dentro del plazo, se te cobrará $1,500 por el módem y $900 por cada decodificador. Si tienes un adeudo, el servicio se suspende y la línea fija sólo recibe llamadas y permite marcar a números de emergencia. Después de 60 días de suspensión, la cuenta se cancela y el adeudo se envía a cobranza.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para devolver los equipos y obtener la señal, necesitarás devolver los módem, decodificadores, controles remotos y cables de corriente dentro de los 30 días naturales.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si no lo haces, se te cobrará $1,500 por el módem y $900 por cada decodificador.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tienes un decodificador sin señal, primero verifica que la televisión esté en la entrada de video correcta y luego reinicia el decodificador.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el problema persiste, revisa que estén incluidos en tu paquete o que el cable coaxial esté bien conectado.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tienes más de un decodificador, puedes tener hasta 4 por domicilio.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si no devuelves los equipos dentro del plazo, se te cobrará $1,500 por el módem y $900 por cada decodificador.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tienes un adeudo, el servicio se suspende y la línea fija sólo recibe llamadas y permite marcar a números de emergencia.",
+      "respaldada": true
+     },
+     {
+      "texto": "Después de 60 días de suspensión, la cuenta se cancela y el adeudo se envía a cobranza.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P065",
+   "mostrados": [
+    "KB15",
+    "KB30",
+    "KB23"
+   ],
+   "reply": "El cambio de domicilio cuesta $300 y se cargan en tu siguiente factura. Si cancelas antes del plazo forzoso, pagarás una penalización del 20% de las rentas mensuales que falten para completar el plazo.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"El cambio de domicilio cuesta $300 y se cargan en tu siguiente factura. Si cancelas antes del plazo forzoso, pagarás una penalización del 20% de las rentas mensuales que falten para completar el plazo.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El cambio de domicilio cuesta $300 y se cargan en tu siguiente factura.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si cancelas antes del plazo forzoso, pagarás una penalización del 20% de las rentas mensuales que falten para completar el plazo.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P066",
+   "mostrados": [
+    "KB26",
+    "KB25",
+    "KB40"
+   ],
+   "reply": "El recargo por falta de pago es de $80. La reconexión cuesta $90 y se carga en la siguiente factura.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"El recargo por falta de pago es de $80. La reconexión cuesta $90 y se carga en la siguiente factura.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El recargo por falta de pago es de $80.",
+      "respaldada": true
+     },
+     {
+      "texto": "La reconexión cuesta $90 y se carga en la siguiente factura.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P067",
+   "mostrados": [
+    "KB13",
+    "KB36",
+    "KB14"
+   ],
+   "reply": "",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"El técnico puede llegar a tu domicilio en las siguientes horarios: 8:00 a 12:00, 12:00 a 16:00, y 16:00 a 20:00. Si no hay nadie en tu casa cuando llega, se le pedirá permiso para entrar y si no lo permite, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona que lo haya invitado. Si no se puede entrar en ninguna de las casas, se le pedirá permiso para entrar en la casa de la persona",
+   "error": null
+  },
+  {
+   "id": "P068",
+   "mostrados": [
+    "KB05",
+    "KB11",
+    "KB34"
+   ],
+   "reply": "Para cambiar la contraseña del wifi, necesitas ser mayor de 18 años y presentar una identificación oficial vigente con fotografía y un comprobante de domicilio con antigüedad no mayor a 3 meses. Si el comprobante no está a tu nombre, se pide además una carta simple firmada por la persona a cuyo nombre está. También debes dar un correo electrónico y un número celular de contacto. Para cambiar la contraseña de tu cuenta de la app, necesitas tener el número de cuenta de 10 dígitos o el correo registrado, más una contraseña. Si la olvidaste, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Después de 5 intentos fallidos el acceso se bloquea 30 minutos. Si perdiste el correo y el número móvil registrados, actualízalos en la línea de atención validando tu identidad.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Para cambiar la contraseña del wifi, necesitas ser mayor de 18 años y presentar una identificación oficial vigente con fotografía y un comprobante de domicilio con antigüedad no mayor a 3 meses. Si el comprobante no está a tu nombre, se pide además una carta simple firmada por la persona a cuyo nombre está. También debes dar un correo electrónico y un número celular de contacto. Para cambiar la contraseña de tu cuenta de la app, necesitas tener el número de cuenta de 10 dígitos o el correo registrado, más una contraseña. Si la olvidaste, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Después de 5 intentos fallidos el acceso se bloquea 30 minutos. Si perdiste el correo y el número móvil registrados, actualízalos en la línea de atención validando tu identidad.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para cambiar la contraseña del wifi, necesitas ser mayor de 18 años y presentar una identificación oficial vigente con fotografía y un comprobante de domicilio con antigüedad no mayor a 3 meses.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el comprobante no está a tu nombre, se pide además una carta simple firmada por la persona a cuyo nombre está.",
+      "respaldada": true
+     },
+     {
+      "texto": "También debes dar un correo electrónico y un número celular de contacto.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para cambiar la contraseña de tu cuenta de la app, necesitas tener el número de cuenta de 10 dígitos o el correo registrado, más una contraseña.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si la olvidaste, toca '¿Olvidaste tu contraseña?' y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos.",
+      "respaldada": true
+     },
+     {
+      "texto": "La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número.",
+      "respaldada": true
+     },
+     {
+      "texto": "Después de 5 intentos fallidos el acceso se bloquea 30 minutos.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si perdiste el correo y el número móvil registrados, actualízalos en la línea de atención validando tu identidad.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P069",
+   "mostrados": [
+    "KB23",
+    "KB27",
+    "KB24"
+   ],
+   "reply": "Si el banco rechaza el cargo, se reintenta el día 8. Si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo. El recargo es de $30 al mes.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Si el banco rechaza el cargo, se reintenta el día 8. Si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo. El recargo es de $30 al mes.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si el banco rechaza el cargo, se reintenta el día 8.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo.",
+      "respaldada": true
+     },
+     {
+      "texto": "El recargo es de $30 al mes.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P070",
+   "mostrados": [
+    "KB27",
+    "KB25",
+    "KB38"
+   ],
+   "reply": "Si no recibes una respuesta dentro de los 10 días hábiles desde la solicitud, puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor. Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles. Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales. Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Si no recibes una respuesta dentro de los 10 días hábiles desde la solicitud, puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor. Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles. Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales. Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si no recibes una respuesta dentro de los 10 días hábiles desde la solicitud, puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor.",
+      "respaldada": false
+     },
+     {
+      "texto": "Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P071",
+   "mostrados": [
+    "KB07",
+    "KB39",
+    "KB23"
+   ],
+   "reply": "Para la falla masiva en tu colonia, puedes consultar en la sección Estado del servicio de la app o en el menú de voz de la línea de atención eligiendo la opción 1. Allí verás la hora estimada de solución. Durante una falla masiva no hace falta levantar un reporte individual ni reiniciar tus equipos una y otra vez. Te enviaremos un aviso cuando el servicio se restablezca.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Para la falla masiva en tu colonia, puedes consultar en la sección Estado del servicio de la app o en el menú de voz de la línea de atención eligiendo la opción 1. Allí verás la hora estimada de solución. Durante una falla masiva no hace falta levantar un reporte individual ni reiniciar tus equipos una y otra vez. Te enviaremos un aviso cuando el servicio se restablezca.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para la falla masiva en tu colonia, puedes consultar en la sección Estado del servicio de la app o en el menú de voz de la línea de atención eligiendo la opción 1.",
+      "respaldada": true
+     },
+     {
+      "texto": "Allí verás la hora estimada de solución.",
+      "respaldada": true
+     },
+     {
+      "texto": "Durante una falla masiva no hace falta levantar un reporte individual ni reiniciar tus equipos una y otra vez.",
+      "respaldada": true
+     },
+     {
+      "texto": "Te enviaremos un aviso cuando el servicio se restablezca.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P072",
+   "mostrados": [
+    "KB04",
+    "KB06",
+    "KB05"
+   ],
+   "reply": "Para reclamar un problema con el wifi, necesitas hacer la prueba de velocidad por cable. Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras. La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta. Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja. Si el promedio de la prueba por cable es por debajo del 80%, levanta un reporte adjuntando las capturas. Las pruebas hechas por wifi no sirven para reclamar la velocidad.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Para reclamar un problema con el wifi, necesitas hacer la prueba de velocidad por cable. Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras. La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta. Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja. Si el promedio de la prueba por cable es por debajo del 80%, levanta un reporte adjuntando las capturas. Las pruebas hechas por wifi no sirven para reclamar la velocidad.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para reclamar un problema con el wifi, necesitas hacer la prueba de velocidad por cable.",
+      "respaldada": true
+     },
+     {
+      "texto": "Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras.",
+      "respaldada": true
+     },
+     {
+      "texto": "La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta.",
+      "respaldada": true
+     },
+     {
+      "texto": "Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si el promedio de la prueba por cable es por debajo del 80%, levanta un reporte adjuntando las capturas.",
+      "respaldada": true
+     },
+     {
+      "texto": "Las pruebas hechas por wifi no sirven para reclamar la velocidad.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P073",
+   "mostrados": [
+    "KB31",
+    "KB19",
+    "KB20"
+   ],
+   "reply": "Si el decodificador se descompone por uso normal, no se debe pagar por el módem y se cobrará $900 por cada decodificador. Si te roban el decodificador, se cobrará $1,500 por el módem y $900 por cada decodificador.",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Si el decodificador se descompone por uso normal, no se debe pagar por el módem y se cobrará $900 por cada decodificador. Si te roban el decodificador, se cobrará $1,500 por el módem y $900 por cada decodificador.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Si el decodificador se descompone por uso normal, no se debe pagar por el módem y se cobrará $900 por cada decodificador.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si te roban el decodificador, se cobrará $1,500 por el módem y $900 por cada decodificador.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P074",
+   "mostrados": [
+    "KB18",
+    "KB17",
+    "KB35"
+   ],
+   "reply": "Para activar el buzón de voz, marca *94. Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación. Para desactivar el desvío de llamadas, marca *73.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Para activar el buzón de voz, marca *94. Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación. Para desactivar el desvío de llamadas, marca *73.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para activar el buzón de voz, marca *94.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para activar el desvío de llamadas, marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación.",
+      "respaldada": true
+     },
+     {
+      "texto": "Para desactivar el desvío de llamadas, marca *73.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P075",
+   "mostrados": [
+    "KB01",
+    "KB03",
+    "KB04"
+   ],
+   "reply": "Espera a que la luz de internet quede fija en verde. Si tras esto sigue sin funcionar, se debe escalar a un técnico.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Espera a que la luz de internet quede fija en verde. Si tras esto sigue sin funcionar, se debe escalar a un técnico.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Espera a que la luz de internet quede fija en verde.",
+      "respaldada": true
+     },
+     {
+      "texto": "Si tras esto sigue sin funcionar, se debe escalar a un técnico.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P076",
+   "mostrados": [
+    "KB29",
+    "KB02",
+    "KB23"
+   ],
+   "reply": "Para descargar tu factura electrónica y que incluya tus datos fiscales, registra tus datos fiscales en la app antes del 25 de cada mes. Luego, la factura electrónica se enviará a tu correo en PDF y XML.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Para descargar tu factura electrónica y que incluya tus datos fiscales, registra tus datos fiscales en la app antes del 25 de cada mes. Luego, la factura electrónica se enviará a tu correo en PDF y XML.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Para descargar tu factura electrónica y que incluya tus datos fiscales, registra tus datos fiscales en la app antes del 25 de cada mes.",
+      "respaldada": true
+     },
+     {
+      "texto": "Luego, la factura electrónica se enviará a tu correo en PDF y XML.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P077",
+   "mostrados": [
+    "KB22",
+    "KB24",
+    "KB23"
+   ],
+   "reply": "Una transferencia bancaria se refleja en tu cuenta más rápido que un pago en tienda de conveniencia.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"Una transferencia bancaria se refleja en tu cuenta más rápido que un pago en tienda de conveniencia.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P078",
+   "mostrados": [
+    "KB13",
+    "KB01",
+    "KB12"
+   ],
+   "reply": "El costo de la visita técnica por cortar un cable sin querer es $250 en efectivo. Esta es una excepción a la regla general de que la visita técnica no tiene costo si el problema es de la red o del equipo de la compañía.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"El costo de la visita técnica por cortar un cable sin querer es $250 en efectivo. Esta es una excepción a la regla general de que la visita técnica no tiene costo si el problema es de la red o del equipo de la compañía.\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El costo de la visita técnica por cortar un cable sin querer es $250 en efectivo.",
+      "respaldada": true
+     },
+     {
+      "texto": "Esta es una excepción a la regla general de que la visita técnica no tiene costo si el problema es de la red o del equipo de la compañía.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P079",
+   "mostrados": [
+    "KB02",
+    "KB17",
+    "KB34"
+   ],
+   "reply": "Lo siento, pero no puedo ayudarte con eso. Por favor, consulta la receta en el portal de clientes o en la app.",
+   "citations": [
+    1,
+    3
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no puedo ayudarte con eso. Por favor, consulta la receta en el portal de clientes o en la app.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 3]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no puedo ayudarte con eso.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, consulta la receta en el portal de clientes o en la app.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P080",
+   "mostrados": [],
+   "reply": "Lo siento, no tengo información sobre el clima de tu ciudad. Por favor, consulta la página web de la meteorología local o utiliza la aplicación de clima para obtener la información más precisa.",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"Lo siento, no tengo información sobre el clima de tu ciudad. Por favor, consulta la página web de la meteorología local o utiliza la aplicación de clima para obtener la información más precisa.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": []\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, no tengo información sobre el clima de tu ciudad.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, consulta la página web de la meteorología local o utiliza la aplicación de clima para obtener la información más precisa.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P081",
+   "mostrados": [
+    "KB18",
+    "KB17",
+    "KB16"
+   ],
+   "reply": "El costo de un celular de gama alta de otra marca puede variar dependiendo de la marca y el modelo. Los precios pueden ser de $100 a $500 o más, dependiendo de la marca y el modelo. Si tienes más preguntas o necesitas ayuda con algo más, estaré encantado de asistirte.",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"El costo de un celular de gama alta de otra marca puede variar dependiendo de la marca y el modelo. Los precios pueden ser de $100 a $500 o más, dependiendo de la marca y el modelo. Si tienes más preguntas o necesitas ayuda con algo más, estaré encantado de asistirte.\",\n  \"confidence\": 0.8,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "El costo de un celular de gama alta de otra marca puede variar dependiendo de la marca y el modelo.",
+      "respaldada": false
+     },
+     {
+      "texto": "Los precios pueden ser de $100 a $500 o más, dependiendo de la marca y el modelo.",
+      "respaldada": false
+     },
+     {
+      "texto": "Si tienes más preguntas o necesitas ayuda con algo más, estaré encantado de asistirte.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P082",
+   "mostrados": [
+    "KB26",
+    "KB24",
+    "KB35"
+   ],
+   "reply": "Lo siento, pero no tengo información específica sobre IP fija para negocios. Puedo ofrecerte más información sobre cómo solicitarlo o cómo proceder en caso de que necesites ayuda con otros aspectos de tu servicio.",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no tengo información específica sobre IP fija para negocios. Puedo ofrecerte más información sobre cómo solicitarlo o cómo proceder en caso de que necesites ayuda con otros aspectos de tu servicio.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": true,\n  \"suggest_escalation\": false,\n  \"citations\": []\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no tengo información específica sobre IP fija para negocios.",
+      "respaldada": false
+     },
+     {
+      "texto": "Puedo ofrecerte más información sobre cómo solicitarlo o cómo proceder en caso de que necesites ayuda con otros aspectos de tu servicio.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P083",
+   "mostrados": [
+    "KB11"
+   ],
+   "reply": "Lo siento, pero no tengo información específica sobre descuentos para adultos mayores o estudiantes. Para obtener más detalles, te recomiendo que contactes directamente con el departamento de atención al cliente de la empresa.",
+   "citations": [],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no tengo información específica sobre descuentos para adultos mayores o estudiantes. Para obtener más detalles, te recomiendo que contactes directamente con el departamento de atención al cliente de la empresa.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": true,\n  \"suggest_escalation\": false,\n  \"citations\": []\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no tengo información específica sobre descuentos para adultos mayores o estudiantes.",
+      "respaldada": false
+     },
+     {
+      "texto": "Para obtener más detalles, te recomiendo que contactes directamente con el departamento de atención al cliente de la empresa.",
+      "respaldada": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P084",
+   "mostrados": [
+    "KB36",
+    "KB27",
+    "KB29"
+   ],
+   "reply": "No, la compañía no vende ni comparte tus datos personales a otras empresas.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"No, la compañía no vende ni comparte tus datos personales a otras empresas.\",\n  \"confidence\": 1,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "No, la compañía no vende ni comparte tus datos personales a otras empresas.",
+      "respaldada": false
+     }
+    ]
+   }
+  },
+  {
+   "id": "P085",
+   "mostrados": [
+    "KB12",
+    "KB08",
+    "KB36"
+   ],
+   "reply": "¡Por supuesto! Podemos ayudarte a contratar un plan de telefonía celular con datos móviles. ¿Podrías proporcionarme más detalles sobre tu situación y necesidades?",
+   "citations": [
+    1,
+    2
+   ],
+   "raw": "{\n  \"reply\": \"¡Por supuesto! Podemos ayudarte a contratar un plan de telefonía celular con datos móviles. ¿Podrías proporcionarme más detalles sobre tu situación y necesidades?\",\n  \"confidence\": 0.9,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1, 2]\n}",
+   "error": null,
+   "juez": {
+    "error": "fuera de contrato o caído"
+   }
+  },
+  {
+   "id": "P086",
+   "mostrados": [
+    "KB35",
+    "KB21"
+   ],
+   "reply": "Lo siento, pero no tengo información sobre el resultado del partido de fútbol de anoche. Por favor, consulta la información en la app o en la web oficial del equipo que jugó el partido.",
+   "citations": [
+    1
+   ],
+   "raw": "{\n  \"reply\": \"Lo siento, pero no tengo información sobre el resultado del partido de fútbol de anoche. Por favor, consulta la información en la app o en la web oficial del equipo que jugó el partido.\",\n  \"confidence\": 0.5,\n  \"needs_more_info\": false,\n  \"suggest_escalation\": false,\n  \"citations\": [1]\n}",
+   "error": null,
+   "juez": {
+    "afirmaciones": [
+     {
+      "texto": "Lo siento, pero no tengo información sobre el resultado del partido de fútbol de anoche.",
+      "respaldada": false
+     },
+     {
+      "texto": "Por favor, consulta la información en la app o en la web oficial del equipo que jugó el partido.",
+      "respaldada": true
+     }
+    ]
+   }
+  }
+ ]
+}

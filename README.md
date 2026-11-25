@@ -14,18 +14,19 @@
 
 | Capability | Evidence |
 |---|---|
-| **Production-grade multi-agent orchestration** | 6 specialized agents (Router, Support, Troubleshooting, Escalation, Quality, Summarizer) coordinated via explicit state machine — no LangGraph, no framework lock-in |
+| **Production-grade multi-agent orchestration** | 6 specialized agents (Router, Support, Troubleshooting, Escalation, Quality, Summarizer) coordinated via an explicit state machine, plus a **LangGraph adapter with measured parity** behind the same application port. The state machine is still the default engine and the production image ships without any framework ([ADR 0005](docs/adr/0005-adaptador-langgraph.md)) |
+| **Evaluated RAG** | Versioned eval set (40-doc KB, 86 questions with expected source and reference answer), deterministic retrieval metrics (hit@k, MRR, citation coverage) over real `nomic-embed-text` vectors, citation-checked faithfulness and key-fact exactness, a CI gate with negative controls (shuffled embeddings, random retriever, altered numbers) plus a versioned snapshot of the production SupportAgent prompt on a small local LLM with an optional LLM judge: [docs/evaluacion_rag.md](docs/evaluacion_rag.md) |
 | **Voice I/O at production latency** | Whisper STT 0.9s (Groq) + Kokoro ONNX TTS at RTF 0.34 on CPU only — GPU stays free for the LLM |
 | **Cost-optimized resilience** | LLM provider chain (`Groq → Ollama → Mock`) keeps the system answering when any provider fails, with $0 floor (local + mock) |
-| **Hybrid RAG with graceful degradation** | `nomic-embed-text` embeddings + keyword fallback when embedder is unavailable — lazy backfill for legacy docs |
+| **Hybrid RAG with graceful degradation** | `nomic-embed-text` embeddings + keyword fallback when embedder is unavailable — lazy backfill for legacy docs. The support agent returns the fragments it cites (`citations`) |
 | **Multi-tenant from day 1** | `tenant_id` scoping in every aggregate, per-tenant API keys, per-tenant metrics |
 | **Clean Architecture** | Domain → Application → Infrastructure → Presentation. 100% of tests run offline (MockProvider + SQLite tmp, PostgreSQL 16 in CI) — no flaky CI |
-| **Verifiable quality** | One test per business rule ([docs/reglas.md](docs/reglas.md), 75 rules), golden-file parity against an independent oracle with a negative control, E2E per role against the production image, versioned OpenAPI contract |
+| **Verifiable quality** | One test per business rule ([docs/reglas.md](docs/reglas.md), 94 rules), golden-file parity against an independent oracle with a negative control, E2E per role against the production image, versioned OpenAPI contract |
 | **Operational maturity** | Deployable as Windows service via nssm. Alembic migrations auto-stamp pre-existing DBs at boot. Agent runs persist full trace (tokens, cost, latency, confidence, error) |
 | **Cloning + voice synthesis** | Chatterbox MIT voice cloning in isolated micro-service (separate venv with torch cu124) avoids GPU contention — auto-fallback to Kokoro if down |
 | **LLM specialization roadmap** | QLoRA fine-tune plan documented in [FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md): synthetic dataset → Unsloth/RunPod → GGUF export → Ollama. Specialization > scale for narrow tasks |
 
-**By the numbers** (2026-11-20) — 6 pipeline agents · 8 use-cases · 18 API operations + webchat · 75 Python modules · ~6,300 LOC in `src/` · 192 tests in 21 suites (100% offline)
+**By the numbers** (2026-11-25) — 6 pipeline agents · 2 interchangeable turn engines (state machine + LangGraph) · 8 use-cases · 18 API operations + webchat · 85 Python modules · ~7,900 LOC in `src/` · 329 tests in 24 suites (100% offline) · RAG eval set of 86 questions over 40 documents
 
 ---
 
@@ -35,7 +36,7 @@
 flowchart TD
     Web[Webchat / REST / WhatsApp adapter] -->|message| API[FastAPI Presentation]
     API --> UC[Use Cases]
-    UC --> Workflow[SupportWorkflow]
+    UC --> Workflow[SupportWorkflowPort<br/>state machine · LangGraph adapter]
 
     Workflow --> Router[RouterAgent<br/>intent + urgency]
     Router -->|technical| Trouble[TroubleshootingAgent<br/>guided steps]
@@ -65,6 +66,8 @@ flowchart TD
 ```
 
 Dependency rule: `presentation → application → domain`; `infrastructure` implements domain ports. Endpoints contain zero business logic.
+
+The support turn sits behind one application port (`application/ports.py · SupportWorkflowPort`) with two engines: the explicit state machine (`WORKFLOW_ENGINE=state_machine`, the default, framework-free) and a LangGraph `StateGraph` adapter (`WORKFLOW_ENGINE=langgraph`, `pip install -r requirements-langgraph.txt`) that records a trace per node. Both share agents, policy and outcome builders; the parity suite proves they take the same path, make the same decisions and escalate the same way ([ADR 0005](docs/adr/0005-adaptador-langgraph.md)).
 
 C4 model (context, containers, components), the support turn and the conversation lifecycle: [docs/arquitectura](docs/arquitectura/README.md). Design decisions: [docs/adr](docs/adr/). API contract: [docs/api/openapi.json](docs/api/openapi.json) (also live at `/docs`).
 
@@ -180,11 +183,14 @@ If `API_TOKEN` is set in `.env`, add `-H "X-API-Token: <token>"` to each request
 ```bash
 pip install -r requirements-dev.txt
 ruff check .
-pytest                                   # 192 tests, offline (PostgreSQL ones skip without a database)
+pytest                                   # 329 tests, offline (PostgreSQL ones skip without a database)
+PYTHONPATH=src python -m callforge.evaluation.rag --compuerta   # RAG gate (deterministic, cached real embeddings)
 ```
 
 - **One test per business rule**: [docs/reglas.md](docs/reglas.md) maps every rule (routing, quality retry, escalation, conversation lifecycle incl. invalid transitions, tenant isolation, LLM fallback order, RAG, migrations, voice) to the tests that cover it; `tests/test_reglas_doc.py` keeps the table honest.
 - **Golden parity** (`tests/test_paridad_golden.py`): 7 conversations / 12 turns through the API vs. an independent oracle (`tests/golden/generar_golden.py`), multiset comparison, control figures (runs, events, tickets, tokens, cost in `Decimal`) and a negative control that must detect seeded differences.
+- **Engine parity** (`tests/test_paridad_motores.py`): 28 scripted scenarios (every branch of the turn) run on the state machine and on the LangGraph adapter and must match field by field: agent sequence, each run's decision and confidence, the exact input each agent received, events, ticket/escalation and reply. The flow rules and the golden batch also run on both engines. Negative control: a mutated graph (no low-confidence escalation, no retry edge) differs in exactly the scenarios that exercise that edge.
+- **RAG evaluation** (`tests/test_evaluacion_rag.py`, `python -m callforge.evaluation.rag --compuerta`): deterministic gate over the versioned eval set; it must fail with shuffled embeddings, a random retriever or altered numbers (also checked in CI). Numbers and findings: [docs/evaluacion_rag.md](docs/evaluacion_rag.md).
 - **E2E per role** (`tests/e2e/`): admin, tenant operator, global token, anonymous and webchat customer; CI also runs it over real HTTP/WebSocket against the production image.
 - **PostgreSQL 16**: `CALLFORGE_TEST_POSTGRES_URL=postgresql+psycopg2://... pytest tests/test_postgres.py`.
 - Scripts that need a GPU, Ollama, RunPod or real API keys are manual and listed in [RUNBOOK.md](RUNBOOK.md).
@@ -195,7 +201,7 @@ Render Blueprint ([render.yaml](render.yaml)): Docker image from `main`, health 
 
 ## Security
 
-Every change runs CodeQL, Semgrep, Trivy (dependencies, Dockerfile and image), gitleaks over the whole history and an SBOM; how to report a vulnerability and how exceptions are handled: [SECURITY.md](SECURITY.md).
+Every change runs CodeQL, Semgrep, Trivy (dependencies, Dockerfile and image), pip-audit (test and LangGraph dependencies, which stay out of the image), gitleaks over the whole history and an SBOM; how to report a vulnerability and how exceptions are handled: [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
