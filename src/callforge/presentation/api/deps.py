@@ -5,19 +5,19 @@ from collections.abc import Iterator
 
 from fastapi import Depends, Header, HTTPException, Request
 
+from callforge.application.ports import SupportWorkflowPort
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.config import Settings
 from callforge.domain.entities import DEFAULT_TENANT_ID
 from callforge.infrastructure.knowledge.store import HybridKnowledgeStore
 from callforge.infrastructure.repositories import SqlTenantRepository
-from callforge.orchestration.workflow import SupportWorkflow
 
 
 def get_settings_dep(request: Request) -> Settings:
     return request.app.state.settings
 
 
-def get_workflow(request: Request) -> SupportWorkflow:
+def get_workflow(request: Request) -> SupportWorkflowPort:
     return request.app.state.workflow
 
 

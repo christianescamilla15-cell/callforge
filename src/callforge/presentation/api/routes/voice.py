@@ -16,10 +16,10 @@ from callforge.application.dtos import (
     ConversationNotFoundError,
     SendMessageInput,
 )
+from callforge.application.ports import SupportWorkflowPort
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.application.use_cases.send_message import SendMessage
 from callforge.infrastructure.knowledge.store import HybridKnowledgeStore
-from callforge.orchestration.workflow import SupportWorkflow
 from callforge.presentation.api.deps import (
     get_knowledge_store,
     get_uow,
@@ -319,7 +319,7 @@ async def voice_message(
     stream: bool = False,
     voice: str | None = None,
     uow: UnitOfWork = Depends(get_uow),
-    workflow: SupportWorkflow = Depends(get_workflow),
+    workflow: SupportWorkflowPort = Depends(get_workflow),
     knowledge_store: HybridKnowledgeStore = Depends(get_knowledge_store),
 ) -> VoiceMessageResponse:
     """One voice turn: audio -> Groq Whisper STT -> the same support workflow as a

@@ -8,6 +8,7 @@ from callforge.application.dtos import (
     SendMessageInput,
     StartConversationInput,
 )
+from callforge.application.ports import SupportWorkflowPort
 from callforge.application.unit_of_work import UnitOfWork
 from callforge.application.use_cases.get_conversation import GetConversation
 from callforge.application.use_cases.manage_conversations import (
@@ -17,7 +18,6 @@ from callforge.application.use_cases.manage_conversations import (
 from callforge.application.use_cases.send_message import SendMessage
 from callforge.application.use_cases.start_conversation import StartConversation
 from callforge.infrastructure.knowledge.store import HybridKnowledgeStore
-from callforge.orchestration.workflow import SupportWorkflow
 from callforge.presentation.api.deps import (
     get_knowledge_store,
     get_uow,
@@ -73,7 +73,7 @@ async def send_message(
     conversation_id: str,
     body: SendMessageRequest,
     uow: UnitOfWork = Depends(get_uow),
-    workflow: SupportWorkflow = Depends(get_workflow),
+    workflow: SupportWorkflowPort = Depends(get_workflow),
     knowledge_store: HybridKnowledgeStore = Depends(get_knowledge_store),
 ) -> SendMessageResponse:
     """Run one support turn: Router -> knowledge -> specialist -> QualityAgent
