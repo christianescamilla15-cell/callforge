@@ -158,12 +158,9 @@ jobs:
             -r requirements.txt -r requirements-langgraph.txt -r requirements-dev.txt
       - name: probar que pip-audit auditó los paquetes fijados
         if: always()
-        shell: python
         run: |
-          import json, sys
-          auditados = json.load(open("pip-audit.json", encoding="utf-8"))["dependencies"]
-          print(f"pip-audit: {len(auditados)} paquetes auditados")
-          sys.exit(0 if len(auditados) >= 60 and any(d["name"] == "langgraph" for d in auditados) else 1)
+          jq -r '"pip-audit: \(.dependencies | length) paquetes auditados"' pip-audit.json
+          jq -e '(.dependencies | length) >= 60 and any(.dependencies[]; .name == "langgraph")' pip-audit.json
 
   sbom:
     name: SBOM (syft)
