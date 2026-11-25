@@ -23,6 +23,10 @@ from callforge.infrastructure.llm.mock_provider import MockProvider
 from callforge.orchestration.policies import EscalationPolicy
 from callforge.orchestration.workflow import SupportWorkflow, WorkflowOutcome
 
+# Motor con el que `armar_flujo` arma el turno. Las pruebas de reglas del flujo lo parametrizan para que
+# cada regla se cumpla con la máquina de estados Y con el adaptador LangGraph (tests/test_reglas_flujo.py).
+MOTOR = "state_machine"
+
 AGENTES = (
     "RouterAgent", "TroubleshootingAgent", "EscalationAgent", "SummarizerAgent",
     "QualityAgent", "SupportAgent",
@@ -77,8 +81,13 @@ class RepoConocimientoEnMemoria:
 
 
 def armar_flujo(llm: LLMProvider, *, umbral_calidad: float = 0.5, umbral_confianza: float = 0.4,
-                reintentos: int = 1) -> SupportWorkflow:
-    return SupportWorkflow(
+                reintentos: int = 1, motor: str | None = None, clase=None):
+    """El turno con `motor` (o el de MOTOR); `clase` arma en su lugar una variante (controles negativos)."""
+    if clase is None:
+        clase = SupportWorkflow
+        if (motor or MOTOR) == "langgraph":
+            from callforge.orchestration.langgraph_workflow import LangGraphSupportWorkflow as clase
+    return clase(
         router=RouterAgent(llm),
         support=SupportAgent(llm),
         troubleshooting=TroubleshootingAgent(llm),
@@ -91,13 +100,13 @@ def armar_flujo(llm: LLMProvider, *, umbral_calidad: float = 0.5, umbral_confian
     )
 
 
-def correr(flujo: SupportWorkflow, mensaje: str, *, historia: list[dict] | None = None,
-           pasos: list[ResolutionStep] | None = None) -> WorkflowOutcome:
+def correr(flujo, mensaje: str, *, historia: list[dict] | None = None,
+           pasos: list[ResolutionStep] | None = None, documentos=()) -> WorkflowOutcome:
     return asyncio.run(flujo.handle_message(
         conversation_id="c-prueba",
         user_message=mensaje,
         history=historia or [],
-        knowledge_store=KeywordKnowledgeStore(RepoConocimientoEnMemoria()),
+        knowledge_store=KeywordKnowledgeStore(RepoConocimientoEnMemoria(documentos)),
         resolution_steps=pasos,
     ))
 

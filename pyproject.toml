@@ -28,6 +28,7 @@ dependencies = [
 [project.optional-dependencies]
 voice = ["kokoro-onnx>=0.4", "soundfile>=0.12"]
 postgres = ["psycopg2-binary>=2.9"]
+langgraph = ["langgraph==1.2.20"]   # adaptador opcional del turno (WORKFLOW_ENGINE=langgraph, ADR 0005)
 dev = ["pytest>=8.0", "pytest-cov>=7.0", "ruff>=0.17"]
 
 [tool.setuptools.packages.find]

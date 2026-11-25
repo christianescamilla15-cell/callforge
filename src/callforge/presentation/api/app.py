@@ -5,12 +5,6 @@ import logging
 from fastapi import FastAPI
 
 from callforge import __version__
-from callforge.agents.escalation_agent import EscalationAgent
-from callforge.agents.quality_agent import QualityAgent
-from callforge.agents.router_agent import RouterAgent
-from callforge.agents.summarizer_agent import SummarizerAgent
-from callforge.agents.support_agent import SupportAgent
-from callforge.agents.troubleshooting_agent import TroubleshootingAgent
 from callforge.config import Settings, get_settings
 from callforge.infrastructure.database import (
     build_engine,
@@ -19,8 +13,7 @@ from callforge.infrastructure.database import (
 )
 from callforge.infrastructure.knowledge.embeddings import OllamaEmbeddingProvider
 from callforge.infrastructure.llm.fallback import build_provider_chain
-from callforge.orchestration.policies import EscalationPolicy
-from callforge.orchestration.workflow import SupportWorkflow
+from callforge.orchestration.factory import build_support_workflow
 from callforge.presentation.api.routes import (
     admin,
     conversations,
@@ -43,16 +36,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     session_factory = build_session_factory(engine)
 
     llm_chain = build_provider_chain(settings)
-    workflow = SupportWorkflow(
-        router=RouterAgent(llm_chain),
-        support=SupportAgent(llm_chain),
-        troubleshooting=TroubleshootingAgent(llm_chain),
-        escalation=EscalationAgent(llm_chain),
-        summarizer=SummarizerAgent(llm_chain),
-        quality=QualityAgent(llm_chain),
-        policy=EscalationPolicy.from_settings(settings),
-        knowledge_top_k=settings.knowledge_top_k,
-    )
+    workflow = build_support_workflow(settings, llm_chain)
 
     app = FastAPI(
         title="CallForge",

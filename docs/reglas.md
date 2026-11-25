@@ -157,3 +157,20 @@ Mock**. Ver [ADR 0002](adr/0002-cadena-de-proveedores-llm.md).
 | P3 | Control negativo: las diferencias sembradas se detectan exactas | `tests/test_paridad_golden.py::test_control_negativo_un_esperado_alterado_da_exactamente_las_diferencias_sembradas`, `tests/test_paridad_golden.py::test_control_negativo_una_entrada_alterada_cambia_solo_su_conversacion`, `tests/test_paridad_golden.py::test_control_negativo_las_inversiones_cuentan_desplazamientos_no_posiciones` |
 | P4 | El contrato OpenAPI versionado está al día y cada operación está documentada | `tests/test_openapi.py::test_el_contrato_versionado_esta_al_dia`, `tests/test_openapi.py::test_el_contrato_trae_todas_las_rutas_de_negocio`, `tests/test_openapi.py::test_cada_operacion_esta_documentada` |
 | P5 | Un caso de soporte completo por rol (alta, conocimiento, webchat, diagnóstico, escalamiento, ticket, cierre, métricas) | `tests/e2e/test_soporte_por_rol.py::test_flujo_completo_de_un_caso_de_soporte`, `tests/e2e/test_soporte_por_rol.py::test_el_cliente_por_rest_recibe_respuesta_y_la_conversacion_reanuda_en_el_webchat`, `tests/test_webchat.py::test_webchat_full_conversation`, `tests/test_audit_fixes.py::test_webchat_resumes_existing_conversation` |
+
+## 12. Motor del turno: adaptador LangGraph · `orchestration/langgraph_workflow.py`, `application/ports.py`
+
+Ver [ADR 0005](adr/0005-adaptador-langgraph.md). El caso de uso depende de `SupportWorkflowPort`; la máquina de
+estados (`SupportWorkflow`) es el motor por omisión y el `StateGraph` de LangGraph un adaptador opcional
+(`WORKFLOW_ENGINE=langgraph`). Las reglas de las secciones 1–3, 5 y 7 y el lote golden corren con los dos.
+
+| # | Regla | Pruebas |
+|---|---|---|
+| G1 | Los dos motores implementan el mismo puerto, con la misma firma | `tests/test_paridad_motores.py::test_los_dos_motores_implementan_el_mismo_puerto` |
+| G2 | Paridad por escenario (28 ramas): misma secuencia de agentes, decisión y confianza por corrida, misma entrada a cada agente, mismos eventos, mismo escalamiento y resultado; el conjunto recorre todos los nodos y aristas del grafo | `tests/test_paridad_motores.py::test_paridad_de_la_huella_por_escenario`, `tests/test_paridad_motores.py::test_paridad_del_conjunto_completo_y_cobertura_de_ramas` |
+| G3 | Las reglas del flujo y el lote golden por la API (oráculo, cifras control, consumo) se cumplen con los dos motores | `tests/test_reglas_flujo.py::test_precedencia_del_enrutamiento_humano_tecnico_facturacion`, `tests/test_paridad_golden.py::test_paridad_del_lote_contra_el_golden`, `tests/test_paridad_golden.py::test_cifras_control_del_lote` |
+| G4 | Control negativo: un adaptador mutado (sin escalar por confianza, sin reintento) difiere exactamente en los escenarios que ejercitan esa arista | `tests/test_paridad_motores.py::test_control_negativo_sin_escalar_por_confianza_difiere_solo_donde_la_confianza_es_baja`, `tests/test_paridad_motores.py::test_control_negativo_sin_reintentos_difiere_exactamente_en_los_escenarios_con_reintento` |
+| G5 | Cada nodo deja una traza (nodo, latencia, agentes, siguiente) coherente con las corridas y una línea de bitácora; la máquina de estados no inventa trazas | `tests/test_paridad_motores.py::test_las_trazas_por_nodo_cuentan_el_mismo_recorrido_que_las_corridas`, `tests/test_paridad_motores.py::test_cada_nodo_deja_una_linea_de_bitacora`, `tests/test_paridad_motores.py::test_la_maquina_de_estados_no_deja_trazas_de_grafo` |
+| G6 | El diagrama del ADR es el grafo compilado | `tests/test_paridad_motores.py::test_el_diagrama_del_adr_es_el_grafo_compilado` |
+| G7 | `WORKFLOW_ENGINE` elige el motor y por omisión es la máquina de estados; uno desconocido no arranca; `langgraph` sin el paquete falla al arrancar con un mensaje claro | `tests/test_paridad_motores.py::test_workflow_engine_elige_el_motor_y_la_omision_es_la_maquina_de_estados`, `tests/test_paridad_motores.py::test_un_motor_desconocido_no_arranca`, `tests/test_paridad_motores.py::test_sin_langgraph_instalado_el_motor_langgraph_falla_con_un_mensaje_claro` |
+

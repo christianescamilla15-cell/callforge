@@ -12,7 +12,8 @@ exactamente las diferencias sembradas en `control_negativo/alteraciones.json`. S
 dijera «todo igual» siempre, estas pruebas fallarían.
 
 Todo es determinista y sin red: el LLM es el MockProvider, tarifado como el modelo de Groq por
-omisión para que el costo no sea trivialmente cero.
+omisión para que el costo no sea trivialmente cero. Cada prueba que opera la API corre DOS veces, una con
+cada motor del turno (máquina de estados y adaptador LangGraph): los dos deben empatar con el oráculo.
 """
 from __future__ import annotations
 
@@ -66,10 +67,14 @@ def _entrada(ruta: Path = LOTE / "entrada.json") -> list[dict]:
     return json.loads(_leer(ruta))["conversaciones"]
 
 
-@pytest.fixture
-def sistema(tmp_path, monkeypatch):
+@pytest.fixture(params=["state_machine", "langgraph"])
+def sistema(request, tmp_path, monkeypatch):
+    """La API completa con cada motor del turno: el lote golden debe salir igual con los dos (ADR 0005)."""
     monkeypatch.setattr(modulo_app, "build_provider_chain", lambda _s: FallbackLLMProvider([MockTarifado()]))
-    with TestClient(modulo_app.create_app(make_test_settings(tmp_path))) as cliente:
+    ajustes = make_test_settings(tmp_path).model_copy(update={"workflow_engine": request.param})
+    with TestClient(modulo_app.create_app(ajustes)) as cliente:
+        assert type(cliente.app.state.workflow).__name__ == {
+            "state_machine": "SupportWorkflow", "langgraph": "LangGraphSupportWorkflow"}[request.param]
         yield cliente
 
 
