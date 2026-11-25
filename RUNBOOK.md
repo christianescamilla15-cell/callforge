@@ -75,6 +75,7 @@ Necesitan red, una llave, Ollama, una GPU o RunPod, y miden calidad o velocidad 
 | `scripts/ci.ps1`, `pipeline_smoke.py`, `e2e_probe.py`, `smoke_service.py`, `smoke_post_restart.py`, `smoke_cascade.py` | instancia local (Windows) con LLM real | pipeline local y humo con el modelo de verdad |
 | `scripts/model_bakeoff.py`, `probe_embeddings.py`, `ollama_speed.ps1` | Ollama local | comparar modelos, calibrar el umbral de similitud, acelerar Ollama |
 | `scripts/refund_eval.py`, `gen_refund_dataset.py`, `finetune_refund.py` | Ollama/LLM maestro; GPU para el fine-tune | especialista de reembolsos ([FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md)) |
+| `scripts/evaluar_rag_local.py`, `python -m callforge.evaluation.rag embeddings\|llm` | `llama-cpp-python` y GGUF, u Ollama | regenerar los vectores del caché de evaluación o la instantánea de respuestas de un LLM local con su juez ([docs/evaluacion_rag.md](docs/evaluacion_rag.md)) |
 | `scripts/runpod_gpu.py`, `gpu_remote.ps1` | cuenta de RunPod o caja GPU | Ollama remoto bajo demanda ([GPU_SERVER.md](GPU_SERVER.md)) |
 | `scripts/smoke_voice.py`, `smoke_voice_prod.py`, `build_voice_bank.py`, `voice_ab.py`, `ab_source_voice.py`, `test_chatterbox.py`, `test_openvoice_vc.py`, `test_qwen3_tts.py`, `extract_voice.py`, `diarize.py`, `cartesia_*.py` | GPU, `.venv-voice` con torch, Groq o Cartesia | voz: clonación, banco de frases, pruebas A/B ([ROADMAP_VOZ.md](ROADMAP_VOZ.md)) |
 
@@ -89,7 +90,9 @@ Necesitan red, una llave, Ollama, una GPU o RunPod, y miden calidad o velocidad 
 | `POST /voice/tts` → 500 en Render | La imagen no instala la voz local (extra `[voice]`: kokoro-onnx) y `TTS_ENABLED` vale `true` por omisión | `TTS_ENABLED=false` en Render, o `TTS_ENGINE=cartesia` con `CARTESIA_API_KEY` |
 | Mensajes con «Perdona, tuve un problema para responderte» | Todos los proveedores de LLM fallaron (evento `fallback_used`) | Revisar el error de la corrida en `agent_runs.error` y las llaves/Ollama |
 | El contenedor no arranca tras actualizar con base propia | Migración contra una base creada fuera de Alembic | `alembic stamp head` sólo si el esquema ya coincide; si no, respaldar y migrar |
+| No arranca con `WORKFLOW_ENGINE=langgraph` («necesita el adaptador») | La imagen de producción no instala LangGraph (ADR 0005) | `pip install -r requirements-langgraph.txt`, o volver a `state_machine` (el motor por omisión) |
 | `docker compose --profile postgres up` no levanta Postgres | Falta `POSTGRES_PASSWORD` en `.env` (no hay contraseña por omisión) | Definirla en `.env` |
 
 Observabilidad: bitácora en vivo en Render; cada decisión de agente queda en `agent_runs`/`agent_events` y se
-resume en `/api/v1/metrics` y `/dashboard`.
+resume en `/api/v1/metrics` y `/dashboard`. Con el motor LangGraph, cada nodo deja además una línea
+`langgraph nodo=… ms=… agentes=… siguiente=…` en la bitácora.

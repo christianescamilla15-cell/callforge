@@ -61,7 +61,10 @@ C4Component
     Component(deps, "Autenticación y tenancy", "presentation/api/deps.py", "Resuelve X-API-Token → tenant; admin aparte")
     Component(casos, "Casos de uso", "application/use_cases", "Start/SendMessage, Close, Feedback, Knowledge, Tickets; UnitOfWork por petición")
     Component(ciclo, "Ciclo de vida", "domain/lifecycle.py", "Transiciones permitidas de la conversación")
-    Component(flujo, "SupportWorkflow", "orchestration/workflow.py", "Router → conocimiento → especialista → calidad → reintento → escalamiento")
+    Component(puerto, "SupportWorkflowPort", "application/ports.py", "Puerto del turno: el caso de uso no sabe qué motor tiene detrás")
+    Component(flujo, "SupportWorkflow (por omisión)", "orchestration/workflow.py", "Máquina de estados: Router → conocimiento → especialista → calidad → reintento → escalamiento")
+    Component(grafo, "Adaptador LangGraph (opcional)", "orchestration/langgraph_workflow.py", "StateGraph con el mismo flujo y traza por nodo; WORKFLOW_ENGINE=langgraph")
+    Component(pasos, "Pasos compartidos", "orchestration/steps.py", "Evento, ticket, escalamiento, respaldo controlado y paso: una sola copia para los dos motores")
     Component(politica, "EscalationPolicy", "orchestration/policies.py", "Umbrales de calidad y confianza, reintentos")
     Component(agentes, "Agentes", "agents/", "Router, Support, Troubleshooting, Quality, Escalation, Summarizer")
     Component(cadena, "Cadena de LLM", "infrastructure/llm", "Groq → Ollama → Mock con respaldo y costo estimado")
@@ -74,7 +77,12 @@ C4Component
   Rel(rutas, deps, "Autentica")
   Rel(rutas, casos, "Invoca")
   Rel(casos, ciclo, "Mueve el estado")
-  Rel(casos, flujo, "Corre un turno")
+  Rel(casos, puerto, "Corre un turno")
+  Rel(puerto, flujo, "Implementa")
+  Rel(puerto, grafo, "Implementa")
+  Rel(grafo, pasos, "Construye el resultado")
+  Rel(flujo, pasos, "Construye el resultado")
+  Rel(grafo, agentes, "Un nodo por agente")
   Rel(flujo, politica, "Decide reintento y escalamiento")
   Rel(flujo, agentes, "Llama en orden")
   Rel(agentes, cadena, "Completa JSON")
@@ -109,6 +117,12 @@ flowchart TD
 
 Cada agente deja una corrida (`agent_runs`: entrada, salida, decisión, confianza, latencia, modelo, proveedor,
 tokens, costo, error) y el flujo sus eventos (`agent_events`): esa traza alimenta `/metrics` y el lote golden.
+Con `WORKFLOW_ENGINE=langgraph` el mismo turno corre como `StateGraph` (diagrama generado del grafo compilado en
+el [ADR 0005](../adr/0005-adaptador-langgraph.md)) y cada nodo deja además una `NodeTrace` (nodo, latencia,
+agentes, siguiente) y una línea de bitácora `langgraph nodo=…`.
+
+La recuperación de conocimiento y las respuestas se miden fuera de línea con `callforge.evaluation` (conjunto
+versionado en `evaluacion/rag/`, compuerta en el CI): ver [evaluacion_rag.md](../evaluacion_rag.md).
 
 ## 5. Ciclo de vida de la conversación
 
