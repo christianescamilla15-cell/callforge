@@ -1,0 +1,411 @@
+{
+  "descripcion": "Base de conocimiento para evaluar la recuperación (RAG) de CallForge en un proveedor de internet, telefonía y TV en casa; todos los documentos son sintéticos salvo KB01 y KB02, copiados de scripts/e2e_probe.py.",
+  "version": "2026-11-25",
+  "documentos": [
+    {
+      "id": "KB01",
+      "titulo": "Cómo reiniciar el módem",
+      "contenido": "Si el internet no funciona: 1) Desconecta el módem de la corriente 60 segundos. 2) Vuelve a conectarlo. 3) Espera a que la luz de internet quede fija en verde. Si tras esto sigue sin funcionar, se debe escalar a un técnico.",
+      "etiquetas": [
+        "internet",
+        "modem"
+      ],
+      "origen": "repo"
+    },
+    {
+      "id": "KB02",
+      "titulo": "Política de facturación",
+      "contenido": "Las facturas se emiten el día 1 de cada mes. Se pueden descargar del portal de clientes en la sección Mis Facturas. Los pagos se pueden hacer hasta el día 10 sin recargo.",
+      "etiquetas": [
+        "facturacion",
+        "pagos"
+      ],
+      "origen": "repo"
+    },
+    {
+      "id": "KB03",
+      "titulo": "Qué significan las luces del módem",
+      "contenido": "El módem tiene cuatro luces: encendido, internet, wifi y teléfono. La luz de encendido en verde fijo indica que el equipo recibe corriente. La luz de internet en verde fijo significa que la conexión es correcta; si parpadea en naranja, el módem está buscando señal y puede tardar hasta 5 minutos en estabilizarse. Si la luz de internet está en rojo fijo, no llega señal al domicilio: revisa que el cable coaxial esté bien apretado y consulta si hay una falla en tu zona. Si la luz de wifi está apagada, presiona 3 segundos el botón lateral marcado como wifi. La luz de teléfono sólo enciende si tienes línea fija contratada.",
+      "etiquetas": [
+        "internet",
+        "modem",
+        "luces"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB04",
+      "titulo": "Wifi lento en casa",
+      "contenido": "Si el wifi va lento pero conectado por cable la velocidad es normal, el problema es la señal inalámbrica y no tu plan. Coloca el módem en un lugar alto y central, a más de 1 metro de microondas, espejos y peceras. La banda de 5 GHz es más rápida pero tiene menos alcance; la de 2.4 GHz llega más lejos pero es más lenta. Con más de 15 dispositivos conectados al mismo tiempo la velocidad por equipo baja. Para casas de dos pisos se puede rentar un repetidor por $49 al mes.",
+      "etiquetas": [
+        "internet",
+        "wifi"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB05",
+      "titulo": "Cambiar el nombre y la contraseña del wifi",
+      "contenido": "Puedes cambiar el nombre de tu red y su contraseña desde la app, en Mi módem > Red wifi. La contraseña nueva debe tener entre 8 y 63 caracteres e incluir al menos un número. El cambio tarda unos 2 minutos en aplicarse y todos los dispositivos se desconectan, por lo que tendrás que volver a conectarlos con la contraseña nueva. Si olvidaste la contraseña actual, la de fábrica está impresa en la etiqueta de la parte inferior del módem. También puedes solicitar el cambio en la línea de atención después de validar que eres el titular.",
+      "etiquetas": [
+        "wifi",
+        "contrasena"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB06",
+      "titulo": "Prueba de velocidad y velocidad contratada",
+      "contenido": "La compañía garantiza al menos el 80 % de la velocidad contratada, medida por cable. Para una prueba confiable, conecta una computadora al módem con cable de red, cierra descargas y aplicaciones, y usa la prueba de velocidad de la app. Repite la prueba 3 veces en horarios distintos. Si el promedio queda por debajo del 80 %, levanta un reporte adjuntando las capturas; un técnico lo revisa en un máximo de 72 horas. Las pruebas hechas por wifi no sirven para reclamar la velocidad.",
+      "etiquetas": [
+        "internet",
+        "velocidad"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB07",
+      "titulo": "Fallas masivas en tu zona",
+      "contenido": "Cuando una falla afecta a muchos clientes de una misma colonia, se registra como falla masiva con un folio que empieza con la letra M. Puedes consultar si tu zona tiene una en la app, en la sección Estado del servicio, o en el menú de voz de la línea de atención eligiendo la opción 1. Ahí verás la hora estimada de solución. Durante una falla masiva no hace falta levantar un reporte individual ni reiniciar tus equipos una y otra vez; recibirás un aviso cuando el servicio se restablezca.",
+      "etiquetas": [
+        "internet",
+        "fallas"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB08",
+      "titulo": "Cambio de plan",
+      "contenido": "Puedes subir o bajar la velocidad de tu plan desde la app o en la línea de atención. Subir de plan se aplica en un máximo de 4 horas y, en la mayoría de los casos, no requiere visita ni cambio de módem. Bajar de plan sólo se permite una vez cada 6 meses y entra en vigor al inicio del siguiente periodo de facturación. El primer mes con el plan nuevo se cobra de forma proporcional a los días de uso. Cambiar de plan no reinicia tu plazo forzoso.",
+      "etiquetas": [
+        "planes",
+        "velocidad"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB09",
+      "titulo": "Planes de internet y precios",
+      "contenido": "La compañía ofrece tres planes de internet en casa: 100 megas por $399 al mes, 300 megas por $549 al mes y 500 megas por $749 al mes. Todos incluyen módem en comodato, wifi de doble banda e instalación sin costo. Puedes armar un paquete agregando televisión o línea fija: la televisión básica, con 80 canales, suma $200 al mes, y la línea fija con llamadas nacionales ilimitadas suma $100 al mes. Los precios ya incluyen impuestos.",
+      "etiquetas": [
+        "planes",
+        "precios"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB10",
+      "titulo": "Control parental",
+      "contenido": "El control parental se activa sin costo desde la app, en Mi módem > Control parental. Permite crear hasta 5 perfiles, asignar a cada perfil los dispositivos de un menor y bloquear categorías como contenido para adultos, apuestas y redes sociales. También puedes programar horarios de descanso, por ejemplo cortar el internet de un perfil de 22:00 a 7:00. Los cambios se aplican en menos de 1 minuto. Sólo funciona en dispositivos conectados al wifi del módem de la compañía, no con datos móviles.",
+      "etiquetas": [
+        "internet",
+        "seguridad",
+        "familia"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB11",
+      "titulo": "Requisitos para contratar",
+      "contenido": "Para contratar necesitas ser mayor de 18 años y presentar una identificación oficial vigente con fotografía y un comprobante de domicilio con antigüedad no mayor a 3 meses. Si el comprobante no está a tu nombre, se pide además una carta simple firmada por la persona a cuyo nombre está. También debes dar un correo electrónico y un número celular de contacto. La contratación se hace en la app, en el portal de clientes o con un asesor, y antes de agendar la instalación se verifica que tu dirección tenga cobertura.",
+      "etiquetas": [
+        "contratacion",
+        "requisitos"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB12",
+      "titulo": "Instalación de un servicio nuevo",
+      "contenido": "Después de contratar, la instalación se agenda en un plazo de 2 a 5 días hábiles. El técnico tarda entre 1 y 2 horas en dejar el servicio funcionando, y durante toda la visita debe estar presente una persona mayor de edad. La instalación incluye hasta 30 metros de cable; cada metro adicional cuesta $15. Si el técnico no puede instalar porque no hay acceso al domicilio, la cita se reprograma una sola vez sin costo. La facturación comienza el día de la instalación.",
+      "etiquetas": [
+        "contratacion",
+        "instalacion"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB13",
+      "titulo": "Visita técnica: costo y horarios",
+      "contenido": "Si la falla está en la red o en un equipo de la compañía, la visita técnica no tiene costo. Si el técnico determina que el problema lo causó el cliente, por ejemplo cables cortados o un aparato propio dañado, la visita cuesta $250 y se carga en la siguiente factura. Las visitas se agendan en ventanas de 4 horas, de 8:00 a 12:00, de 12:00 a 16:00 o de 16:00 a 20:00, de lunes a sábado. El técnico llama 30 minutos antes de llegar y siempre porta credencial con fotografía.",
+      "etiquetas": [
+        "soporte",
+        "visita tecnica"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB14",
+      "titulo": "Cancelar o reprogramar una visita técnica",
+      "contenido": "Puedes cancelar o reprogramar una visita técnica en la app, en la sección Mis citas, o en la línea de atención. Hazlo con al menos 2 horas de anticipación al inicio de la ventana horaria; si cancelas después o el técnico no encuentra a nadie en el domicilio, se cobra una penalización de $120 por visita fallida. Cada cita se puede reprogramar hasta 2 veces. Si la falla se resolvió sola, cancela la visita y conserva el folio por si el problema regresa en los siguientes 7 días.",
+      "etiquetas": [
+        "soporte",
+        "visita tecnica"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB15",
+      "titulo": "Cambio de domicilio",
+      "contenido": "Si te mudas, puedes llevar el servicio a tu nuevo domicilio siempre que tenga cobertura. Solicita el cambio con al menos 5 días hábiles de anticipación. El cambio de domicilio cuesta $300, que se cargan en tu siguiente factura; conservas tu plan y tu número de cuenta, y tu plazo forzoso no se reinicia. El técnico desconecta los equipos en el domicilio anterior y los instala en el nuevo el mismo día. Si la nueva dirección no tiene cobertura, puedes cancelar sin penalización presentando un comprobante del nuevo domicilio.",
+      "etiquetas": [
+        "mudanza",
+        "domicilio"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB16",
+      "titulo": "Portabilidad del número fijo",
+      "contenido": "Puedes traer tu número fijo desde otra compañía sin costo. Necesitas ser titular de la línea, presentar identificación oficial y el código de portabilidad de 4 dígitos, que se obtiene llamando desde esa línea a tu compañía anterior. La portabilidad se completa en un máximo de 24 horas hábiles; durante ese tiempo puede haber una interrupción de hasta 1 hora. No canceles tu servicio anterior antes de que termine la portabilidad, porque perderías el número.",
+      "etiquetas": [
+        "telefonia",
+        "portabilidad"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB17",
+      "titulo": "Buzón de voz de la línea fija",
+      "contenido": "El buzón de voz está incluido en todas las líneas fijas y se activa marcando *94. La primera vez te pide crear un PIN de 4 dígitos y grabar tu saludo. Guarda hasta 20 mensajes de un máximo de 3 minutos cada uno, y los mensajes ya escuchados se borran a los 15 días. Para escucharlos desde tu línea marca *95; desde otro teléfono, marca tu propio número, espera el saludo y presiona la tecla de asterisco. Si tu buzón está lleno, quien te llame escuchará un aviso y no podrá dejar mensaje.",
+      "etiquetas": [
+        "telefonia",
+        "buzon"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB18",
+      "titulo": "Desvío de llamadas",
+      "contenido": "El desvío de llamadas envía las llamadas que entran a tu línea fija hacia otro número. Para activarlo marca *72 seguido del número de destino a 10 dígitos y espera el tono de confirmación; para desactivarlo marca *73. El desvío a otro número fijo nacional no tiene costo, pero el desvío a un celular se cobra a $1.50 por minuto. Mientras el desvío está activo, las llamadas no llegan al buzón de voz. Sólo puedes tener un número de destino a la vez.",
+      "etiquetas": [
+        "telefonia",
+        "desvio"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB19",
+      "titulo": "Decodificador sin señal",
+      "contenido": "Si la pantalla muestra el mensaje «Sin señal», primero verifica que la televisión esté en la entrada de video correcta. Después reinicia el decodificador: desconéctalo de la corriente 30 segundos y espera unos 3 minutos a que cargue la guía de canales. Si aparece «Error E-12», el cable coaxial está flojo o dañado. Si sólo faltan algunos canales, revisa que estén incluidos en tu paquete. Cada decodificador adicional cuesta $69 al mes y se pueden tener hasta 4 por domicilio.",
+      "etiquetas": [
+        "television",
+        "decodificador"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB20",
+      "titulo": "Control remoto del decodificador",
+      "contenido": "Si el control remoto no responde, cambia sus 2 pilas AAA y apunta directamente al decodificador a menos de 5 metros. Para emparejarlo de nuevo, mantén presionados al mismo tiempo los botones OK y Menú durante 5 segundos, hasta que la luz del control parpadee dos veces. También puedes configurarlo para encender y apagar la televisión desde Ajustes > Control remoto. Si el control está dañado, puedes pedir uno de reemplazo por $150, que se envía a tu domicilio en 3 a 5 días hábiles.",
+      "etiquetas": [
+        "television",
+        "control remoto"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB21",
+      "titulo": "Canales premium y paquetes adicionales",
+      "contenido": "Puedes agregar paquetes de canales a tu televisión desde la app o desde el control remoto, en la sección Tienda. El paquete de películas cuesta $139 al mes, el de deportes $189 al mes y el infantil $79 al mes. Los canales se activan en menos de 15 minutos. Los paquetes adicionales no tienen plazo forzoso y se pueden cancelar en cualquier momento, aunque el cargo del mes en curso no se devuelve. Para comprar desde el control se pide un PIN de compras de 4 dígitos que se crea en la app.",
+      "etiquetas": [
+        "television",
+        "canales"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB22",
+      "titulo": "Pago en línea con tarjeta o transferencia",
+      "contenido": "Puedes pagar en la app o en el portal de clientes con tarjeta de crédito o débito; el pago se refleja al instante y puedes guardar la tarjeta para pagos futuros. También puedes pagar por transferencia bancaria usando la referencia de 12 dígitos que aparece en tu factura; las transferencias se reflejan en un máximo de 1 día hábil. Si transfieres sin la referencia, el pago no se puede aplicar a tu cuenta y tendrás que enviar el comprobante por la línea de atención para que lo ubiquen.",
+      "etiquetas": [
+        "pagos",
+        "tarjeta",
+        "transferencia"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB23",
+      "titulo": "Pago domiciliado",
+      "contenido": "Con el pago domiciliado, el total de tu factura se carga automáticamente a tu tarjeta de crédito o débito el día 5 de cada mes. Se activa en la app, en Pagos > Domiciliar, y aplica a partir de la siguiente factura. Al domiciliar recibes un descuento de $30 al mes. Si el banco rechaza el cargo, se reintenta el día 8; si vuelve a fallar, debes pagar por otro medio a más tardar el día 10 para evitar el recargo. Puedes cancelar la domiciliación en cualquier momento desde la misma sección.",
+      "etiquetas": [
+        "pagos",
+        "domiciliacion"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB24",
+      "titulo": "Pago en tienda de conveniencia",
+      "contenido": "Puedes pagar en efectivo en tiendas de conveniencia y farmacias afiliadas mostrando el código de barras de tu factura o el número de referencia de la app. La tienda cobra una comisión de $12 por pago y el monto máximo por operación es de $5,000. El pago se refleja en tu cuenta en un máximo de 48 horas; si pagas a más tardar el día 10 no se genera recargo aunque el pago aparezca después. Conserva tu comprobante de pago hasta que veas el pago aplicado.",
+      "etiquetas": [
+        "pagos",
+        "efectivo"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB25",
+      "titulo": "Recargo por pago tardío y suspensión",
+      "contenido": "Si no pagas a más tardar el día 10, se agrega un recargo de $80 a tu siguiente factura. El día 15 recibes un aviso por mensaje y por correo. Si el adeudo sigue pendiente el día 20, el servicio se suspende: el internet y la televisión dejan de funcionar y la línea fija sólo recibe llamadas y permite marcar a números de emergencia. Después de 60 días de suspensión la cuenta se cancela y el adeudo se envía a cobranza.",
+      "etiquetas": [
+        "pagos",
+        "recargos",
+        "suspension"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB26",
+      "titulo": "Reconexión después de una suspensión por falta de pago",
+      "contenido": "Para reactivar un servicio suspendido por falta de pago, liquida el adeudo total, incluido el recargo. La reconexión cuesta $90 y se carga en la siguiente factura. Si pagas con tarjeta en la app, el servicio se reactiva en un máximo de 2 horas; si pagas en tienda o por transferencia, se reactiva cuando el pago se refleje. Si pasado ese tiempo no funciona, reinicia el módem y el decodificador. Las cuentas canceladas por adeudo no se pueden reconectar y requieren un contrato nuevo.",
+      "etiquetas": [
+        "pagos",
+        "reconexion"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB27",
+      "titulo": "Aclaración de cobros",
+      "contenido": "Si en tu factura aparece un cargo que no reconoces, puedes pedir una aclaración dentro de los 60 días naturales siguientes a su emisión. Levanta la solicitud en la app, en Facturas > Aclarar un cargo, o en la línea de atención, y recibirás un folio. La compañía responde en un máximo de 10 días hábiles. Mientras la aclaración está abierta no se cobra recargo sobre el monto en disputa, pero el resto de la factura sí debe pagarse a tiempo. Si la aclaración procede, el monto se bonifica en tu siguiente factura.",
+      "etiquetas": [
+        "facturacion",
+        "aclaraciones"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB28",
+      "titulo": "Reembolso de saldo a favor",
+      "contenido": "Si te queda saldo a favor, por ejemplo por un pago duplicado o al cancelar el servicio, puedes recuperarlo. Los saldos menores a $200 se abonan automáticamente a tus siguientes facturas. Para saldos de $200 o más, solicita el reembolso en la línea de atención con una cuenta bancaria a nombre del titular y su clabe interbancaria de 18 dígitos. El depósito se realiza en un máximo de 15 días hábiles. Si la cuenta de servicio ya está cancelada, el reembolso siempre se hace por transferencia, sin importar el monto.",
+      "etiquetas": [
+        "pagos",
+        "reembolsos"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB29",
+      "titulo": "Factura electrónica con datos fiscales",
+      "contenido": "Las facturas que se descargan del portal se emiten a nombre de público en general. Si necesitas una factura electrónica a tu nombre, registra tus datos fiscales en la app, en Cuenta > Datos fiscales: RFC, razón social, código postal fiscal, régimen fiscal y uso de la factura. Regístralos antes del día 25 para que la factura de ese mes ya salga con ellos. Los meses anteriores sólo se pueden refacturar dentro del mismo año fiscal. La factura electrónica llega a tu correo en PDF y XML.",
+      "etiquetas": [
+        "facturacion",
+        "datos fiscales"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB30",
+      "titulo": "Cancelación del servicio y penalización",
+      "contenido": "Los planes tienen un plazo forzoso de 12 meses contados desde la instalación. Si cancelas antes, pagas una penalización del 20 % de las rentas mensuales que falten para completar el plazo. Después de los 12 meses puedes cancelar sin penalización. La cancelación la solicita el titular en la línea de atención o en un centro de atención, con identificación oficial. Se procesa en un máximo de 5 días hábiles y se emite una factura final con el proporcional de los días usados. Para cerrar la cuenta debes devolver los equipos.",
+      "etiquetas": [
+        "cancelacion",
+        "contrato"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB31",
+      "titulo": "Devolución de equipos",
+      "contenido": "Al cancelar el servicio debes devolver el módem, los decodificadores, los controles remotos y los cables de corriente en un plazo de 30 días naturales. Puedes llevarlos a cualquier centro de atención o pedir que los recojan en tu domicilio por $100. Al entregarlos recibes un comprobante de devolución que debes conservar. Si no devuelves los equipos dentro del plazo, se cobra $1,500 por el módem y $900 por cada decodificador. Los equipos se reciben aunque estén dañados, pero el daño se cobra por separado.",
+      "etiquetas": [
+        "equipos",
+        "cancelacion"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB32",
+      "titulo": "Garantía de equipos",
+      "contenido": "Los equipos que la compañía entrega en comodato tienen garantía mientras el servicio esté activo. Si el módem o el decodificador fallan por desgaste normal, se reemplazan sin costo después de un diagnóstico remoto. El reemplazo llega en una visita técnica o puedes recogerlo en un centro de atención al día hábil siguiente. La garantía no cubre daños por agua, golpes, descargas eléctricas ni equipos abiertos; en esos casos el reemplazo cuesta $1,200 por módem y $700 por decodificador.",
+      "etiquetas": [
+        "equipos",
+        "garantia"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB33",
+      "titulo": "Robo o pérdida de equipos",
+      "contenido": "Si te roban o pierdes el módem o el decodificador, repórtalo en la línea de atención en un máximo de 5 días naturales para bloquear el equipo y evitar que otra persona lo use. Si presentas la denuncia ante la autoridad o una constancia de hechos, el reemplazo cuesta $350; sin ese documento se cobra el precio completo del equipo. El equipo nuevo se instala en una visita técnica sin costo de visita. Si después recuperas el equipo, no lo conectes y llévalo a un centro de atención.",
+      "etiquetas": [
+        "equipos",
+        "robo"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB34",
+      "titulo": "Acceso a la app y recuperación de contraseña",
+      "contenido": "Para entrar a la app o al portal de clientes se usa el número de cuenta de 10 dígitos o el correo registrado, más una contraseña. Si la olvidaste, toca «¿Olvidaste tu contraseña?» y recibirás un código de 6 dígitos por SMS o correo, válido por 10 minutos. La contraseña nueva debe tener al menos 10 caracteres, una mayúscula y un número. Después de 5 intentos fallidos el acceso se bloquea 30 minutos. Si perdiste el correo y el número móvil registrados, actualízalos en la línea de atención validando tu identidad.",
+      "etiquetas": [
+        "cuenta",
+        "app",
+        "contrasena"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB35",
+      "titulo": "Cambio de titular",
+      "contenido": "El titular puede ceder el contrato a otra persona sin costo. Ambos deben acudir a un centro de atención con identificación oficial vigente, o el titular firma una carta de cesión que el nuevo titular entrega junto con copia de las dos identificaciones. La cuenta debe estar al corriente en sus pagos. El nuevo titular conserva el número de cuenta, el plan y el plazo forzoso restante. Si el titular falleció, un familiar directo puede hacer el cambio presentando el acta de defunción y su identificación.",
+      "etiquetas": [
+        "cuenta",
+        "titularidad"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB36",
+      "titulo": "Seguridad: la compañía nunca pide contraseñas",
+      "contenido": "La compañía nunca te pedirá por teléfono, mensaje o correo la contraseña de tu cuenta, el código de verificación que recibes por SMS ni el número completo de tu tarjeta. Para validar tu identidad, los asesores sólo pueden preguntar los últimos 4 dígitos de tu tarjeta y tu fecha de nacimiento. Si alguien te pide esos datos en nombre de la compañía, cuelga y reporta el intento en la línea de atención. Los técnicos tampoco cobran en efectivo en tu domicilio: todos los cargos aparecen en tu factura.",
+      "etiquetas": [
+        "seguridad",
+        "fraude"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB37",
+      "titulo": "Horarios y canales de atención",
+      "contenido": "La línea de atención funciona las 24 horas, los 365 días del año, para reportar fallas técnicas. Para facturación, pagos y contrataciones, atiende de lunes a sábado de 8:00 a 22:00 y los domingos de 9:00 a 18:00. El chat de la app atiende todos los días de 7:00 a 23:00. Los centros de atención abren de lunes a sábado de 10:00 a 19:00 y cierran domingos y días festivos. En la app puedes solicitar que un asesor te devuelva la llamada en lugar de esperar en línea.",
+      "etiquetas": [
+        "atencion",
+        "horarios"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB38",
+      "titulo": "Quejas y escalamiento",
+      "contenido": "Si no quedaste conforme con la atención o con la solución de un reporte, puedes presentar una queja formal en la app, en Ayuda > Quejas, o pedir en la línea de atención que te comuniquen con un supervisor. Recibirás un folio de queja y una respuesta en un máximo de 3 días hábiles. Si la respuesta no te satisface, puedes pedir que la revise el área de calidad, que contesta en 10 días hábiles adicionales. Si aun así no hay solución, puedes acudir a la autoridad de protección al consumidor con tu folio.",
+      "etiquetas": [
+        "atencion",
+        "quejas"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB39",
+      "titulo": "Compensación por fallas prolongadas",
+      "contenido": "Si tu servicio deja de funcionar más de 24 horas continuas por una causa atribuible a la compañía, se bonifica la parte proporcional de la renta por cada día sin servicio, más una compensación adicional del 25 % sobre ese monto. En las fallas masivas la bonificación se aplica sola en la siguiente factura. En fallas individuales debes solicitarla dentro de los 30 días siguientes, con el folio de tu reporte. No aplica si la falla se debe a falta de pago, a daños causados por el cliente o a cortes de luz en tu domicilio.",
+      "etiquetas": [
+        "fallas",
+        "compensacion"
+      ],
+      "origen": "sintetico"
+    },
+    {
+      "id": "KB40",
+      "titulo": "Suspensión temporal voluntaria",
+      "contenido": "Si vas a ausentarte de tu domicilio, puedes pausar el servicio de forma voluntaria por un mínimo de 1 mes y un máximo de 3 meses, una vez al año. Mientras está en pausa pagas una cuota de $99 al mes en lugar de tu renta, conservas tu número de línea fija y los equipos se quedan instalados. El plazo forzoso se extiende por el tiempo que dure la pausa. Solicítala con al menos 3 días de anticipación en la app o en la línea de atención; la cuenta debe estar al corriente.",
+      "etiquetas": [
+        "cuenta",
+        "suspension"
+      ],
+      "origen": "sintetico"
+    }
+  ]
+}

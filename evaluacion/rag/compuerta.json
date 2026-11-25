@@ -1,0 +1,19 @@
+{
+  "descripcion": "Compuerta del CI sobre métricas DETERMINISTAS (sin LLM). Umbrales medidos el 2026-11-25 sobre el conjunto 2026-11-25 con los defaults de producción (top-k 3, piso 0.55, nomic-embed-text) y un margen de ~0.02: una regresión real o un sabotaje (embeddings barajados, recuperador al azar, cifras alteradas) los cruza; ver docs/evaluacion_rag.md. Se suben cuando la medición sube; bajarlos exige explicarlo en el informe.",
+  "relaciones": [
+    {"mayor_o_igual": "recuperacion.hibrido hit@3", "que": "recuperacion.palabras hit@3"},
+    {"mayor_o_igual": "recuperacion.hibrido mrr", "que": "recuperacion.palabras mrr"}
+  ],
+  "umbrales": {
+    "recuperacion.palabras": {
+      "hit@3": 0.54, "mrr": 0.52, "cobertura_citas@3": 0.53, "hit@3.literal": 0.96
+    },
+    "recuperacion.hibrido": {
+      "hit@3": 0.62, "mrr": 0.61, "cobertura_citas@3": 0.6, "hit@3.literal": 0.96,
+      "hit@3.parafrasis": 0.12, "hit@3.multi": 0.85
+    },
+    "respuestas.extractivo_hibrido": {
+      "fidelidad": 0.98, "con_cita_valida": 0.98, "cita_fuente_esperada": 0.58, "hechos_clave": 0.46
+    }
+  }
+}

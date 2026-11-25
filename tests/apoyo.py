@@ -30,6 +30,7 @@ MOTOR = "state_machine"
 AGENTES = (
     "RouterAgent", "TroubleshootingAgent", "EscalationAgent", "SummarizerAgent",
     "QualityAgent", "SupportAgent",
+    "GroundingJudge",  # el juez opcional de la evaluación del RAG (callforge.evaluation.answers)
 )
 
 CAIDO = LLMUnavailableError("todos los proveedores fallaron (simulado)")

@@ -1,5 +1,6 @@
 # CI (N02, N03, N07, N08, N08b, N09): pruebas por regla contra SQLite y PostgreSQL REAL, paridad contra el lote
-# golden, contrato OpenAPI al día, y la imagen de producción (la que despliega Render) construida, escaneada,
+# golden (con los dos motores del turno), compuerta del RAG con su control negativo, contrato OpenAPI al día,
+# y la imagen de producción (la que despliega Render) construida, escaneada,
 # ARRANCADA con la configuración de render.yaml y recorrida por la prueba de humo y el E2E por rol.
 # Plantilla común del portafolio adaptada a Switchboard (CallForge: FastAPI + SQLAlchemy/Alembic, sin front aparte).
 #
@@ -77,6 +78,22 @@ jobs:
         run: |
           python3 tests/golden/generar_golden.py --revisar
           python3 herramientas/exportar_openapi.py --revisar
+      # Evaluación del RAG (docs/evaluacion_rag.md): sólo métricas deterministas sobre el conjunto versionado y los
+      # vectores reales de nomic-embed-text en caché (sin red, sin LLM). La compuerta no es de adorno: con los
+      # embeddings barajados DEBE fallar, y el informe versionado debe traer exactamente las cifras medidas.
+      - name: compuerta del RAG (umbrales medidos en evaluacion/rag/compuerta.json)
+        if: matrix.bd == 'sqlite'
+        run: PYTHONPATH=src python -m callforge.evaluation.rag --compuerta --json rag.json
+      - name: control negativo de la compuerta del RAG (embeddings barajados ⇒ debe fallar)
+        if: matrix.bd == 'sqlite'
+        run: |
+          if PYTHONPATH=src python -m callforge.evaluation.rag --sabotaje embeddings_barajados --compuerta; then
+            echo "::error::la compuerta del RAG pasó con los embeddings barajados: no está midiendo nada"
+            exit 1
+          fi
+      - name: informe del RAG al día
+        if: matrix.bd == 'sqlite'
+        run: PYTHONPATH=src python -m callforge.evaluation.rag --revisar-informe
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
@@ -84,6 +101,7 @@ jobs:
           path: |
             reporte.xml
             coverage.xml
+            rag.json
 
   # La imagen es la que despliega Render (render.yaml: env docker, Dockerfile de la raíz). Lección de Verificarro
   # (19-nov): el CI probaba en 3.12 y la imagen traía otro Python; todo salía en verde y producción no servía.
