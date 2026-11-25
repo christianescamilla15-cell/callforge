@@ -149,6 +149,7 @@ def test_un_cache_incompleto_hace_fallar_la_compuerta_aunque_el_hibrido_responda
 def test_hit_mrr_y_cobertura_de_citas():
     ranking = ["KB07", "KB03", "KB01", "KB12"]
     assert (hit_at_k(ranking, {"KB01"}, 1), hit_at_k(ranking, {"KB01"}, 3)) == (0.0, 1.0)
+    assert hit_at_k(ranking, {"KB12"}, 3) == 0.0     # 4.º lugar: fuera del top-3 (k exacto, no k + 1)
     assert reciprocal_rank(ranking, {"KB01"}) == pytest.approx(1 / 3)
     assert reciprocal_rank(ranking, {"KB99"}) == 0.0
     assert reciprocal_rank([], {"KB01"}) == 0.0

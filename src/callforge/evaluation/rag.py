@@ -377,17 +377,19 @@ def render_block(results: dict, controls: dict[str, dict]) -> str:
     k, p, data = results["parametros"]["top_k"], results["parametros"], results["conjunto"]
     kinds = ", ".join(f"{v} {KIND_LABELS[n]}" for n, v in data["por_tipo"].items())
     overlap = ", ".join(f"{KIND_LABELS[n]} {v}" for n, v in data["traslape_con_la_fuente"].items())
-    lines = [BEGIN, "",
-             f"Conjunto `{data['version']}`: {data['documentos']} documentos, {data['preguntas']} preguntas "
-             f"({kinds}); raíces de contenido que comparte una pregunta con su fuente, en promedio: "
-             f"{overlap}. "
-             f"top-k = {k}, piso de similitud = {p['piso_similitud']}, embeddings `{p['modelo_embeddings']}` "
-             f"({p['motor_embeddings']}).", "",
+    summary_line = (
+        f"Conjunto `{data['version']}`: {data['documentos']} documentos, {data['preguntas']} preguntas "
+        f"({kinds}); raíces de contenido que comparte una pregunta con su fuente, en promedio: {overlap}. "
+        f"top-k = {k}, piso de similitud = {p['piso_similitud']}, embeddings `{p['modelo_embeddings']}` "
+        f"({p['motor_embeddings']})."
+    )
+    retrieval_header = (
+        f"| Recuperador | hit@1 | hit@{k} | hit@5 | MRR@{DEPTH} | cobertura de citas@{k} | sin resultados "
+        f"| hit@{k} literal | hit@{k} paráfrasis | hit@{k} multi | abstención fuera de dominio |"
+    )
+    lines = [BEGIN, "", summary_line, "",
              "**Recuperación** (preguntas con respuesta; la abstención es sobre las de fuera de dominio)", "",
-             f"| Recuperador | hit@1 | hit@{k} | hit@5 | MRR@{DEPTH} | cobertura de citas@{k} "
-             "| sin resultados "
-             f"| hit@{k} literal | hit@{k} paráfrasis | hit@{k} multi | abstención fuera de dominio |",
-             "|---|---|---|---|---|---|---|---|---|---|---|"]
+             retrieval_header, "|---|---|---|---|---|---|---|---|---|---|---|"]
     names = {"palabras": "Palabras clave (caída)", "hibrido": f"Híbrido (embeddings, piso {MIN_SIMILARITY})",
              "hibrido_sin_piso": "Embeddings sin piso (referencia)",
              "fusion_rrf": "Fusión RRF palabras + embeddings (referencia)"}
@@ -415,11 +417,13 @@ def render_block(results: dict, controls: dict[str, dict]) -> str:
             s, model = entry["separacion"], entry.get("modelo", p["modelo_embeddings"])
             lines.append(f"| `{model}` | {s['top1_con_respuesta_min']:.3f} | "
                          f"{s['top1_con_respuesta_mediana']:.3f} | {s['top1_fuera_de_dominio_max']:.3f} |")
+    answers_header = (
+        "| Generador | fidelidad | respuestas 100 % fieles | con cita válida | cita la fuente esperada "
+        "| hechos clave | F1 vs. referencia | abstención fuera de dominio | abstención indebida "
+        "| citas fantasma |"
+    )
     lines += ["", "**Respuestas** (fidelidad y citas verificadas sin LLM contra los fragmentos citados)", "",
-              "| Generador | fidelidad | respuestas 100 % fieles | con cita válida | cita la fuente esperada "
-              "| hechos clave | F1 vs. referencia | abstención fuera de dominio | abstención indebida "
-              "| citas fantasma |",
-              "|---|---|---|---|---|---|---|---|---|---|"]
+              answers_header, "|---|---|---|---|---|---|---|---|---|---|"]
     answer_names = {"extractivo_hibrido": "Extractivo sobre el híbrido",
                     "extractivo_palabras": "Extractivo sobre palabras clave"}
     answer_rows = [(answer_names.get(n, f"LLM `{r.get('modelo', n)}` sobre el híbrido"), r)
@@ -436,9 +440,10 @@ def render_block(results: dict, controls: dict[str, dict]) -> str:
                      f"{s['citas_fantasma']} |")
     judged = [(n, r["juez"]) for n, r in results["respuestas"].items() if "juez" in r]
     if judged:
-        lines += ["", "**Juez LLM (opcional, no entra a la compuerta)**", "",
-                  "| Respuestas | fidelidad según el juez | acuerdo con el verificador determinista "
-                  "| afirmaciones comparadas |", "|---|---|---|---|"]
+        judge_header = ("| Respuestas | fidelidad según el juez | acuerdo con el verificador determinista "
+                        "| afirmaciones comparadas |")
+        lines += ["", "**Juez LLM (opcional, no entra a la compuerta)**", "", judge_header,
+                  "|---|---|---|---|"]
         for name, j in judged:
             lines.append(f"| `{name}` | {_pct(j['fidelidad_juez'])} | {_pct(j['acuerdo_con_verificador'])} | "
                          f"{j['afirmaciones_comparadas']} |")

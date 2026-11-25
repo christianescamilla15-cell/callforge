@@ -48,7 +48,8 @@ class WorkflowOutcome:
 
 
 class KnowledgeSearch(Protocol):
-    def search(self, query: str, top_k: int = 3) -> list[KnowledgeSnippet]: ...
+    def search(self, query: str, top_k: int = 3) -> list[KnowledgeSnippet]:
+        """The `top_k` most relevant snippets for `query`, best first (empty when nothing is relevant)."""
 
 
 class SupportWorkflowPort(Protocol):
@@ -59,4 +60,5 @@ class SupportWorkflowPort(Protocol):
         history: list[dict[str, str]],
         knowledge_store: KnowledgeSearch,
         resolution_steps: list[ResolutionStep] | None = None,
-    ) -> WorkflowOutcome: ...
+    ) -> WorkflowOutcome:
+        """Run one support turn: route, retrieve, answer, check quality, escalate when the policy says so."""
