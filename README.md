@@ -15,18 +15,18 @@
 | Capability | Evidence |
 |---|---|
 | **Production-grade multi-agent orchestration** | 6 specialized agents (Router, Support, Troubleshooting, Escalation, Quality, Summarizer) coordinated via an explicit state machine, plus a **LangGraph adapter with measured parity** behind the same application port. The state machine is still the default engine and the production image ships without any framework ([ADR 0005](docs/adr/0005-adaptador-langgraph.md)) |
-| **Evaluated RAG** | Versioned eval set (40-doc KB, 86 questions with expected source and reference answer), deterministic retrieval metrics (hit@k, MRR, citation coverage) over real `nomic-embed-text` vectors, citation-checked faithfulness and key-fact exactness, a CI gate with negative controls (shuffled embeddings, random retriever, altered numbers) and an optional local LLM judge: [docs/evaluacion_rag.md](docs/evaluacion_rag.md) |
+| **Evaluated RAG** | Versioned eval set (40-doc KB, 86 questions with expected source and reference answer), deterministic retrieval metrics (hit@k, MRR, citation coverage) over real `nomic-embed-text` vectors, citation-checked faithfulness and key-fact exactness, a CI gate with negative controls (shuffled embeddings, random retriever, altered numbers) plus a versioned snapshot of the production SupportAgent prompt on a small local LLM with an optional LLM judge: [docs/evaluacion_rag.md](docs/evaluacion_rag.md) |
 | **Voice I/O at production latency** | Whisper STT 0.9s (Groq) + Kokoro ONNX TTS at RTF 0.34 on CPU only — GPU stays free for the LLM |
 | **Cost-optimized resilience** | LLM provider chain (`Groq → Ollama → Mock`) keeps the system answering when any provider fails, with $0 floor (local + mock) |
 | **Hybrid RAG with graceful degradation** | `nomic-embed-text` embeddings + keyword fallback when embedder is unavailable — lazy backfill for legacy docs. The support agent returns the fragments it cites (`citations`) |
 | **Multi-tenant from day 1** | `tenant_id` scoping in every aggregate, per-tenant API keys, per-tenant metrics |
 | **Clean Architecture** | Domain → Application → Infrastructure → Presentation. 100% of tests run offline (MockProvider + SQLite tmp, PostgreSQL 16 in CI) — no flaky CI |
-| **Verifiable quality** | One test per business rule ([docs/reglas.md](docs/reglas.md), 93 rules), golden-file parity against an independent oracle with a negative control, E2E per role against the production image, versioned OpenAPI contract |
+| **Verifiable quality** | One test per business rule ([docs/reglas.md](docs/reglas.md), 94 rules), golden-file parity against an independent oracle with a negative control, E2E per role against the production image, versioned OpenAPI contract |
 | **Operational maturity** | Deployable as Windows service via nssm. Alembic migrations auto-stamp pre-existing DBs at boot. Agent runs persist full trace (tokens, cost, latency, confidence, error) |
 | **Cloning + voice synthesis** | Chatterbox MIT voice cloning in isolated micro-service (separate venv with torch cu124) avoids GPU contention — auto-fallback to Kokoro if down |
 | **LLM specialization roadmap** | QLoRA fine-tune plan documented in [FINETUNE_RUNBOOK.md](FINETUNE_RUNBOOK.md): synthetic dataset → Unsloth/RunPod → GGUF export → Ollama. Specialization > scale for narrow tasks |
 
-**By the numbers** (2026-11-25) — 6 pipeline agents · 2 interchangeable turn engines (state machine + LangGraph) · 8 use-cases · 18 API operations + webchat · 85 Python modules · ~7,900 LOC in `src/` · 327 tests in 24 suites (100% offline) · RAG eval set of 86 questions over 40 documents
+**By the numbers** (2026-11-25) — 6 pipeline agents · 2 interchangeable turn engines (state machine + LangGraph) · 8 use-cases · 18 API operations + webchat · 85 Python modules · ~7,900 LOC in `src/` · 329 tests in 24 suites (100% offline) · RAG eval set of 86 questions over 40 documents
 
 ---
 
@@ -183,7 +183,7 @@ If `API_TOKEN` is set in `.env`, add `-H "X-API-Token: <token>"` to each request
 ```bash
 pip install -r requirements-dev.txt
 ruff check .
-pytest                                   # 327 tests, offline (PostgreSQL ones skip without a database)
+pytest                                   # 329 tests, offline (PostgreSQL ones skip without a database)
 PYTHONPATH=src python -m callforge.evaluation.rag --compuerta   # RAG gate (deterministic, cached real embeddings)
 ```
 

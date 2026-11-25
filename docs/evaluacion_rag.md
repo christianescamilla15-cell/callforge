@@ -20,8 +20,9 @@ mejores fragmentos al `SupportAgent`, que debe responder SÓLO con ellos y, desd
    sus raíces y TODAS sus cifras aparecen ahí), citas válidas y fantasma, si cita la fuente esperada,
    **exactitud** contra la referencia (hechos clave presentes y F1 de tokens) y abstención (fuera de dominio
    debe abstenerse; con respuesta, no).
-3. **Juez LLM opcional**: un modelo local dice, afirmación por afirmación, si los fragmentos citados la
-   respaldan; se reporta su acuerdo con el verificador determinista. Nunca entra a la compuerta.
+3. **Juez LLM opcional**: un modelo local dice, afirmación por afirmación, si los fragmentos que vio el agente
+   la respaldan; se reporta su acuerdo con el verificador determinista, que es más estricto porque además exige
+   que la respuesta cite el fragmento correcto. Nunca entra a la compuerta.
 
 ## 2. El conjunto de evaluación (`evaluacion/rag/`)
 
@@ -99,11 +100,18 @@ Conjunto `2026-11-25/2026-11-25`: 40 documentos, 86 preguntas (32 literales, 32 
 
 **Respuestas** (fidelidad y citas verificadas sin LLM contra los fragmentos citados)
 
-| Generador | fidelidad | respuestas 100 % fieles | con cita válida | cita la fuente esperada | hechos clave | F1 vs. referencia | abstención fuera de dominio | abstención indebida | citas fantasma |
-|---|---|---|---|---|---|---|---|---|---|
-| Extractivo sobre el híbrido | 100.0 % | 100.0 % | 100.0 % | 60.3 % | 48.1 % | 31.8 % | 12.5 % | 0.0 % | 0 |
-| Extractivo sobre palabras clave | 100.0 % | 100.0 % | 100.0 % | 56.4 % | 42.3 % | 28.6 % | 0.0 % | 2.6 % | 0 |
-| Control: cifras alteradas (extractivo) | 40.4 % | 11.5 % | 100.0 % | 60.3 % | 9.6 % | 27.4 % | 12.5 % | 0.0 % | 0 |
+| Generador | fidelidad | respuestas 100 % fieles | con cita válida | cita la fuente esperada | hechos clave | F1 vs. referencia | abstención fuera de dominio | abstención indebida | citas fantasma | afirmaciones con cifra sin respaldo |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Extractivo sobre el híbrido | 100.0 % | 100.0 % | 100.0 % | 60.3 % | 48.1 % | 31.8 % | 12.5 % | 0.0 % | 0 | 0 de 163 |
+| Extractivo sobre palabras clave | 100.0 % | 100.0 % | 100.0 % | 56.4 % | 42.3 % | 28.6 % | 0.0 % | 2.6 % | 0 | 0 de 159 |
+| LLM `qwen2.5-1.5b-instruct-q4_k_m` sobre el híbrido | 61.1 % | 51.9 % | 96.2 % | 55.1 % | 48.1 % | 39.9 % | 37.5 % | 0.0 % | 0 | 13 de 198 |
+| Control: cifras alteradas (extractivo) | 40.4 % | 11.5 % | 100.0 % | 60.3 % | 9.6 % | 27.4 % | 12.5 % | 0.0 % | 0 | 97 de 163 |
+
+**Juez LLM (opcional, no entra a la compuerta)**
+
+| Respuestas | fidelidad según el juez | acuerdo con el verificador determinista | afirmaciones comparadas | sólo el juez la respalda | sólo el verificador la respalda | respuestas que el juez no pudo calificar |
+|---|---|---|---|---|---|---|
+| `llm_qwen2.5-1.5b-instruct-q4-k-m` | 67.1 % | 78.9 % | 185 | 33 | 6 | 13 |
 
 **Compuerta** (`evaluacion/rag/compuerta.json`)
 
@@ -112,7 +120,7 @@ Conjunto `2026-11-25/2026-11-25`: 40 documentos, 86 preguntas (32 literales, 32 
 | Medición real | pasa |
 | Control: embeddings barajados | FALLA (9 umbrales) |
 | Control: recuperador al azar | FALLA (12 umbrales) |
-| Control: cifras alteradas | FALLA (2 umbrales) |
+| Control: cifras alteradas | FALLA (4 umbrales) |
 
 <!-- metricas:fin -->
 
@@ -142,18 +150,38 @@ Conjunto `2026-11-25/2026-11-25`: 40 documentos, 86 preguntas (32 literales, 32 
    1024 dimensiones) hacen caer la búsqueda a palabras clave (regla K3) y el relleno perezoso sólo embebe los
    documentos SIN vector, así que hace falta re-embeber la base de cada tenant. Es una decisión de producción;
    esta evaluación es la que la justificaría y la que diría si funcionó.
-5. **El extractivo es la línea base, no la meta.** Copia oraciones de los fragmentos, así que su fidelidad es
+5. **Un LLM chico, medido con el prompt de producción.** La instantánea `respuestas/qwen2.5-1.5b-instruct-q4-k-m.json`
+   es el `SupportAgent` real (mismo prompt y contrato JSON) sobre la recuperación híbrida de producción, con
+   Qwen2.5-1.5B-Instruct Q4_K_M en llama.cpp, temperatura 0 y semilla fija; el juez es el mismo modelo. Cita
+   algo válido en el 96.2 % de las respuestas y nunca un fragmento inexistente, pero sólo el 61.1 % de sus
+   afirmaciones están respaldadas por lo que cita (51.9 % de respuestas totalmente fieles), y 13 de sus 198
+   afirmaciones traen una cifra que no está en sus citas: en P081, fuera de dominio, inventó un rango de
+   precios de celulares («$100 a $500») y citó dos fragmentos que no hablan de eso; en P005 dio la regla de
+   la contraseña del wifi con la cifra correcta pero citando el fragmento equivocado. Trae los hechos clave
+   igual que el extractivo (48.1 %) con mejor F1 contra la referencia (39.9 % contra 31.8 %), se abstiene
+   bien en 3 de 8 fuera de dominio y nunca se abstiene cuando sí hay respuesta. Dos de sus negativas («no puedo
+   ayudarte con eso», «no tengo información sobre el resultado del partido») citan fragmentos de todos modos;
+   la métrica no las cuenta como abstención (abstenerse es no citar nada).
+6. **Juez y verificador coinciden en el 78.9 % de 185 afirmaciones.** Cuando difieren, casi siempre es el
+   juez el que respalda y el verificador el que no (33 contra 6): el juez ve los tres fragmentos mostrados y
+   acepta una afirmación aunque la respuesta haya citado otro, o la acepta parafraseada; el verificador exige
+   la cita correcta y las cifras textuales. En las 6 contrarias está el límite léxico del verificador: «No, no
+   cobramos por cancelar el servicio» comparte las palabras de su fuente y la contradice. El juez de 1.5B no
+   pudo calificar 13 respuestas (salida fuera de contrato), por eso no bloquea nada.
+7. **El extractivo es la línea base, no la meta.** Copia oraciones de los fragmentos, así que su fidelidad es
    100 % por construcción; lo que mide es el camino recuperación → respuesta: cita la fuente esperada en 60.3 %
    y trae los hechos clave en 48.1 %, acotado por el 64.1 % de hit@3 y por la elección de oraciones.
-6. **Los controles negativos funcionan.** Con los vectores barajados el híbrido cae a 10.3 % en hit@3 y la
+8. **Los controles negativos funcionan.** Con los vectores barajados el híbrido cae a 10.3 % en hit@3 y la
    compuerta falla en 9 umbrales; con un recuperador al azar, en 12; con las cifras de las respuestas movidas
-   en uno (60 → 61), la fidelidad baja de 100 % a 40.4 % y la compuerta falla.
+   en uno (60 → 61), la fidelidad del extractivo baja de 100 % a 40.4 %, la del LLM de 61.1 % a 18.7 %, y la
+   compuerta falla en 4 umbrales.
 
 ## 6. Compuerta del CI
 
 `evaluacion/rag/compuerta.json` fija, sobre métricas deterministas: hit@3, MRR@10, cobertura de citas@3 y hit@3
 literal de los dos recuperadores; además hit@3 de paráfrasis y multi del híbrido; y fidelidad, citas válidas,
-cita de la fuente esperada y hechos clave del extractivo sobre el híbrido. Cada umbral está a unos 0.02 de lo
+cita de la fuente esperada y hechos clave del extractivo sobre el híbrido y de la instantánea del LLM (sobre
+una instantánea fija, el verificador es determinista). Cada umbral está a unos 0.02 de lo
 medido (una prueba exige que ninguno quede más de 0.10 abajo, para que no sean de adorno). Dos relaciones
 exigen que el híbrido no sea peor que su caída a palabras clave en hit@3 y MRR. La compuerta también rechaza
 la corrida si el híbrido tuvo un solo fallo de caché.
@@ -179,3 +207,7 @@ este informe.
   cobra» contra «se cobra») puede pasar. Las cifras sí se exigen exactas. Para lo demás está el juez.
 - Los vectores se calcularon con llama.cpp en proceso, no con el servidor de Ollama; la equivalencia se
   comprobó con los pares del sondeo de junio (sección 2).
+- El LLM medido es chico (1.5B, cuantizado) para no competir por memoria con otros procesos de la máquina; es
+  una línea base de lo que el prompt logra con un modelo local barato, no lo que daría el modelo de
+  producción en la nube. El juez es ese mismo modelo: sus cifras son orientativas. Regenerar la instantánea
+  con otro modelo es un comando (sección 3) y la compuerta dirá si mejora.

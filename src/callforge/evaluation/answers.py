@@ -93,6 +93,10 @@ Responde SOLO con JSON: {"veredictos": [true|false, ...]} con un valor por afirm
 
 
 class LLMJudge:
+    """Per-claim grounding verdicts. It is given every fragment the agent was SHOWN, while the deterministic
+    verifier only accepts the fragments the answer CITES: the judge asks «is it in the context?», the
+    verifier also asks «did it cite the right place?». Their disagreement is reported, never gated."""
+
     def __init__(self, llm: LLMProvider) -> None:
         self._llm = llm
 

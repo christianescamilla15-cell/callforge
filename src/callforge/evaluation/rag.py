@@ -191,12 +191,15 @@ def evaluate_answers(eval_set: EvalSet, answers: Answers) -> dict:
     """`answers`: question id -> (answer, ids of the fragments shown, in the order the agent saw them)."""
     faithfulness, fully_faithful, cited_ok, expected_cited, facts, f1 = [], [], [], [], [], []
     ood_abstained, wrongly_abstained, phantoms, errors = [], [], 0, 0
+    claims_total = invented_numbers = 0
     for q in eval_set.questions:
         answer, shown = answers[q.id]
         if answer.error:
             errors += 1
         check = verify_answer(answer.reply, answer.citations, [eval_set.document(d).fragment for d in shown])
         phantoms += len(check.phantom_citations)
+        claims_total += len(check.claims)
+        invented_numbers += sum(1 for c in check.claims if c.missing_numbers)
         if not q.answerable:
             ood_abstained.append(float(check.abstained))
             continue
@@ -220,6 +223,8 @@ def evaluate_answers(eval_set: EvalSet, answers: Answers) -> dict:
         "abstencion_fuera_de_dominio": _ratio(ood_abstained),
         "abstencion_indebida": _ratio(wrongly_abstained),
         "citas_fantasma": phantoms,
+        "afirmaciones": claims_total,
+        "afirmaciones_con_cifra_sin_respaldo": invented_numbers,
         "errores": errors,
     }}
 
@@ -250,7 +255,7 @@ def load_snapshot(path: Path) -> tuple[dict, dict[str, tuple[Answer, list[str]]]
 
 def judge_summary(eval_set: EvalSet, data: dict) -> dict | None:
     """Judge faithfulness and its agreement with the deterministic verifier (claims matched by text)."""
-    per_answer, agree, compared = [], 0, 0
+    per_answer, agree, compared, judge_only, verifier_only = [], 0, 0, 0, 0
     for record in data["respuestas"]:
         judged = (record.get("juez") or {}).get("afirmaciones")
         if not judged:
@@ -263,10 +268,16 @@ def judge_summary(eval_set: EvalSet, data: dict) -> dict | None:
             if claim["texto"] in deterministic:
                 compared += 1
                 agree += deterministic[claim["texto"]] == claim["respaldada"]
+                judge_only += claim["respaldada"] and not deterministic[claim["texto"]]
+                verifier_only += deterministic[claim["texto"]] and not claim["respaldada"]
     if not per_answer:
         return None
-    return {"fidelidad_juez": _ratio(per_answer), "acuerdo_con_verificador": round(agree / compared, 4)
-            if compared else 0.0, "afirmaciones_comparadas": compared, "respuestas_juzgadas": len(per_answer)}
+    return {"fidelidad_juez": _ratio(per_answer),
+            "acuerdo_con_verificador": round(agree / compared, 4) if compared else 0.0,
+            "afirmaciones_comparadas": compared, "respuestas_juzgadas": len(per_answer),
+            "respuestas_fuera_de_contrato": sum(1 for r in data["respuestas"]
+                                                if (r.get("juez") or {}).get("error")),
+            "solo_el_juez_respalda": judge_only, "solo_el_verificador_respalda": verifier_only}
 
 
 # --------------------------------------------------------------------------- #
@@ -420,10 +431,10 @@ def render_block(results: dict, controls: dict[str, dict]) -> str:
     answers_header = (
         "| Generador | fidelidad | respuestas 100 % fieles | con cita válida | cita la fuente esperada "
         "| hechos clave | F1 vs. referencia | abstención fuera de dominio | abstención indebida "
-        "| citas fantasma |"
+        "| citas fantasma | afirmaciones con cifra sin respaldo |"
     )
     lines += ["", "**Respuestas** (fidelidad y citas verificadas sin LLM contra los fragmentos citados)", "",
-              answers_header, "|---|---|---|---|---|---|---|---|---|---|"]
+              answers_header, "|---|---|---|---|---|---|---|---|---|---|---|"]
     answer_names = {"extractivo_hibrido": "Extractivo sobre el híbrido",
                     "extractivo_palabras": "Extractivo sobre palabras clave"}
     answer_rows = [(answer_names.get(n, f"LLM `{r.get('modelo', n)}` sobre el híbrido"), r)
@@ -437,16 +448,19 @@ def render_block(results: dict, controls: dict[str, dict]) -> str:
                      f"{_pct(s['con_cita_valida'])} | {_pct(s['cita_fuente_esperada'])} | "
                      f"{_pct(s['hechos_clave'])} | {_pct(s['f1_referencia'])} | "
                      f"{_pct(s['abstencion_fuera_de_dominio'])} | {_pct(s['abstencion_indebida'])} | "
-                     f"{s['citas_fantasma']} |")
+                     f"{s['citas_fantasma']} | "
+                     f"{s['afirmaciones_con_cifra_sin_respaldo']} de {s['afirmaciones']} |")
     judged = [(n, r["juez"]) for n, r in results["respuestas"].items() if "juez" in r]
     if judged:
         judge_header = ("| Respuestas | fidelidad según el juez | acuerdo con el verificador determinista "
-                        "| afirmaciones comparadas |")
+                        "| afirmaciones comparadas | sólo el juez la respalda "
+                        "| sólo el verificador la respalda | respuestas que el juez no pudo calificar |")
         lines += ["", "**Juez LLM (opcional, no entra a la compuerta)**", "", judge_header,
-                  "|---|---|---|---|"]
+                  "|---|---|---|---|---|---|---|"]
         for name, j in judged:
             lines.append(f"| `{name}` | {_pct(j['fidelidad_juez'])} | {_pct(j['acuerdo_con_verificador'])} | "
-                         f"{j['afirmaciones_comparadas']} |")
+                         f"{j['afirmaciones_comparadas']} | {j['solo_el_juez_respalda']} | "
+                         f"{j['solo_el_verificador_respalda']} | {j['respuestas_fuera_de_contrato']} |")
     lines += ["", "**Compuerta** (`evaluacion/rag/compuerta.json`)", "",
               "| Corrida | Resultado |", "|---|---|"]
     failures = gate_failures(results)

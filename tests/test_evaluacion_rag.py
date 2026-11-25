@@ -244,6 +244,38 @@ def test_el_juez_da_un_veredicto_por_afirmacion_y_fuera_de_contrato_no_cuenta():
         assert asyncio.run(LLMJudge(malo).judge(afirmaciones, [FRAGMENTO])) is None
 
 
+INSTANTANEA = rag.SNAPSHOTS / "qwen2.5-1.5b-instruct-q4-k-m.json"
+
+
+def test_la_instantanea_real_del_llm_cubre_el_conjunto_y_el_verificador_atrapa_la_cifra_inventada(conjunto):
+    """Dato real: fuera de dominio (P081) el modelo de 1.5B inventó un rango de precios y aun así citó dos
+    fragmentos; el verificador marca esas cifras como sin respaldo."""
+    datos, respuestas = rag.load_snapshot(INSTANTANEA)
+    assert sorted(respuestas) == sorted(q.id for q in conjunto.questions)
+    respuesta, mostrados = respuestas["P081"]
+    revision = verify_answer(respuesta.reply, respuesta.citations,
+                             [conjunto.document(d).fragment for d in mostrados])
+    assert respuesta.citations and revision.faithfulness == 0.0
+    assert {"100", "500"} <= {n for c in revision.claims for n in c.missing_numbers}
+    assert datos["juez"] == datos["modelo"]
+
+
+def test_el_resumen_del_juez_cuenta_acuerdos_y_desacuerdos_por_afirmacion(conjunto):
+    fiel = "Desconecta el módem de la corriente 60 segundos."
+    inventada = "La visita técnica cuesta 999 pesos."
+    instantanea = {"modelo": "prueba", "respuestas": [
+        {"id": "P001", "mostrados": ["KB01"], "reply": f"{fiel} {inventada}", "citations": [1],
+         "juez": {"afirmaciones": [{"texto": fiel, "respaldada": True},
+                                   {"texto": inventada, "respaldada": True}]}},
+        {"id": "P002", "mostrados": ["KB01"], "reply": fiel, "citations": [1], "juez": {"error": "caído"}},
+    ]}
+    resumen = rag.judge_summary(conjunto, instantanea)
+    assert resumen["afirmaciones_comparadas"] == 2
+    assert resumen["acuerdo_con_verificador"] == 0.5   # la cifra inventada: el juez sí, el verificador no
+    assert (resumen["solo_el_juez_respalda"], resumen["solo_el_verificador_respalda"]) == (1, 0)
+    assert resumen["respuestas_fuera_de_contrato"] == 1
+
+
 # --------------------------------------------------------------------------- #
 # Medición, compuerta y controles negativos
 # --------------------------------------------------------------------------- #
