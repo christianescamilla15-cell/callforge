@@ -201,7 +201,7 @@ Render Blueprint ([render.yaml](render.yaml)): Docker image from `main`, health 
 
 ## Security
 
-Every change runs CodeQL, Semgrep, Trivy (dependencies, Dockerfile and image), gitleaks over the whole history and an SBOM; how to report a vulnerability and how exceptions are handled: [SECURITY.md](SECURITY.md).
+Every change runs CodeQL, Semgrep, Trivy (dependencies, Dockerfile and image), pip-audit (test and LangGraph dependencies, which stay out of the image), gitleaks over the whole history and an SBOM; how to report a vulnerability and how exceptions are handled: [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 

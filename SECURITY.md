@@ -11,6 +11,7 @@ hábiles y publico el arreglo con su aviso. Por favor no abras un issue público
 |---|---|---|
 | Análisis estático | CodeQL (Python) + Semgrep `p/default` | sí (Semgrep) |
 | Dependencias, configuración e IaC | Trivy (`requirements.txt` con versión exacta, `Dockerfile`) | sí, en CRITICAL/HIGH con arreglo publicado |
+| Dependencias fuera de la imagen | pip-audit de `requirements-dev.txt` y `requirements-langgraph.txt` (Trivy sólo lee archivos llamados `requirements.txt`); el paso prueba que auditó los paquetes fijados | sí, con cualquier aviso conocido |
 | Imagen de producción | Trivy de la imagen; usuario sin root; sin herramientas de pruebas; Python 3.12 | sí |
 | Secretos en toda la historia | gitleaks (exige ver «N commits scanned») | sí |
 | Datos de terceros | revisión de confidencialidad (`herramientas/confidencialidad.py`) | sí |

@@ -145,6 +145,25 @@ jobs:
           scan-type: config
           severity: CRITICAL,HIGH
           exit-code: '1'
+      # Trivy sólo inventaría los archivos que se llaman exactamente requirements.txt: las dependencias de pruebas y
+      # las del adaptador LangGraph (requirements-dev.txt, requirements-langgraph.txt; no van a la imagen) se
+      # auditan aquí. pip-audit no sigue los «-r» anidados con --disable-pip: se le pasan los tres archivos.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: dependencias fuera de la imagen (pip-audit, bloqueante)
+        run: |
+          python -m pip install --quiet pip-audit==2.10.1
+          pip-audit --strict --disable-pip --no-deps -f json -o pip-audit.json \
+            -r requirements.txt -r requirements-langgraph.txt -r requirements-dev.txt
+      - name: probar que pip-audit auditó los paquetes fijados
+        if: always()
+        shell: python
+        run: |
+          import json, sys
+          auditados = json.load(open("pip-audit.json", encoding="utf-8"))["dependencies"]
+          print(f"pip-audit: {len(auditados)} paquetes auditados")
+          sys.exit(0 if len(auditados) >= 60 and any(d["name"] == "langgraph" for d in auditados) else 1)
 
   sbom:
     name: SBOM (syft)
